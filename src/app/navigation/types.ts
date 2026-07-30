@@ -1,0 +1,10 @@
+import { ActivityCard } from '../../features/home/data/home.data';
+import { ROUTES } from './routeNames';
+
+export type RootStackParamList = {
+  [ROUTES.SPLASH]: undefined;
+  [ROUTES.ONBOARDING]: undefined;
+  [ROUTES.HOME]: undefined;
+  [ROUTES.LEARNING]: { data: ActivityCard };
+  [ROUTES.TRACING]: { data: ActivityCard };
+};
