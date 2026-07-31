@@ -1,8 +1,6 @@
 import {
-  FlatList,
   Image,
   LayoutChangeEvent,
-  ListRenderItem,
   Text,
   TouchableOpacity,
   View,
@@ -15,7 +13,7 @@ import React, {
   useState,
 } from 'react';
 import { useRoute } from '@react-navigation/native';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { GestureDetector, usePanGesture } from 'react-native-gesture-handler';
 import Svg, { Circle, G, Path, Rect } from 'react-native-svg';
 import { svgPathProperties } from 'svg-path-properties';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
@@ -32,9 +30,8 @@ import { ROUTES } from '../../app/navigation/routeNames';
 import CustomTopbar from '../../components/customTopbar/CustomTopbar';
 import ScreenHeadingSection from '../../components/screenHeadingSection/ScreenHeadingSection';
 import CustomButton from '../../components/customButton/CustomButton';
-import { ActivityCard } from '../home/data/home.data';
 import { wp } from '../../utils/Responsive';
-import { TraceLetter, traceLetters } from './data/letters.data';
+import { traceLetters } from './data/letters.data';
 import { styles } from './Tracing.styles';
 import ActionButton from '../../components/customButton/ActionButton';
 import AnimatedSwitcher from '../../components/animatedSwitcher/AnimatedSwitcher';
@@ -70,38 +67,64 @@ const TracingScreen = () => {
     width: 1,
     height: 1,
   });
+  const [activeStrokeIndex, setActiveStrokeIndex] = useState<number>(0);
   const [tracedLength, setTracedLength] = useState<number>(0);
-  const [trailPath, setTrailPath] = useState<string>('');
+  const [strokeTrails, setStrokeTrails] = useState<string[]>([]);
   const [checkpointIndex, setCheckpointIndex] = useState<number>(0);
   const [statusText, setStatusText] = useState<string>('Touch the first dot.');
   const [isTracing, setIsTracing] = useState<boolean>(false);
   const [isComplete, setIsComplete] = useState<boolean>(false);
 
+
+
+  // activeStrokeIndex
+  const activeStrokeIndexRef = useRef<number>(0);
   const tracedLengthRef = useRef<number>(0);
   const trailPathRef = useRef<string>('');
+  const strokeTrailsRef = useRef<string[]>([]);
   const isTracingRef = useRef<boolean>(false);
   const isCompleteRef = useRef<boolean>(false);
 
   const current = traceLetters[currentIndex];
+  const currentStroke =
+    current.strokes[activeStrokeIndex] ?? current.strokes[0];
   const pathMeasure = useMemo(
-    () => new svgPathProperties(current.path),
-    [current.path],
+    () => new svgPathProperties(currentStroke.path),
+    [currentStroke.path],
   );
   const totalLength = useMemo(
     () => pathMeasure.getTotalLength(),
     [pathMeasure],
   );
-  const letterProgress = totalLength > 0 ? tracedLength / totalLength : 0;
+  const strokeLengths = useMemo(
+    () =>
+      current.strokes.map(strokeItem =>
+        new svgPathProperties(strokeItem.path).getTotalLength(),
+      ),
+    [current.strokes],
+  );
+  const totalLetterLength = strokeLengths.reduce(
+    (sum, length) => sum + length,
+    0,
+  );
+  const completedStrokeLength = strokeLengths
+    .slice(0, activeStrokeIndex)
+    .reduce((sum, length) => sum + length, 0);
+  const letterProgress =
+    totalLetterLength > 0
+      ? (completedStrokeLength + tracedLength) / totalLetterLength
+      : 0;
+
   const screenProgress = Math.round(
-    ((currentIndex + Math.min(letterProgress, 1)) / traceLetters.length) * 100,
+    ((currentIndex + 1) / traceLetters.length) * 100,
   );
 
   const guidePoints = useMemo(
     () =>
-      current.checkpoints.map(ratio =>
+      currentStroke.checkpoints.map(ratio =>
         pathMeasure.getPointAtLength(totalLength * ratio),
       ),
-    [current.checkpoints, pathMeasure, totalLength],
+    [currentStroke.checkpoints, pathMeasure, totalLength],
   );
 
   const pulse = useSharedValue(1);
@@ -117,17 +140,20 @@ const TracingScreen = () => {
     );
   }, [pulse]);
 
-  const startDotStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: pulse.value }],
-  }));
+  // const startDotStyle = useAnimatedStyle(() => ({
+  //   transform: [{ scale: pulse.value }],
+  // }));
 
   const resetTrace = useCallback(() => {
+    activeStrokeIndexRef.current = 0;
     tracedLengthRef.current = 0;
     trailPathRef.current = '';
+    strokeTrailsRef.current = [];
     isTracingRef.current = false;
     isCompleteRef.current = false;
+    setActiveStrokeIndex(0);
     setTracedLength(0);
-    setTrailPath('');
+    setStrokeTrails([]);
     setCheckpointIndex(0);
     setStatusText('Touch the first dot.');
     setIsTracing(false);
@@ -163,15 +189,22 @@ const TracingScreen = () => {
   );
 
   const getNearestPathPoint = useCallback(
-    (point: Point): NearestPathPoint => {
+    (point: Point, currentLength: number): NearestPathPoint => {
       const sampleCount = 96;
       let bestLength = 0;
       let bestPoint = pathMeasure.getPointAtLength(0);
       let bestDistance = Number.MAX_VALUE;
 
-      for (let index = 0; index <= sampleCount; index += 1) {
-        const length = (totalLength * index) / sampleCount;
+      const SEARCH_BEHIND = 20;
+      const SEARCH_AHEAD = 35;
+
+      const start = Math.max(0, currentLength - SEARCH_BEHIND);
+
+      const end = Math.min(totalLength, currentLength + SEARCH_AHEAD);
+
+      for (let length = start; length <= end; length += 2) {
         const sample = pathMeasure.getPointAtLength(length);
+
         const distance = Math.hypot(sample.x - point.x, sample.y - point.y);
 
         if (distance < bestDistance) {
@@ -209,28 +242,64 @@ const TracingScreen = () => {
   const syncProgress = useCallback(
     (nextLength: number, nextTrailPath: string) => {
       const clampedLength = Math.min(totalLength, Math.max(0, nextLength));
-      const nextCheckpointIndex = current.checkpoints.findIndex(
+      const nextCheckpointIndex = currentStroke.checkpoints.findIndex(
         ratio => clampedLength < totalLength * ratio - 10,
       );
       const visibleCheckpointIndex =
         nextCheckpointIndex === -1
-          ? current.checkpoints.length
+          ? currentStroke.checkpoints.length
           : nextCheckpointIndex;
-      const complete = clampedLength / totalLength >= COMPLETE_RATIO;
+      const nextStrokeTrails = [...strokeTrailsRef.current];
+      const strokeIndex = activeStrokeIndexRef.current;
+      const strokeComplete = clampedLength / totalLength >= COMPLETE_RATIO;
+      const letterComplete =
+        strokeComplete && strokeIndex >= current.strokes.length - 1;
+
+      nextStrokeTrails[strokeIndex] = nextTrailPath;
+
+      strokeTrailsRef.current = nextStrokeTrails;
+      setStrokeTrails(nextStrokeTrails);
+
+      if (letterComplete) {
+        tracedLengthRef.current = clampedLength;
+        trailPathRef.current = nextTrailPath;
+        isCompleteRef.current = true;
+        setTracedLength(clampedLength);
+        setCheckpointIndex(visibleCheckpointIndex);
+        setIsComplete(true);
+        setStatusText(`Amazing! ${current.letter} is complete.`);
+        return;
+      }
+
+      if (strokeComplete) {
+        const nextStrokeIndex = strokeIndex + 1;
+
+        activeStrokeIndexRef.current = nextStrokeIndex;
+        tracedLengthRef.current = 0;
+        trailPathRef.current = '';
+        isTracingRef.current = false;
+
+        setActiveStrokeIndex(nextStrokeIndex);
+        setTracedLength(0);
+        setCheckpointIndex(0);
+        setIsTracing(false);
+        setStatusText(`Great! Now trace stroke ${nextStrokeIndex + 1}.`);
+
+        return;
+      }
 
       tracedLengthRef.current = clampedLength;
       trailPathRef.current = nextTrailPath;
-      isCompleteRef.current = complete;
-
       setTracedLength(clampedLength);
-      setTrailPath(nextTrailPath);
       setCheckpointIndex(visibleCheckpointIndex);
-      setIsComplete(complete);
-      setStatusText(
-        complete ? `Amazing! ${current.letter} is complete.` : 'Keep tracing!',
-      );
+      setStatusText('Keep tracing!');
     },
-    [current.checkpoints, current.letter, totalLength],
+    [
+      current.letter,
+      current.strokes.length,
+      currentStroke.checkpoints,
+      totalLength,
+    ],
   );
 
   const handleTraceStart = useCallback(
@@ -240,7 +309,7 @@ const TracingScreen = () => {
       }
 
       const point = toViewBoxPoint(x, y);
-      const nearest = getNearestPathPoint(point);
+      const nearest = getNearestPathPoint(point, tracedLengthRef.current);
       const currentLength = tracedLengthRef.current;
       const startsNearCurrentProgress =
         currentLength < 8
@@ -253,13 +322,18 @@ const TracingScreen = () => {
         return;
       }
 
-      const nextTrailPath = `M${nearest.x.toFixed(1)} ${nearest.y.toFixed(1)}`;
+      const nextTrailPath = trailPathRef.current
+        ? `${trailPathRef.current} M${nearest.x.toFixed(1)} ${nearest.y.toFixed(
+            1,
+          )}`
+        : `M${nearest.x.toFixed(1)} ${nearest.y.toFixed(1)}`;
       isTracingRef.current = true;
       setIsTracing(true);
       syncProgress(Math.max(currentLength, nearest.length), nextTrailPath);
     },
     [getNearestPathPoint, syncProgress, toViewBoxPoint],
   );
+  const MAX_FORWARD_DISTANCE = 25;
 
   const handleTraceMove = useCallback(
     (x: number, y: number) => {
@@ -268,7 +342,7 @@ const TracingScreen = () => {
       }
 
       const point = toViewBoxPoint(x, y);
-      const nearest = getNearestPathPoint(point);
+      const nearest = getNearestPathPoint(point, tracedLengthRef.current);
       const currentLength = tracedLengthRef.current;
 
       if (nearest.distance > HIT_RADIUS) {
@@ -283,6 +357,14 @@ const TracingScreen = () => {
 
       if (nearest.length > currentLength + PROGRESS_LOOKAHEAD) {
         setStatusText('Slow down and follow the dots.');
+        return;
+      }
+
+      if (
+        currentLength > 0 &&
+        nearest.length > currentLength + MAX_FORWARD_DISTANCE
+      ) {
+        setStatusText('Continue on the current stroke.');
         return;
       }
 
@@ -304,22 +386,18 @@ const TracingScreen = () => {
 
     setStatusText(
       tracedLengthRef.current > 0
-        ? 'Lift and continue from the dot.'
+        ? 'Lift and continue from the current dot.'
         : 'Touch the first dot.',
     );
   }, []);
 
-  const panGesture = useMemo(
-    () =>
-      Gesture.Pan()
-        .minDistance(0)
-        .runOnJS(true)
-        .onBegin(event => handleTraceStart(event.x, event.y))
-        .onUpdate(event => handleTraceMove(event.x, event.y))
-        .onEnd(handleTraceEnd)
-        .onFinalize(handleTraceEnd),
-    [handleTraceEnd, handleTraceMove, handleTraceStart],
-  );
+  const panGesture = usePanGesture({
+    minDistance: 0,
+    runOnJS: true,
+    onBegin: ({ x, y }) => handleTraceStart(x, y),
+    onUpdate: ({ x, y }) => handleTraceMove(x, y),
+    onFinalize: () => handleTraceEnd(),
+  });
 
   const handleNext = () => {
     if (currentIndex < traceLetters.length - 1) {
@@ -334,13 +412,14 @@ const TracingScreen = () => {
       setCurrentIndex(prev => prev - 1);
     }
   };
+  console.log(current.hint2?.[currentIndex], 'venom');
 
   return (
     <View
       style={[
         styles.container,
         {
-          backgroundColor: `${data.lightColor}20`,
+          backgroundColor: `${data.lightColor}22`,
         },
       ]}
     >
@@ -350,6 +429,38 @@ const TracingScreen = () => {
         heading={data.cardTitle}
         subText="Trace each letter with Coco! Tap, follow, and practice your writing!"
       />
+
+      <View
+        style={[
+          styles.infoSection,
+          styles.tracingProgressSection,
+          { borderColor: data.darkColor },
+        ]}
+      >
+        <View style={[styles.tracingProgress]}>
+          <Text
+            style={[
+              styles.statusText,
+              styles.traceProgessText,
+              { color: data.darkColor },
+            ]}
+          >
+            stroke: {strokeTrails.length}/{current.strokes.length}
+          </Text>
+        </View>
+
+        <View style={styles.tracingProgress}>
+          <Text
+            style={[
+              styles.statusText,
+              styles.traceProgessText,
+              { color: data.darkColor },
+            ]}
+          >
+            {isComplete ? '100' : Math.round(letterProgress * 100)}%
+          </Text>
+        </View>
+      </View>
 
       <AnimatedSwitcher
         animatedKey={current.letter}
@@ -389,52 +500,84 @@ const TracingScreen = () => {
                   strokeLinecap="round"
                 />
               </G>
-              <Path
-                d={current.path}
-                stroke={`${data.midColor}34`}
-                strokeWidth={44}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                fill="none"
-              />
-              <Path
-                d={current.path}
-                stroke="#fff"
-                strokeWidth={28}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                fill="none"
-              />
-              <Path
-                d={current.path}
-                stroke={`${data.darkColor}42`}
-                strokeWidth={6}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeDasharray="2 14"
-                fill="none"
-              />
-              <Path
-                d={current.path}
-                stroke={isComplete ? '#28a745' : '#ff8a2b'}
-                strokeWidth={30}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                fill="none"
-                strokeDasharray={`${totalLength} ${totalLength}`}
-                strokeDashoffset={Math.max(totalLength - tracedLength, 0)}
-              />
-              {trailPath.length > 0 ? (
+              {current.strokes.map((strokeItem, index) => (
                 <Path
-                  d={trailPath}
-                  stroke="#ffe76a"
-                  strokeWidth={10}
+                  key={`${current.letter}-guide-bg-${index}`}
+                  d={strokeItem.path}
+                  stroke={`${data.midColor}34`}
+                  strokeWidth={44}
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   fill="none"
-                  opacity={0.85}
+                />
+              ))}
+              {current.strokes.map((strokeItem, index) => (
+                <Path
+                  key={`${current.letter}-guide-inner-${index}`}
+                  d={strokeItem.path}
+                  stroke="#fff"
+                  strokeWidth={28}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  fill="none"
+                />
+              ))}
+              {current.strokes.map((strokeItem, index) => (
+                <Path
+                  key={`${current.letter}-guide-dash-${index}`}
+                  d={strokeItem.path}
+                  stroke={`${data.darkColor}42`}
+                  strokeWidth={6}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeDasharray="2 14"
+                  fill="none"
+                />
+              ))}
+              {current.strokes.map((strokeItem, index) => {
+                if (index >= activeStrokeIndex && !isComplete) {
+                  return null;
+                }
+
+                return (
+                  <Path
+                    key={`${current.letter}-completed-${index}`}
+                    d={strokeItem.path}
+                    stroke={isComplete ? '#28a745' : '#ff8a2b'}
+                    strokeWidth={30}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    fill="none"
+                  />
+                );
+              })}
+              {!isComplete ? (
+                <Path
+                  d={currentStroke.path}
+                  stroke="#ff8a2b"
+                  // stroke={data.darkColor}
+                  strokeWidth={30}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  fill="none"
+                  strokeDasharray={`${totalLength} ${totalLength}`}
+                  strokeDashoffset={Math.max(totalLength - tracedLength, 0)}
                 />
               ) : null}
+              {strokeTrails.map((trailPath, index) =>
+                trailPath.length > 0 ? (
+                  <Path
+                    key={`${current.letter}-trail-${index}`}
+                    d={trailPath}
+                    stroke={isComplete ? '#fff' : '#ffe76a'}
+                    strokeWidth={10}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    fill="none"
+                    opacity={isComplete ? 0.3 : 0.5}
+                  />
+                ) : null,
+              )}
               {guidePoints.map((point, index) => {
                 const isDone = index < checkpointIndex;
                 const isCurrent = index === checkpointIndex && !isComplete;
@@ -465,11 +608,11 @@ const TracingScreen = () => {
               })}
             </Svg>
 
-            <Animated.View style={[styles.startBadge, startDotStyle]}>
+            {/* <Animated.View style={[styles.startBadge, startDotStyle]}>
               <Text style={styles.startBadgeText}>
                 {isComplete ? 'Done' : isTracing ? 'Trace' : 'Start'}
               </Text>
-            </Animated.View>
+            </Animated.View> */}
           </View>
         </GestureDetector>
       </AnimatedSwitcher>
@@ -494,14 +637,27 @@ const TracingScreen = () => {
             {current.hint}
           </Text>
         </View>
-        <Image
-          source={
-            isComplete
-              ? require('../../assets/images/character/great.png')
-              : require('../../assets/images/character/standing.png')
-          }
-          style={styles.characterImage}
-        />
+        <View>
+          <Text
+            style={[
+              styles.hintText,
+              styles.characterMsg,
+              {
+                color: data.darkColor,
+              },
+            ]}
+          >
+            {current.hint2?.[activeStrokeIndex]}
+          </Text>
+          <Image
+            source={
+              isComplete
+                ? require('../../assets/images/character/great.png')
+                : require('../../assets/images/character/standing.png')
+            }
+            style={styles.characterImage}
+          />
+        </View>
       </View>
 
       <View style={styles.actionRow}>
@@ -525,7 +681,7 @@ const TracingScreen = () => {
         </TouchableOpacity>
         <CustomButton
           width={wp(40)}
-          bottomBorderColor="#d84e16"
+          bottomBorderColor={isComplete ? '#0d8f3e' : '#d84e16'}
           colors={isComplete ? ['#35c46b', '#1ca952'] : ['#ff7b38', '#ff6425']}
           onPress={isComplete ? handleNext : resetTrace}
           padding={12}

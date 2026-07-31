@@ -1,10 +1,11 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet } from 'react-native';
+import { wp } from '../../utils/Responsive';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 15,
-    gap: 9,
+    gap: 12,
   },
   traceSection: {
     flex: 1,
@@ -16,6 +17,7 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 7,
     borderRadius: 12,
     overflow: 'hidden',
+    marginVertical: 10,
   },
   startBadge: {
     position: 'absolute',
@@ -32,6 +34,10 @@ export const styles = StyleSheet.create({
     fontFamily: 'Fredoka-Bold',
     color: '#d84e16',
     fontSize: 12,
+  },
+  tracingProgressSection: {
+    minHeight: 50,
+    backgroundColor: '#fffdf8',
   },
   infoSection: {
     minHeight: 110,
@@ -68,55 +74,24 @@ export const styles = StyleSheet.create({
   hintText: {
     fontFamily: 'Fredoka-Bold',
     fontSize: 12,
-    color: '#7d7d7d',
-    lineHeight: 16,
+    color: '#999696',
+    lineHeight: 15,
+    letterSpacing: 0.5,
+  },
+  activeHintText: {
+    color: '#d84d16ce',
+    fontSize: 17,
   },
   characterImage: {
     width: 92,
     height: 92,
     resizeMode: 'contain',
   },
-  sliderSection: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-  },
-  sliderTitle: {
-    paddingTop: 11,
-    textAlign: 'center',
-    fontFamily: 'Fredoka-Bold',
-    fontSize: 13,
-    color: '#9e9e9e',
-  },
-  sliderList: {
-    gap: 10,
-    paddingVertical: 12,
-  },
-  sliderItem: {
-    width: 48,
-    height: 48,
-    borderRadius: 10,
-    borderWidth: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  sliderLetter: {
-    fontFamily: 'Fredoka-Bold',
-    fontSize: 24,
-  },
   actionRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 10,
-  },
-  roundAction: {
-    width: 56,
-    height: 56,
-    // borderRadius: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // borderBottomWidth: 6,
-    // borderBottomColor: '#d84d16ce',
   },
   buttonContent: {
     flex: 1,
@@ -135,5 +110,28 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 11,
     paddingVertical: 8,
     borderRadius: 20,
+  },
+  tracingProgress: {
+    // position:"absolute",
+    // top:10,
+    // right:10,
+    backgroundColor: '#f4e2dd',
+    borderRadius: 20,
+  },
+  traceProgessText: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  characterMsg: {
+    borderWidth: 1,
+    position: 'absolute',
+    backgroundColor: '#fff',
+    width: wp(50),
+    padding: 10,
+    right: 75,
+    top: -20,
+    borderTopLeftRadius: 20,
+    borderBottomLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
 });
