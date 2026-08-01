@@ -17,10 +17,10 @@ import {
   OnBoardingSlideType,
 } from './data/onBoarding.data';
 import LinearGradient from 'react-native-linear-gradient';
-import { wp } from '../../utils/Responsive';
+import { wp } from '../../utils/responsive';
 import CustomButton from '../../components/customButton/CustomButton';
 import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProps } from '../../types/navigation';
+import { StackNavigationProps } from '../../types/navigation.types';
 import { ROUTES } from '../../app/navigation/routeNames';
 import StorageService from '../../services/mmkv.service';
 import { STORAGE_KEYS } from '../../config/constants';

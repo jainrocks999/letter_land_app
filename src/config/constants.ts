@@ -25,3 +25,13 @@ export const DEFAULT_ACTIVITIES_PRPOGRESS = {
   matching2: 0,
   reading: 0,
 };
+
+
+export const tracingConstants={
+   VIEW_BOX_WIDTH : 240,
+   VIEW_BOX_HEIGHT : 260,
+   HIT_RADIUS : 32,
+   PROGRESS_LOOKAHEAD : 74,
+   COMPLETE_RATIO : 0.94,
+   MAX_FORWARD_DISTANCE : 25,
+}

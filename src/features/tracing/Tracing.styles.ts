@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { wp } from '../../utils/Responsive';
+import { wp } from '../../utils/responsive';
 
 export const styles = StyleSheet.create({
   container: {
@@ -10,14 +10,6 @@ export const styles = StyleSheet.create({
   traceSection: {
     flex: 1,
     minHeight: 250,
-  },
-  traceCard: {
-    flex: 1,
-    borderWidth: 1.5,
-    borderBottomWidth: 7,
-    borderRadius: 12,
-    overflow: 'hidden',
-    marginVertical: 10,
   },
   startBadge: {
     position: 'absolute',
@@ -123,7 +115,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   characterMsg: {
-    borderWidth: 1,
+    borderWidth: 0,
     position: 'absolute',
     backgroundColor: '#fff',
     width: wp(50),

@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import { styles } from './Splash.styles';
 import { useNavigation } from '@react-navigation/native';
 import { ROUTES } from '../../app/navigation/routeNames';
-import { StackNavigationProps } from '../../types/navigation';
+import { StackNavigationProps } from '../../types/navigation.types';
 import StorageService from '../../services/mmkv.service';
 import { STORAGE_KEYS } from '../../config/constants';
 

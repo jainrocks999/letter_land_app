@@ -4,7 +4,7 @@ import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import ProgressBar from '../progressBar/ProgressBar';
 import { ActivityCard } from '../../features/home/data/home.data';
 import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProps } from '../../types/navigation';
+import { StackNavigationProps } from '../../types/navigation.types';
 import { ROUTES } from '../../app/navigation/routeNames';
 import { ActivitiesKey } from '../../services/mmkv.service';
 import { STORAGE_KEYS } from '../../config/constants';

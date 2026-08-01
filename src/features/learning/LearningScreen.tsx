@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { ROUTES } from '../../app/navigation/routeNames';
-import { StackRouteProps } from '../../types/navigation';
+import { StackRouteProps } from '../../types/navigation.types';
 import { useRoute } from '@react-navigation/native';
 import { ActivityCard } from '../home/data/home.data';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
@@ -17,7 +17,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { alphabetData, LetterCardType } from './data/learning.data';
 import CustomButton from '../../components/customButton/CustomButton';
-import { wp } from '../../utils/Responsive';
+import { wp } from '../../utils/responsive';
 import { styles } from './Learning.styles';
 import TTSService from '../../services/tts.service';
 import TTSEventService from '../../services/ttsEvents.service';

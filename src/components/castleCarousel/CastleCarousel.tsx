@@ -1,5 +1,5 @@
 import { Text, TouchableOpacity, View } from 'react-native';
-import { hp, wp } from '../../utils/Responsive';
+import { hp, wp } from '../../utils/responsive';
 import { ActivityCard, Castle } from '../../features/home/data/home.data';
 import { styles } from './CastleCarousel.styles';
 import Animated, {
@@ -12,7 +12,7 @@ import Animated, {
 import ProgressBar from '../progressBar/ProgressBar';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProps } from '../../types/navigation';
+import { StackNavigationProps } from '../../types/navigation.types';
 import { ROUTES } from '../../app/navigation/routeNames';
 import { UserActivitiesType } from '../../services/mmkv.service';
 import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';

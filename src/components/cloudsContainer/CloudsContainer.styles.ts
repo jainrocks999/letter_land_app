@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { hp, wp } from '../../utils/Responsive';
+import { hp, wp } from '../../utils/responsive';
 
 export const styles = StyleSheet.create({
   clouds: {

@@ -5,7 +5,7 @@ import Animated, {
   SharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated';
-import { wp } from '../../utils/Responsive';
+import { wp } from '../../utils/responsive';
 import { StyleSheet } from 'react-native';
 
 interface DotProps {

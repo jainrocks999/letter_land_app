@@ -1,14 +1,4 @@
-export interface TraceStroke {
-  path: string;
-  checkpoints: number[];
-}
-
-export interface TraceLetter {
-  letter: string;
-  hint: string;
-  hint2?: string[];
-  strokes: TraceStroke[];
-}
+import { TraceLetter } from "../../../types/tracing.types";
 
 const lineCheckpoints = [0, 0.5, 1];
 const curveCheckpoints = [0, 0.33, 0.66, 1];
@@ -62,7 +52,8 @@ export const traceLetters: TraceLetter[] = [
   {
     letter: 'D',
     hint: 'Go down the back, then make one round belly.',
-    hint2: ['Start at the top and slide down.',
+    hint2: [
+      'Start at the top and slide down.',
       'Go back to the top and make one big curve to the bottom.',
     ],
     strokes: [
@@ -77,7 +68,8 @@ export const traceLetters: TraceLetter[] = [
       'Start at the top right and draw a line to the left.',
       'Next, draw a line straight down.',
       'Then draw the bottom line from left to right.',
-      'Last, draw the middle line from left to right.',],
+      'Last, draw the middle line from left to right.',
+    ],
     strokes: [
       stroke('M190 40 L60 40'),
       stroke('M60 40 L60 220'),
@@ -91,7 +83,7 @@ export const traceLetters: TraceLetter[] = [
     hint2: [
       'Start form left at the Bottom and slide up.',
       'Draw the top line from left to right.',
-      'then the middle line.'
+      'then the middle line.',
     ],
     strokes: [
       stroke('M60 220 L60 40'),
@@ -102,10 +94,10 @@ export const traceLetters: TraceLetter[] = [
   {
     letter: 'G',
     hint: 'Curve around, then tuck the little line inward.',
-    hint2: 
-    ['Start at the top and make a big curve around.',
-    'Finish by drawing a little line inward in the middle.',
-  ],
+    hint2: [
+      'Start at the top and make a big curve around.',
+      'Finish by drawing a little line inward in the middle.',
+    ],
     strokes: [
       stroke(
         'M190 66 C120 18 45 58 45 132 C45 210 126 244 194 196',
@@ -117,7 +109,8 @@ export const traceLetters: TraceLetter[] = [
   {
     letter: 'H',
     hint: 'Down one side, down the other, then bridge the middle.',
-    hint2: ['Start at the top and slide down at lift.',
+    hint2: [
+      'Start at the top and slide down at lift.',
       'Draw the second line from top to bottom at right.',
       'Then draw a line across the middle from left to right.',
     ],
@@ -133,7 +126,8 @@ export const traceLetters: TraceLetter[] = [
     hint2: [
       'Start from the top at left slide right.',
       'then middle from top to bottom',
-      'now bottom lines. from left to right',],
+      'now bottom lines. from left to right',
+    ],
     strokes: [
       stroke('M70 40 L170 40', [0, 1]),
       stroke('M120 40 L120 220'),
@@ -143,7 +137,8 @@ export const traceLetters: TraceLetter[] = [
   {
     letter: 'J',
     hint: 'Go down, then hook around the bottom.',
-    hint2: ['Start at the top and slide down',
+    hint2: [
+      'Start at the top and slide down',
       'then curve around at the bottom.',
     ],
     strokes: [
@@ -154,7 +149,8 @@ export const traceLetters: TraceLetter[] = [
   {
     letter: 'K',
     hint: 'Draw the back, then the two sharp arms.',
-    hint2: ['Start from left at the top and slide down.',
+    hint2: [
+      'Start from left at the top and slide down.',
       'Go to the right at top, draw a line up to the top right down to the middle.',
       'then another line down form middle to the bottom right.',
     ],
@@ -217,7 +213,7 @@ export const traceLetters: TraceLetter[] = [
   {
     letter: 'P',
     hint: 'Draw the tall line and round the top bubble.',
-    hint2:[
+    hint2: [
       'Start at the bottom left and draw a straight line up to the top.',
       'Go back to the top, then make one big curve to the middle.',
     ],
@@ -229,7 +225,8 @@ export const traceLetters: TraceLetter[] = [
   {
     letter: 'Q',
     hint: 'Make the loop, then add the little tail.',
-    hint2: ['Start at the top and make one big circle.',
+    hint2: [
+      'Start at the top and make one big circle.',
       'Then draw a short slanted line at the bottom right',
     ],
     strokes: [
@@ -257,7 +254,9 @@ export const traceLetters: TraceLetter[] = [
   {
     letter: 'S',
     hint: 'Snake from the top around to the bottom.',
-    hint2: ['Start at the top and make a curve to the middle. Then make another curve to the bottom.'],
+    hint2: [
+      'Start at the top and make a curve to the middle. Then make another curve to the bottom.',
+    ],
     strokes: [
       stroke(
         'M190 62 C112 10 45 58 70 118 C88 164 192 138 185 196 C178 248 82 236 48 198',
@@ -268,7 +267,7 @@ export const traceLetters: TraceLetter[] = [
   {
     letter: 'T',
     hint: 'Trace the roof first, then the center line.',
-    hint2:[
+    hint2: [
       'Start at the top and draw a line across left to right.',
       'Then slide down from the middle starts from top to bottom.',
     ],
@@ -277,7 +276,9 @@ export const traceLetters: TraceLetter[] = [
   {
     letter: 'U',
     hint: 'Go down, around the bottom, and back up.',
-    hint2:['Start at the top left, slide down, curve around the bottom, and slide up to the top right.'],
+    hint2: [
+      'Start at the top left, slide down, curve around the bottom, and slide up to the top right.',
+    ],
     strokes: [
       stroke('M54 38 L54 156 C54 246 186 246 186 156 L186 38', loopCheckpoints),
     ],
@@ -285,7 +286,8 @@ export const traceLetters: TraceLetter[] = [
   {
     letter: 'V',
     hint: 'Slide down to the point, then climb up.',
-    hint2: ['Start at the top left and slide down to the bottom.',
+    hint2: [
+      'Start at the top left and slide down to the bottom.',
       'Then slide up to the top right.',
     ],
     strokes: [stroke('M44 40 L120 220'), stroke('M120 220 L196 40')],
@@ -293,10 +295,12 @@ export const traceLetters: TraceLetter[] = [
   {
     letter: 'W',
     hint: 'Make two pointy dips across the page.',
-    hint2: ['Start at the top left, slide down.',
+    hint2: [
+      'Start at the top left, slide down.',
       'then slide up.',
       'again down.',
-      'up again to the top right',],
+      'up again to the top right',
+    ],
     strokes: [
       stroke('M34 40 L72 220'),
       stroke('M72 220 L120 118'),
@@ -307,9 +311,10 @@ export const traceLetters: TraceLetter[] = [
   {
     letter: 'X',
     hint: 'Trace one diagonal, then cross it.',
-    hint2:[
+    hint2: [
       'Draw a slanted line from the top left to the bottom right.',
-      'Then draw another slanted line from the top right to the bottom left.',],
+      'Then draw another slanted line from the top right to the bottom left.',
+    ],
     strokes: [stroke('M48 42 L192 220'), stroke('M192 42 L48 220')],
   },
   {
@@ -318,7 +323,8 @@ export const traceLetters: TraceLetter[] = [
     hint2: [
       'Draw slanted line form left top to middle.',
       'Then draw another slanted line from the top right to middle.',
-      ' Then slide down to the bottom.',],
+      ' Then slide down to the bottom.',
+    ],
     strokes: [
       stroke('M44 40 L120 128'),
       stroke('M196 40 L120 128'),
@@ -328,9 +334,11 @@ export const traceLetters: TraceLetter[] = [
   {
     letter: 'Z',
     hint: 'Go across, zip diagonally, then across again.',
-    hint2:['Start at the top left and draw a line across to the right.',
+    hint2: [
+      'Start at the top left and draw a line across to the right.',
       'Next, draw a slanted line down to the bottom left.',
-      'Then draw a line across the bottom to the right',],
+      'Then draw a line across the bottom to the right',
+    ],
     strokes: [
       stroke('M48 40 L192 40'),
       stroke('M192 40 L52 220'),
