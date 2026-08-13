@@ -1,10 +1,13 @@
 import {
+  StyleProp,
   StyleSheet,
   TouchableOpacity,
   TouchableOpacityProps,
   View,
+  ViewStyle,
 } from 'react-native';
 import React from 'react';
+
 
 interface Props {
   backgroundColor: string;
@@ -13,6 +16,7 @@ interface Props {
   bottomBorderWidth: number;
   onPress: TouchableOpacityProps['onPress'];
   children: React.ReactNode;
+  styles?:StyleProp<ViewStyle>;
 }
 
 const ActionButton: React.FC<Props> = ({
@@ -22,12 +26,14 @@ const ActionButton: React.FC<Props> = ({
   radius,
   bottomBorderWidth,
   onPress,
+  styles:customStyle
 }) => {
   return (
     <TouchableOpacity
       style={[
         { backgroundColor: bottomBorderColor, borderRadius: radius },
         styles.playBtn,
+        customStyle
       ]}
       onPress={onPress}
     >

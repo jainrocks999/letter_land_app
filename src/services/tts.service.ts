@@ -29,6 +29,10 @@ const TTSService = {
       console.log(error);
     }
   },
+
+  setSpeechRate: (speechRate: number = 0.25) => {
+    Tts.setDefaultRate(speechRate);
+  },
   //    speakCorrectAnswer: () => {
   //     Tts.stop();
   //     Tts.speak('Great job!');

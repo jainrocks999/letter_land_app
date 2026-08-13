@@ -7,4 +7,5 @@ export type RootStackParamList = {
   [ROUTES.HOME]: undefined;
   [ROUTES.LEARNING]: { data: ActivityCard };
   [ROUTES.TRACING]: { data: ActivityCard };
+  [ROUTES.SEARCHING]: { data: ActivityCard };
 };

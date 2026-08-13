@@ -1,7 +1,10 @@
 import { ImageSourcePropType } from 'react-native';
 import { ROUTES } from '../../../app/navigation/routeNames';
 
-type ActivityRoutes = typeof ROUTES.LEARNING | typeof ROUTES.TRACING;
+type ActivityRoutes =
+  | typeof ROUTES.LEARNING
+  | typeof ROUTES.TRACING
+  | typeof ROUTES.SEARCHING;
 
 export interface Castle {
   id: string;
@@ -69,10 +72,11 @@ export const activityData: Castle[] = [
       icon: '🔍',
       cardTitle: 'Find the Letter',
       shortDes: 'Find the correct letter and improve your letter recognition!',
-      tag: "Let's Trace",
+      tag: "Let's find",
       darkColor: '#c09e74',
       midColor: '#3d3a45',
       lightColor: '#dbc68d',
+      navigate: ROUTES.SEARCHING,
     },
   },
   {

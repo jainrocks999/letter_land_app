@@ -4,4 +4,5 @@ export const ROUTES = {
   HOME: 'Home',
   LEARNING: 'Learning',
   TRACING: 'Tracing',
+  SEARCHING: 'Searching',
 } as const;
