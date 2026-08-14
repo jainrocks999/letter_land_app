@@ -6,6 +6,8 @@ import Cookie3Svg from '../features/searching/components/svgs/Cookie3Svg';
 import Cookie4Svg from '../features/searching/components/svgs/Cookie4Svg';
 import Cookie5Svg from '../features/searching/components/svgs/Cookie5Svg';
 import Cookie6Svg from '../features/searching/components/svgs/Cookie6Svg';
+import Cookie7Svg from '../features/searching/components/svgs/Cookie7Svg';
+import Cookie8Svg from '../features/searching/components/svgs/Cookie8Svg';
 import { RectType, SearchQuestionType } from '../types/search.types';
 
 const shuffle = <T>(arr: T[]): T[] => [...arr].sort(() => Math.random() - 0.5);
@@ -41,12 +43,19 @@ export const generateQuestions = (): SearchQuestionType[] => {
 
   return selectedQues.map((target, index) => {
     const randomPositions = shuffle(
-      activityPool[index]===activity.MONSTER ? POSITIONS : MATCH_POSITIONS 
+      activityPool[index]===activity.MONSTER ? POSITIONS : MATCH_POSITIONS
     );
     // const randomPositions=shuffle(MATCH_POSITIONS)
     const wrongOptions = shuffle(
       alphabetData.filter(item => item.letter !== target.letter),
-    ).slice(0, activityPool[index] !== activity.FIND ? 5 : 3);
+    ).slice(
+      0,
+      activityPool[index] === activity.MONSTER
+        ? 7
+        : activityPool[index] !== activity.FIND
+        ? 5
+        : 3,
+    );
 
     const options = shuffle([target, ...wrongOptions]).map(
       (options, index) => ({ data: options, ...randomPositions[index] }),
@@ -61,12 +70,19 @@ export const generateQuestions = (): SearchQuestionType[] => {
 };
 
 export const POSITIONS = [
-  { x: 85, y: 65 },
-  { x: 132, y: 25 },
-  { x: 193, y: 25 },
-  { x: 132, y: 110 },
-  { x: 193, y: 110 },
-  { x: 240, y: 65 },
+  { x: 55, y: 50 },
+  { x: 55, y: 130 },
+  { x: 125, y: 50 },
+  { x: 125, y: 130 },
+  { x: 190, y: 50 },
+  { x: 190, y: 130 },
+  { x: 255, y: 50 },
+  { x: 255, y: 130 },
+  // { x: 132, y: 25 },
+  // { x: 193, y: 25 },
+  // { x: 132, y: 110 },
+  // { x: 193, y: 110 },
+  // { x: 240, y: 65 },
 ];
 export const MATCH_POSITIONS = [
   { x: 50, y: 60 },
@@ -83,6 +99,8 @@ export const CookieSvg = shuffle([
   Cookie4Svg,
   Cookie5Svg,
   Cookie6Svg,
+  Cookie7Svg,
+  Cookie8Svg,
 ]);
 
 export const isInsideRect = (x: number, y: number, rect: RectType) => {

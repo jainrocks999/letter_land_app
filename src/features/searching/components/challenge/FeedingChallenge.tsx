@@ -112,6 +112,7 @@ const FeedingChallenge = ({
             onDrop={handleDrop}
             targetLetter={currentQuest.target.letter}
             onHoverChange={handleHoverChange}
+            colors={colors}
           />
         ))}
       </View>

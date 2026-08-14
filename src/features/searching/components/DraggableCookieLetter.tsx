@@ -1,6 +1,6 @@
 import { StyleSheet, Text } from 'react-native';
 import React from 'react';
-import { LetterOptionWithPosType, RectType } from '../../../types/search.types';
+import { colorData, LetterOptionWithPosType, RectType } from '../../../types/search.types';
 import Animated from 'react-native-reanimated';
 import { GestureDetector, usePanGesture } from 'react-native-gesture-handler';
 import { CookieSvg } from '../../../utils/searchingHelper';
@@ -13,6 +13,7 @@ interface Props {
   mouthRect: RectType;
   onDrop: (letter: string, dropX: number, dropY: number) => void;
   onHoverChange: (isHovering: boolean) => void;
+  colors:colorData;
 }
 
 const DraggableCookie: React.FC<Props> = ({
@@ -22,6 +23,7 @@ const DraggableCookie: React.FC<Props> = ({
   mouthRect,
   targetLetter,
   onHoverChange,
+  colors
 }) => {
   const drag = useLetterDrag({
     data,
@@ -49,7 +51,7 @@ const DraggableCookie: React.FC<Props> = ({
     <GestureDetector gesture={panGesture}>
       <Animated.View style={[styles.dragableContainer, drag.animatedStyle]}>
         <Cookie width={'100%'} height={'100%'} />
-        <Text style={styles.LetterText}>{data.data.letter}</Text>
+        <Text style={[styles.LetterText,{color:colors.midColor}]}>{data.data.letter}</Text>
       </Animated.View>
     </GestureDetector>
   );
@@ -59,13 +61,13 @@ export default DraggableCookie;
 
 const styles = StyleSheet.create({
   dragableContainer: {
-    width: 55,
-    height: 55,
+    width: 66,
+    height: 66,
     justifyContent: 'center',
     alignItems: 'center',
   },
   LetterText: {
-    fontSize: 26,
+    fontSize: 36,
     fontFamily: 'Fredoka-Bold',
     color: '#333',
     position: 'absolute',
