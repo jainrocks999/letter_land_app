@@ -4,7 +4,8 @@ import { ROUTES } from '../../../app/navigation/routeNames';
 type ActivityRoutes =
   | typeof ROUTES.LEARNING
   | typeof ROUTES.TRACING
-  | typeof ROUTES.SEARCHING;
+  | typeof ROUTES.SEARCHING
+  | typeof ROUTES.MATCHING
 
 export interface Castle {
   id: string;
@@ -94,6 +95,7 @@ export const activityData: Castle[] = [
       darkColor: '#e0a2b6',
       midColor: '#8c662e',
       lightColor: '#eec2d8',
+      navigate:ROUTES.MATCHING
     },
   },
   {

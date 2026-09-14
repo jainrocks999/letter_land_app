@@ -8,6 +8,7 @@ import { RootStackParamList } from './types';
 import { ROUTES } from './routeNames';
 import TracingScreen from '../../features/tracing/TracingScreen';
 import SearchingScreen from '../../features/searching/SearchingScreen';
+import MatchingScreen from '../../features/matching/MatchingScreen';
 
 const RootNavigator = () => {
   const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -24,6 +25,7 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.LEARNING} component={LearningScreen} />
         <Stack.Screen name={ROUTES.TRACING} component={TracingScreen} />
         <Stack.Screen name={ROUTES.SEARCHING} component={SearchingScreen} />
+        <Stack.Screen name={ROUTES.MATCHING} component={MatchingScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

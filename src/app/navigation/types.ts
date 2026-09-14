@@ -8,4 +8,5 @@ export type RootStackParamList = {
   [ROUTES.LEARNING]: { data: ActivityCard };
   [ROUTES.TRACING]: { data: ActivityCard };
   [ROUTES.SEARCHING]: { data: ActivityCard };
+  [ROUTES.MATCHING]: { data: ActivityCard };
 };
