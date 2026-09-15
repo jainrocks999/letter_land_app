@@ -100,7 +100,6 @@ const MatchChallenge = ({
         {/* Can you find {currentQuest.target.letter} and put it in the right spot? */}
         {questionAsk}
       </Text>
-
       <View
         style={[
           styles.targetLetterContainer,
@@ -113,6 +112,7 @@ const MatchChallenge = ({
           isCorrect={isCorrect}
           styles={styles.characterFeeback}
           isSpeaking={isSpeaking}
+          imgTop={25}
         />
         <View style={styles.letterEmojiSection}>
           <View

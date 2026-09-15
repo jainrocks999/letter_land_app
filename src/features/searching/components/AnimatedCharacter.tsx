@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet } from 'react-native';
-import React, {useState } from 'react';
+import React, { useState } from 'react';
 import Animated, {
   FadeIn,
   FadeOut,
@@ -10,14 +10,14 @@ import Animated, {
 } from 'react-native-reanimated';
 
 interface Props {
-  state: 'standing' | 'feed' | 'enjoy' | 'oops'|'speaking';
+  state: 'standing' | 'feed' | 'enjoy' | 'oops' | 'speaking';
 }
 
 const AnimatedCharacter = ({ state }: Props) => {
   const [isHungry, setIsHungry] = useState<boolean>(false);
   const [isPressed, setIsPressed] = useState<boolean>(false);
   const translateY = useSharedValue(0);
-  
+
   const image =
     // state === 'feed'
     //   ? require('../../../assets/images/character/feedme.png')
@@ -27,14 +27,14 @@ const AnimatedCharacter = ({ state }: Props) => {
     //   ? require('../../../assets/images/character/uhha.png')
     //   : require('../../../assets/images/character/standing.png');
     state === 'feed'
-      ? require('../../../assets/images/character/feedme.png')
+      ? require('../../../assets/images/character/feedme.gif')
       : state === 'enjoy'
-      ? require('../../../assets/images/character/yummy.png')
+      ? require('../../../assets/images/character/yummy.gif')
       : state === 'oops'
-      ? require('../../../assets/images/character/uhha.png')
+      ? require('../../../assets/images/character/uhha.gif')
       : state === 'speaking'
       ? require('../../../assets/images/character/speaking.png')
-      : require('../../../assets/images/character/standing.png');
+      : require('../../../assets/images/character/standing.gif');
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
@@ -47,7 +47,7 @@ const AnimatedCharacter = ({ state }: Props) => {
   });
 
   const jump = () => {
-     translateY.value = withSequence(
+    translateY.value = withSequence(
       withTiming(-25, { duration: 150 }),
       withTiming(0, { duration: 180 }),
     );
@@ -63,16 +63,13 @@ const AnimatedCharacter = ({ state }: Props) => {
       setIsHungry(false);
     }, 4000);
   };
-  
+
   return (
-  
     <Pressable onPress={jump}>
       <Animated.Image
         key={state}
-        entering={FadeIn.duration(350)}
-        exiting={FadeOut.duration(350)}
         source={image}
-        style={[{ width: 150, height: 150 }, animatedStyle]}
+        style={[{ width: 200, height: 200 }, animatedStyle]}
       />
     </Pressable>
   );

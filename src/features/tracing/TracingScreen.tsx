@@ -23,6 +23,7 @@ import TracingGestureHandler from './components/tracing/TracingGestureHandler';
 import TracingCanvas from './components/tracing/TracingCanvas';
 import useLetterTracing from '../../hooks/useLetterTracing';
 import { tracingConstants } from '../../config/constants';
+import TTSEventService from '../../services/ttsEvents.service';
 
 const { VIEW_BOX_WIDTH, VIEW_BOX_HEIGHT } = tracingConstants;
 
@@ -31,6 +32,7 @@ const TracingScreen = () => {
   const { data } = route.params;
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [isSpeaking, setSpeaking] = useState<boolean>(false);
   const [isNext, setIsNext] = useState<boolean>(true);
 
   const bubbleOpacity = useSharedValue(0);
@@ -72,6 +74,14 @@ const TracingScreen = () => {
   });
 
   useEffect(() => {
+    TTSEventService.addListeners({
+      onStart: () => setSpeaking(true),
+      onFinish: () => setSpeaking(false),
+      onCancel: () => setSpeaking(false),
+    });
+  }, []);
+
+  useEffect(() => {
     handleStrokeComplete(0);
     handleSpeak(`${current.hint2?.[0]}`);
   }, [currentIndex]);
@@ -82,7 +92,6 @@ const TracingScreen = () => {
       setCurrentIndex(prev => prev + 1);
     }
   };
-
   const handlePrev = () => {
     if (currentIndex > 0) {
       setIsNext(false);
@@ -223,8 +232,10 @@ const TracingScreen = () => {
           <Image
             source={
               tracing.isComplete
-                ? require('../../assets/images/character/great.png')
-                : require('../../assets/images/character/standing.png')
+                ? require('../../assets/images/character/great.gif')
+                : isSpeaking
+                ? require('../../assets/images/character/speaking.gif')
+                : require('../../assets/images/character/standing.gif')
             }
             style={styles.characterImage}
           />

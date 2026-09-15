@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Image,
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 
 interface SuccessModalProps {
   visible: boolean;
@@ -31,21 +25,14 @@ const SuccessModal = ({
           resizeMode="contain"
         />
 
-        <Text style={styles.title}>
-          🎉 Amazing!
-        </Text>
+        <Text style={styles.title}>🎉 Amazing!</Text>
 
         <Text style={styles.message}>
           You matched all the letters correctly!
         </Text>
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={onClose}
-        >
-          <Text style={styles.buttonText}>
-            Yay! 🎉
-          </Text>
+        <TouchableOpacity style={styles.button} onPress={onClose}>
+          <Text style={styles.buttonText}>OK</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -61,12 +48,9 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-
     justifyContent: 'center',
     alignItems: 'center',
-
     zIndex: 9999,
     elevation: 9999,
   },
@@ -74,15 +58,10 @@ const styles = StyleSheet.create({
   card: {
     width: '82%',
     maxWidth: 380,
-
     backgroundColor: '#fff',
-
     borderRadius: 30,
-
     padding: 25,
-
     alignItems: 'center',
-
     elevation: 20,
   },
 
@@ -93,14 +72,16 @@ const styles = StyleSheet.create({
 
   title: {
     fontSize: 32,
-    fontWeight: '800',
     marginBottom: 12,
+    fontFamily: 'Fredoka-Bold',
+    color: '#1a105f',
   },
 
   message: {
     fontSize: 18,
     textAlign: 'center',
     color: '#555',
+    fontFamily: 'Fredoka-Medium',
     marginBottom: 25,
   },
 

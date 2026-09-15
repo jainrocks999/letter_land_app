@@ -1,8 +1,11 @@
 import { View, Text, Image, Pressable } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { ROUTES } from '../../app/navigation/routeNames';
-import { useRoute } from '@react-navigation/native';
-import { StackRouteProps } from '../../types/navigation.types';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  StackNavigationProps,
+  StackRouteProps,
+} from '../../types/navigation.types';
 import { styles } from './Matching.styles';
 import CustomTopbar from '../../components/customTopbar/CustomTopbar';
 import ScreenHeadingSection from '../../components/screenHeadingSection/ScreenHeadingSection';
@@ -10,7 +13,6 @@ import DraggableLetterMatched from './components/DraggableLetters';
 import EmojiTarget from './components/Emoji';
 import MatchingLine from './components/MatchingLine';
 import { useLetterMatchPair } from '../../hooks/useLetterMatchPair';
-import { wp } from '../../utils/responsive';
 import TTSService from '../../services/tts.service';
 import { praiseMessages, tryAgainMessages } from '../../utils/helperData';
 import TTSEventService from '../../services/ttsEvents.service';
@@ -19,6 +21,8 @@ import SuccessModal from '../../components/customModal/CustomModel';
 const MatchingScreen: React.FC = () => {
   const route = useRoute<StackRouteProps<typeof ROUTES.MATCHING>>();
   const { data } = route.params;
+  const navigation =
+    useNavigation<StackNavigationProps<typeof ROUTES.MATCHING>>();
 
   const [instruction, setInstruction] = useState<string>('');
   const [isSpeaking, setSpeaking] = useState<boolean>(false);
@@ -44,9 +48,8 @@ const MatchingScreen: React.FC = () => {
   useEffect(() => {
     const { isCorrect } = matching.roundStatus;
     const matchedCount = matching.matchedLetters.length;
-   console.log(isCorrect === null)
-   if (isCorrect === null) return;
-   console.log(isCorrect === null)
+
+    if (isCorrect === null) return;
 
     const currentLetter = matching.currentPairs[matchedCount]?.letter;
     if (isCorrect === false) {
@@ -88,7 +91,14 @@ const MatchingScreen: React.FC = () => {
     <View
       style={[styles.container, { backgroundColor: `${data.darkColor}33` }]}
     >
-      <CustomTopbar data={data} progress={Math.round(((matching.currentRound * 5) + matching.matchedLetters.length) / (matching.rounds.length * 5) * 100)} />
+      <CustomTopbar
+        data={data}
+        progress={Math.round(
+          ((matching.currentRound * 5 + matching.matchedLetters.length) /
+            (matching.rounds.length * 5)) *
+            100,
+        )}
+      />
       <ScreenHeadingSection
         heading={data.cardTitle}
         subText="Match letters to pictures with Coco! Find the picture that starts with each letter."
@@ -103,49 +113,57 @@ const MatchingScreen: React.FC = () => {
           styles.actInfoSection,
         ]}
       >
-        <View style={styles.rowSection}>
-          <Text
-            style={[
-              styles.indicatorText,
-              {
-                color: data.midColor,
-                backgroundColor: `${data.darkColor}77`,
-                borderColor: data.darkColor,
-              },
-            ]}
-          >
-            Round {matching.currentRound + 1}/{matching.rounds.length}
-          </Text>
-          <Text
-            style={[
-              styles.indicatorText,
-              {
-                color: data.midColor,
-                backgroundColor: `${data.darkColor}77`,
-                borderColor: data.darkColor,
-              },
-            ]}
-          >
-            Progress {matching.matchedLetters.length}/5
-          </Text>
-        </View>
-
-        <View style={styles.rowSection}>
-          {matching.currentPairs[matching?.matchedLetters.length]?.letter && (
-            <View style={styles.questionTextContainer}>
-              {matching.currentPairs && (
-                <Text style={[styles.questionText, { color: data.darkColor }]}>
-                  {matching.currentPairs[matching?.matchedLetters.length]
-                    ?.letter || ''}
-                </Text>
-              )}
+        <View style={styles.rowWithSpace}>
+          <View style={styles.infoSection}>
+            <View style={styles.rowSection}>
+              <Text
+                style={[
+                  styles.indicatorText,
+                  {
+                    color: data.midColor,
+                    backgroundColor: `${data.darkColor}77`,
+                    borderColor: data.darkColor,
+                  },
+                ]}
+              >
+                Round {matching.currentRound + 1}/{matching.rounds.length}
+              </Text>
+              <Text
+                style={[
+                  styles.indicatorText,
+                  {
+                    color: data.midColor,
+                    backgroundColor: `${data.darkColor}77`,
+                    borderColor: data.darkColor,
+                  },
+                ]}
+              >
+                Progress {matching.matchedLetters.length}/5
+              </Text>
             </View>
-          )}
-          <View style={styles.instructionTextContainer}>
-            <Text style={styles.instructionText}>
-              {instruction || ` Round ${matching.currentRound + 1}`}
-            </Text>
+
+            <View style={styles.rowSection}>
+              {matching.currentPairs[matching?.matchedLetters.length]
+                ?.letter && (
+                <View style={styles.questionTextContainer}>
+                  {matching.currentPairs && (
+                    <Text
+                      style={[styles.questionText, { color: data.darkColor }]}
+                    >
+                      {matching.currentPairs[matching?.matchedLetters.length]
+                        ?.letter || ''}
+                    </Text>
+                  )}
+                </View>
+              )}
+              <View style={styles.instructionTextContainer}>
+                <Text style={styles.instructionText}>
+                  {instruction || ` Round ${matching.currentRound + 1}`}
+                </Text>
+              </View>
+            </View>
           </View>
+
           <Pressable
             onPress={() => {
               handleSpeak(instruction);
@@ -155,11 +173,11 @@ const MatchingScreen: React.FC = () => {
               source={
                 matching.roundStatus.isCorrect === null
                   ? matching.roundStatus.isCorrect === null && isSpeaking
-                    ? require('../../assets/images/character/speaking.png')
-                    : require('../../assets/images/character/standing.png')
+                    ? require('../../assets/images/character/speaking.gif')
+                    : require('../../assets/images/character/standing.gif')
                   : matching.roundStatus.isCorrect
-                  ? require('../../assets/images/character/great.png')
-                  : require('../../assets/images/character/opps.png')
+                  ? require('../../assets/images/character/great.gif')
+                  : require('../../assets/images/character/opps.gif')
               }
               style={styles.cocoImage}
             />
@@ -265,12 +283,13 @@ const MatchingScreen: React.FC = () => {
       </View>
 
       <SuccessModal
-  visible={matching.showSuccessModal}
-  onClose={() => {
-    matching.setShowSuccessModal(false)
-  }}
-  characterImage={require('../../assets/images/character/yay.png')}
-/>
+        visible={matching.showSuccessModal}
+        onClose={() => {
+          matching.setShowSuccessModal(false);
+          navigation.goBack();
+        }}
+        characterImage={require('../../assets/images/character/yay.gif')}
+      />
     </View>
   );
 };

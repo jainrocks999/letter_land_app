@@ -70,8 +70,6 @@ const DraggableLetter: React.FC<Props> = ({
   //                     ? '#4CAF50'
   //                     : 'red'
 
-  
-
   return (
     <GestureDetector gesture={panGesture}>
       <Animated.View

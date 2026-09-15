@@ -1,11 +1,11 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
 import { colorData, SearchQuestionType } from '../../../../types/search.types';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import SadEmojiAnimation from '../../../../components/characterAnimation/SadEmojiAnimation';
-import CharacterFeedback from '../../../../components/characterAnimation/CharacterFeedback';
 import { praiseMessages, tryAgainMessages } from '../../../../utils/helperData';
 import TTSService from '../../../../services/tts.service';
+import CharacterFeedback from '../../../../components/characterAnimation/CharacterFeedback';
 
 interface Props {
   colors: colorData;
@@ -15,8 +15,6 @@ interface Props {
   questionAsk: string;
   handlePlay: () => void;
 }
-
-
 
 const FindingChallenge = ({
   colors,
@@ -32,7 +30,9 @@ const FindingChallenge = ({
   const handleOnPress = (letter: string) => {
     setSelectedOption(letter);
     if (letter === currentQuest.target.letter.toLowerCase()) {
-      TTSService.speak(praiseMessages[Math.floor(Math.random()* praiseMessages.length)]);
+      TTSService.speak(
+        praiseMessages[Math.floor(Math.random() * praiseMessages.length)],
+      );
       setIsCorrect(true);
       setTimeout(() => {
         setIsCorrect(null);
@@ -40,12 +40,14 @@ const FindingChallenge = ({
         onCorrectAnswer();
       }, 2000);
     } else {
-      TTSService.speak(tryAgainMessages[Math.floor(Math.random()* praiseMessages.length)]);
+      TTSService.speak(
+        tryAgainMessages[Math.floor(Math.random() * praiseMessages.length)],
+      );
       setIsCorrect(false);
       setTimeout(() => {
         setSelectedOption(null);
         setIsCorrect(null);
-      }, 1500);
+      }, 3000);
     }
   };
   return (
@@ -56,6 +58,7 @@ const FindingChallenge = ({
         isCorrect={isCorrect}
         isSpeaking={isSpeaking}
       />
+
       {isCorrect === false && <SadEmojiAnimation />}
 
       <Pressable

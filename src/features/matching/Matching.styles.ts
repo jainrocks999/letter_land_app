@@ -68,8 +68,16 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
   cocoImage: {
-    width: 92,
-    height: 92,
+    width: 130,
+    height: 130,
     resizeMode: 'contain',
+  },
+  rowWithSpace: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  infoSection: {
+    gap: 12,
+    width: '70%',
   },
 });

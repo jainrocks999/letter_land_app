@@ -3,7 +3,6 @@ import { ActivityCard } from '../features/home/data/home.data';
 import { LetterCardType } from '../features/learning/data/learning.data';
 import { Point } from '../types/tracing.types';
 import { createRounds, shuffleArray } from '../utils/matchingHelper';
-import { Alert } from 'react-native';
 
 type ItemPosition = {
   x: number;
@@ -35,7 +34,7 @@ export const useLetterMatchPair = ({ data }: { data: ActivityCard }) => {
   const [rounds, setRounds] = useState<LetterCardType[][]>(createRounds());
   // const [rounds, setRounds] = useState<LetterCardType[][]>([]);
   const [currentRound, setCurrentRound] = useState(0);
-  
+
   const [emojis, setEmojis] = useState<LetterCardType[]>(
     shuffleArray(rounds[0]),
   );
@@ -59,7 +58,7 @@ export const useLetterMatchPair = ({ data }: { data: ActivityCard }) => {
   >({});
 
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-  
+
   const letterColumnRef = useRef({ x: 0, y: 0 });
   const emojiColumnRef = useRef({ x: 0, y: 0 });
 
@@ -267,7 +266,8 @@ export const useLetterMatchPair = ({ data }: { data: ActivityCard }) => {
             isCorrect: null,
           }));
           setActiveLine(null);
-        }, 800);
+          // }, 800);
+        }, 3000);
 
         return;
       }
@@ -287,15 +287,8 @@ export const useLetterMatchPair = ({ data }: { data: ActivityCard }) => {
           isCorrect: null,
         }));
         setActiveLine(null);
-      }, 800);
-
-      // Show alert
-      // setTimeout(() => {
-      //   Alert.alert(
-      //     'Try Again! 😊',
-      //     `The letter ${letter} does not match this picture.`,
-      //   );
-      // }, 400);
+        // }, 800);
+      }, 3000);
     },
     [emojiPositions, findTargetAtPoint, getCenter, letterPositions],
   );
@@ -319,10 +312,6 @@ export const useLetterMatchPair = ({ data }: { data: ActivityCard }) => {
       setCurrentRound(nextRound);
       setEmojis(shuffleArray(rounds[nextRound]));
     } else {
-      // {
-      //   /* 🎉 Amazing! You matched them all!*/
-      // }
-      // Alert.alert('🎉 Amazing!', 'You matched all the letters correctly!');
       setShowSuccessModal(true);
     }
   }, [currentRound, rounds, resetRoundState]);

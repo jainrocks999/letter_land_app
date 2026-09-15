@@ -10,6 +10,7 @@ interface Props {
   isCorrect: boolean | null;
   isSpeaking: boolean;
   styles?: StyleProp<ViewStyle>;
+  imgTop?: number;
 }
 
 const CharacterFeedback = ({
@@ -18,6 +19,7 @@ const CharacterFeedback = ({
   isCorrect,
   styles: customStyle,
   isSpeaking,
+  imgTop,
 }: Props) => {
   return (
     <View
@@ -31,13 +33,13 @@ const CharacterFeedback = ({
         source={
           !selectedOption
             ? isSpeaking
-              ? require('../../assets/images/character/speaking.png')
-              : require('../../assets/images/character/standing.png')
+              ? require('../../assets/images/character/speaking.gif')
+              : require('../../assets/images/character/standing.gif')
             : isCorrect
-            ? require('../../assets/images/character/yay.png')
-            : require('../../assets/images/character/opps.png')
+            ? require('../../assets/images/character/yay.gif')
+            : require('../../assets/images/character/opps.gif')
         }
-        style={{ width: '90%', height: '100%', top: 35 }}
+        style={{ width: '90%', height: '100%', top: imgTop || 35 }}
       />
 
       {isCorrect && (
@@ -57,8 +59,8 @@ export default CharacterFeedback;
 
 const styles = StyleSheet.create({
   imgContainer: {
-    height: 150,
-    width: 150,
+    height: 180,
+    width: 180,
     borderWidth: 3,
     borderRadius: '50%',
     overflow: 'hidden',

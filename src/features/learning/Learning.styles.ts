@@ -113,4 +113,25 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#ffffffcb',
   },
+  imgContainer: {
+    height: 150,
+    width: 150,
+    justifyContent: 'space-between',
+    marginBottom: 22,
+  },
+  img: {
+    height: '100%',
+    width: '100%',
+    resizeMode: 'contain',
+  },
+  imgTitle: {
+    fontFamily: 'Fredoka-Bold',
+    marginHorizontal: 15,
+    backgroundColor: '#fff',
+    padding: 5,
+    textAlign: 'center',
+    borderRadius: 50,
+    color: '#d84d16ce',
+    fontSize: 12,
+  },
 });

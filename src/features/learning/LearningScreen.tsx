@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   FlatList,
   ListRenderItem,
+  Image,
 } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { ROUTES } from '../../app/navigation/routeNames';
@@ -11,17 +12,13 @@ import { StackRouteProps } from '../../types/navigation.types';
 import { useRoute } from '@react-navigation/native';
 import { ActivityCard } from '../home/data/home.data';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
-import Animated, {
-  FadeIn,
-  FadeOut,
-} from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { alphabetData, LetterCardType } from './data/learning.data';
 import CustomButton from '../../components/customButton/CustomButton';
 import { wp } from '../../utils/responsive';
 import { styles } from './Learning.styles';
 import TTSService from '../../services/tts.service';
 import TTSEventService from '../../services/ttsEvents.service';
-import CharacterSection from '../../components/characterAnimation/CharacterSection';
 import CustomTopbar from '../../components/customTopbar/CustomTopbar';
 import ScreenHeadingSection from '../../components/screenHeadingSection/ScreenHeadingSection';
 import AnimatedSwitcher from '../../components/animatedSwitcher/AnimatedSwitcher';
@@ -133,7 +130,7 @@ const LearningScreen: React.FC = () => {
             </TouchableOpacity>
           </View>
         </Animated.View>
-        </AnimatedSwitcher>
+      </AnimatedSwitcher>
 
       <View
         style={[
@@ -165,7 +162,17 @@ const LearningScreen: React.FC = () => {
             </Text>
           </View>
         </View>
-        <CharacterSection isSpeaking={isSpeaking} />
+        <View style={styles.imgContainer}>
+          <Image
+            source={
+              isSpeaking
+                ? require('../../assets/images/character/speaking.gif')
+                : require('../../assets/images/character/standing.gif')
+            }
+            style={styles.img}
+          />
+          <Text style={styles.imgTitle}>Learning Buddy</Text>
+        </View>
       </View>
 
       <View style={styles.letterSliderSection}>

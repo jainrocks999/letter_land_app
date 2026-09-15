@@ -11,7 +11,10 @@ import BackerySVG from '../svgs/BackerySvg';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import ActionButton from '../../../../components/customButton/ActionButton';
 import TTSService from '../../../../services/tts.service';
-import { feedingPraiseMessages, feedingTryAgainMessages } from '../../../../utils/helperData';
+import {
+  feedingPraiseMessages,
+  feedingTryAgainMessages,
+} from '../../../../utils/helperData';
 
 interface Props {
   colors: colorData;
@@ -47,7 +50,7 @@ const FeedingChallenge = ({
   useEffect(() => {
     const id = setTimeout(() => {
       mouthRef.current?.measureInWindow((x, y) => {
-        setMouthRect({ x: x + 55, y: y + 40, width: 55, height: 55 });
+        setMouthRect({ x: x + 0, y: y + 80, width: 150, height: 80 });
       });
     }, 0);
     return () => clearTimeout(id);
@@ -61,19 +64,27 @@ const FeedingChallenge = ({
     isResolvingRef.current = true;
     if (letter === currentQuest.target.letter) {
       setCharacterState('enjoy');
-      TTSService.speak(feedingPraiseMessages[Math.floor(Math.random()* feedingPraiseMessages.length)]);
+      TTSService.speak(
+        feedingPraiseMessages[
+          Math.floor(Math.random() * feedingPraiseMessages.length)
+        ],
+      );
       setTimeout(() => {
         setCharacterState('standing');
         isResolvingRef.current = false;
         onCorrectAnswer();
-      }, 1200);
+      }, 5000);
     } else {
       setCharacterState('oops');
-      TTSService.speak(feedingTryAgainMessages[Math.floor(Math.random()* feedingTryAgainMessages.length)]);
+      TTSService.speak(
+        feedingTryAgainMessages[
+          Math.floor(Math.random() * feedingTryAgainMessages.length)
+        ],
+      );
       setTimeout(() => {
         setCharacterState('standing');
         isResolvingRef.current = false;
-      }, 1200);
+      }, 3500);
     }
   };
 
@@ -148,7 +159,7 @@ const styles = StyleSheet.create({
   optionsContainer: {
     width: '100%',
     height: '50%',
-    marginTop: 25,
+    // marginTop: 25,
   },
   speakBtn: {
     height: '9%',
@@ -158,5 +169,3 @@ const styles = StyleSheet.create({
     top: 10,
   },
 });
-
-
