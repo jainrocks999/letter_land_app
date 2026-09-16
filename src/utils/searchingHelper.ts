@@ -141,3 +141,42 @@ export const isInsideRect = (x: number, y: number, rect: RectType) => {
     y <= rect.y + rect.height
   );
 };
+
+export const calculateMouthRect = (
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+): RectType => {
+  if (width <= 0 || height <= 0) {
+    return { x: 0, y: 0, width: 0, height: 0 };
+  }
+  return {
+    x: x + width * 0.15,
+    y: y + height * 0.35,
+    width: width * 0.7,
+    height: height * 0.45,
+  };
+};
+
+export const calculateTightDropRect = (
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  insetRatio: number = 0.15,
+): RectType => {
+  if (width <= 0 || height <= 0) {
+    return { x: 0, y: 0, width: 0, height: 0 };
+  }
+  const padX = width * insetRatio;
+  const padY = height * insetRatio;
+  return {
+    x: x + padX,
+    y: y + padY,
+    width: Math.max(width - padX * 2, 10),
+    height: Math.max(height - padY * 2, 10),
+  };
+};
+
+

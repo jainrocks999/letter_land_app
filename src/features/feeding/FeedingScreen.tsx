@@ -2,11 +2,14 @@ import { View, Text } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { StackRouteProps } from '../../types/navigation.types';
 import { ROUTES } from '../../app/navigation/routeNames';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { styles } from './Feeding.styles';
 import CustomTopbar from '../../components/customTopbar/CustomTopbar';
 import ScreenHeadingSection from '../../components/screenHeadingSection/ScreenHeadingSection';
-import { generateQuestionsUpgrade } from '../../utils/searchingHelper';
+import {
+  calculateMouthRect,
+  generateQuestionsUpgrade,
+} from '../../utils/searchingHelper';
 import { RectType, SearchQuestionType } from '../../types/search.types';
 import TTSEventService from '../../services/ttsEvents.service';
 import TTSService from '../../services/tts.service';
@@ -19,20 +22,27 @@ import {
 import DraggableLetter from './components/DraggableCookieLetter';
 import AnimatedCharacter from './components/AnimatedCharacter';
 import BackerySVG from './components/svgs/BackerySvg';
+import SuccessModal from '../../components/customModal/CustomModel';
+import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
+import { ActivitiesKey } from '../../services/mmkv.service';
 
 const FeedingScreen = () => {
-  const route = useRoute<StackRouteProps<typeof ROUTES.SEARCHING>>();
+  const route = useRoute<StackRouteProps<typeof ROUTES.FEEDING>>();
+  const navigation = useNavigation();
   const { data } = route.params;
+  const { updateProgress } = useActivityProContext();
+
   const [questions] = useState<SearchQuestionType[]>(() =>
     generateQuestionsUpgrade(true),
   );
-
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
   const [questionAsk, setQuestionAsk] = useState<string>('');
+  const [isCompleted, setIsCompleted] = useState<boolean>(false);
+  const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
 
   const [characterState, setCharacterState] = useState<
-    'standing' | 'feed' | 'enjoy' | 'oops'
+    'standing' | 'feed' | 'enjoy' | 'oops' | 'speaking'
   >('standing');
   const [mouthRect, setMouthRect] = useState<RectType>({
     x: 0,
@@ -43,33 +53,54 @@ const FeedingScreen = () => {
 
   const mouthRef = useRef<View>(null);
   const isResolvingRef = useRef(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const currentQues = questions[currentIndex];
   const screenProgress = Math.round(
     ((currentIndex + 1) / questions.length) * 100,
   );
+
+  const updateMouthRect = () => {
+    mouthRef.current?.measureInWindow((x, y, width, height) => {
+      setMouthRect(calculateMouthRect(x, y, width, height));
+    });
+  };
+
   useEffect(() => {
-    TTSEventService.addListeners({
+    const removeListeners = TTSEventService.addListeners({
       onStart: () => setIsSpeaking(true),
       onFinish: () => setIsSpeaking(false),
       onCancel: () => setIsSpeaking(false),
     });
     TTSService.setSpeechRate(0.4);
 
-    const id = setTimeout(() => {
-      mouthRef.current?.measureInWindow((x, y) => {
-        setMouthRect({ x: x + 0, y: y + 80, width: 150, height: 80 });
-      });
-    }, 0);
-    return () => clearTimeout(id);
+    const id = setTimeout(updateMouthRect, 100);
+    return () => {
+      clearTimeout(id);
+      if (timerRef.current) clearTimeout(timerRef.current);
+      removeListeners();
+      TTSService.stop();
+    };
   }, []);
 
   useEffect(() => {
+    if (
+      isSpeaking &&
+      (characterState === 'standing' || characterState === 'speaking')
+    ) {
+      setCharacterState('speaking');
+    } else if (!isSpeaking && characterState === 'speaking') {
+      setCharacterState('standing');
+    }
+  }, [isSpeaking, characterState]);
+
+  useEffect(() => {
+    if (!currentQues || isCompleted) return;
     const text = getQuestionText(currentQues);
     if (!text) return;
     setQuestionAsk(text);
     TTSService.speak(text);
-  }, [currentQues]);
+  }, [currentQues, isCompleted]);
 
   const getQuestionText = (question: SearchQuestionType): string => {
     const letter = question.target.letter;
@@ -88,29 +119,36 @@ const FeedingScreen = () => {
 
   const handleDrop = (letter: string) => {
     isResolvingRef.current = true;
+    TTSService.stop();
     if (letter === currentQues.target.letter) {
       setCharacterState('enjoy');
-      TTSService.speak(
+      const praise =
         feedingPraiseMessages[
           Math.floor(Math.random() * feedingPraiseMessages.length)
-        ],
-      );
-      setTimeout(() => {
+        ];
+      TTSService.speak(praise);
+
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => {
         setCharacterState('standing');
         isResolvingRef.current = false;
         handleCorrectAnswer();
-      }, 5000);
+        // }, 5000);
+      }, 2200);
     } else {
       setCharacterState('oops');
-      TTSService.speak(
+      const tryAgain =
         feedingTryAgainMessages[
           Math.floor(Math.random() * feedingTryAgainMessages.length)
-        ],
-      );
-      setTimeout(() => {
+        ];
+      TTSService.speak(tryAgain);
+
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => {
         setCharacterState('standing');
         isResolvingRef.current = false;
-      }, 3500);
+        // }, 3500);
+      }, 1800);
     }
   };
 
@@ -118,7 +156,10 @@ const FeedingScreen = () => {
     if (currentIndex < questions.length - 1) {
       setCurrentIndex(prev => prev + 1);
     } else {
-      console.log('All questions completed');
+      setIsCompleted(true);
+      setShowSuccessModal(true);
+      TTSService.stop();
+      TTSService.speak('Great job! You fed Coco all the correct letters!');
     }
   };
 
@@ -126,6 +167,12 @@ const FeedingScreen = () => {
     if (!isSpeaking) {
       TTSService.speak(questionAsk);
     }
+  };
+
+  const handleRestart = () => {
+    setIsCompleted(false);
+    setCurrentIndex(0);
+    isResolvingRef.current = false;
   };
 
   return (
@@ -156,7 +203,9 @@ const FeedingScreen = () => {
           {currentQues?.activity} Challenge
         </Text>
         <Text style={[styles.normalHeadingText, { color: data.midColor }]}>
-          {`Coco is looking for the letter ${currentQues?.target.letter}! Can you help?`}
+          {isCompleted
+            ? 'Congratulations! Coco is full and happy!'
+            : `Coco is looking for the letter ${currentQues?.target.letter}! Can you help?`}
         </Text>
       </View>
       <View style={[styles.playArea, { borderColor: data.midColor }]}>
@@ -178,7 +227,7 @@ const FeedingScreen = () => {
         <Text style={[styles.questionText, { color: data.darkColor }]}>
           {questionAsk}
         </Text>
-        <View ref={mouthRef}>
+        <View ref={mouthRef} onLayout={updateMouthRect}>
           <AnimatedCharacter state={characterState} />
         </View>
         <View style={styles.optionsContainer}>
@@ -186,7 +235,7 @@ const FeedingScreen = () => {
           {currentQues.options.map((option, index) => (
             <DraggableLetter
               index={index}
-              key={option.data.letter}
+              key={`${currentIndex}-${option.data.letter}-${index}`}
               data={option}
               mouthRect={mouthRect}
               onDrop={handleDrop}
@@ -197,6 +246,22 @@ const FeedingScreen = () => {
           ))}
         </View>
       </View>
+
+      <SuccessModal
+        visible={showSuccessModal}
+        title="🎉 Yummy! All Fed!"
+        message="Great job! You fed Coco all the correct letter cookies!"
+        onRestart={handleRestart}
+        onClose={() => {
+          updateProgress({
+            key: data.navigate?.toLowerCase() as ActivitiesKey,
+            progress: screenProgress,
+          });
+          setShowSuccessModal(false);
+          navigation.goBack();
+        }}
+        characterImage={require('../../assets/images/character/yummy.gif')}
+      />
     </View>
   );
 };

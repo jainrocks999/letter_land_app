@@ -9,7 +9,7 @@ import {
 import React, { useEffect, useRef, useState } from 'react';
 import { ROUTES } from '../../app/navigation/routeNames';
 import { StackRouteProps } from '../../types/navigation.types';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { ActivityCard } from '../home/data/home.data';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
@@ -22,12 +22,18 @@ import TTSEventService from '../../services/ttsEvents.service';
 import CustomTopbar from '../../components/customTopbar/CustomTopbar';
 import ScreenHeadingSection from '../../components/screenHeadingSection/ScreenHeadingSection';
 import AnimatedSwitcher from '../../components/animatedSwitcher/AnimatedSwitcher';
+import SuccessModal from '../../components/customModal/CustomModel';
+import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
+import { ActivitiesKey } from '../../services/mmkv.service';
 const LearningScreen: React.FC = () => {
   const route = useRoute<StackRouteProps<typeof ROUTES.LEARNING>>();
+  const navigation = useNavigation();
   const { data } = route.params;
+  const { updateProgress } = useActivityProContext();
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isNext, setIsNext] = useState<boolean>(true);
   const [isSpeaking, setSpeaking] = useState<boolean>(false);
+  const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
 
   const current = alphabetData[currentIndex];
   const progress = Math.round(((currentIndex + 1) / alphabetData.length) * 100);
@@ -47,6 +53,10 @@ const LearningScreen: React.FC = () => {
     if (currentIndex < alphabetData.length - 1) {
       setIsNext(true);
       setCurrentIndex(prev => prev + 1);
+    } else {
+      setShowSuccessModal(true);
+      TTSService.stop();
+      TTSService.speak('Great job! You learned all the letters!');
     }
   };
   const handlePrev = () => {
@@ -54,6 +64,12 @@ const LearningScreen: React.FC = () => {
       setIsNext(false);
       setCurrentIndex(prev => prev - 1);
     }
+  };
+
+  const handleRestart = () => {
+    setShowSuccessModal(false);
+    setCurrentIndex(0);
+    setIsNext(true);
   };
 
   const handlePlay = () => {
@@ -232,6 +248,22 @@ const LearningScreen: React.FC = () => {
           </View>
         </CustomButton>
       </View>
+
+      <SuccessModal
+        visible={showSuccessModal}
+        title="🎉 Alphabet Master!"
+        message="Awesome job! You learned all A to Z letters with Coco!"
+        onRestart={handleRestart}
+        onClose={() => {
+          updateProgress({
+            key: data.navigate?.toLowerCase() as ActivitiesKey,
+            progress: progress,
+          });
+          setShowSuccessModal(false);
+          navigation.goBack();
+        }}
+        characterImage={require('../../assets/images/character/yay.gif')}
+      />
     </View>
   );
 };

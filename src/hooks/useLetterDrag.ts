@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
   useAnimatedStyle,
   useSharedValue,
@@ -33,8 +34,20 @@ const useLetterDrag = ({
 
   const origin = useSharedValue({ x: 0, y: 0, width: 0, height: 0 }); // NEW: letter's own resting screen position
 
+  const resetDrag = () => {
+    translateX.value = 0;
+    translateY.value = 0;
+    opacity.value = 1;
+    scale.value = 1;
+    isLocked.value = false;
+    wasInside.value = false;
+  };
+
+  useEffect(() => {
+    resetDrag();
+  }, [data.data.letter, targetLetter]);
+
   const setOrigin = (x: number, y: number, width: number, height: number) => {
-    // NEW
     origin.value = { x, y, width, height };
   };
 
@@ -132,7 +145,7 @@ const useLetterDrag = ({
 
       const finalTranslateX = targetCenterX - tileCenterX;
       const finalTranslateY = targetCenterY - tileCenterY;
-      
+
       translateX.value = withTiming(finalTranslateX, { duration: 280 });
       translateY.value = withTiming(
         finalTranslateY,
@@ -147,6 +160,7 @@ const useLetterDrag = ({
         withTiming(1.25, { duration: 120 }),
         withSpring(1, { damping: 10, stiffness: 200 }),
       );
+      opacity.value = withTiming(0, { duration: 300 });
     } else {
       translateX.value = withSpring(0);
       translateY.value = withSpring(0);
@@ -181,6 +195,7 @@ const useLetterDrag = ({
     handleFinalizeNormal,
     animatedStyle,
     setOrigin,
+    resetDrag,
   };
 };
 

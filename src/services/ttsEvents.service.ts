@@ -8,16 +8,21 @@ interface AddListenersProps {
 
 const TTSEventService = {
   addListeners: ({ onStart, onFinish, onCancel }: AddListenersProps) => {
+    const subscriptions: any[] = [];
     if (onStart) {
-      Tts.addEventListener('tts-start', onStart);
+      subscriptions.push(Tts.addEventListener('tts-start', onStart));
     }
     if (onFinish) {
-      Tts.addEventListener('tts-finish', onFinish);
+      subscriptions.push(Tts.addEventListener('tts-finish', onFinish));
     }
     if (onCancel) {
-      Tts.addEventListener('tts-cancel', onCancel);
+      subscriptions.push(Tts.addEventListener('tts-cancel', onCancel));
     }
+    return () => {
+      subscriptions.forEach(sub => sub?.remove?.());
+    };
   },
 };
 
 export default TTSEventService;
+

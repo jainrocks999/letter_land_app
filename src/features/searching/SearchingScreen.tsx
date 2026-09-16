@@ -2,7 +2,7 @@ import { View, Text, Pressable } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { StackRouteProps } from '../../types/navigation.types';
 import { ROUTES } from '../../app/navigation/routeNames';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { styles } from './Searching.styles';
 import CustomTopbar from '../../components/customTopbar/CustomTopbar';
 import ScreenHeadingSection from '../../components/screenHeadingSection/ScreenHeadingSection';
@@ -14,10 +14,16 @@ import CharacterFeedback from '../../components/characterAnimation/CharacterFeed
 import SadEmojiAnimation from '../../components/characterAnimation/SadEmojiAnimation';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6/static';
 import { praiseMessages, tryAgainMessages } from '../../utils/helperData';
+import SuccessModal from '../../components/customModal/CustomModel';
+import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
+import { ActivitiesKey } from '../../services/mmkv.service';
 
 const SearchingScreen = () => {
   const route = useRoute<StackRouteProps<typeof ROUTES.SEARCHING>>();
+  const navigation = useNavigation();
   const { data } = route.params;
+  const { updateProgress } = useActivityProContext();
+
   const [questions] = useState<SearchQuestionType[]>(() =>
     generateQuestionsUpgrade(false, 3),
   );
@@ -26,6 +32,7 @@ const SearchingScreen = () => {
   const [questionAsk, setQuestionAsk] = useState<string>('');
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
 
   const currentQues = questions[currentIndex];
   const screenProgress = Math.round(
@@ -88,7 +95,9 @@ const SearchingScreen = () => {
     if (currentIndex < questions.length - 1) {
       setCurrentIndex(prev => prev + 1);
     } else {
-      console.log('All questions completed');
+      setShowSuccessModal(true);
+      TTSService.stop();
+      TTSService.speak('Great job! You found all the correct letters!');
     }
   };
 
@@ -96,6 +105,13 @@ const SearchingScreen = () => {
     if (!isSpeaking) {
       TTSService.speak(questionAsk);
     }
+  };
+
+  const handleRestart = () => {
+    setShowSuccessModal(false);
+    setCurrentIndex(0);
+    setSelectedOption(null);
+    setIsCorrect(null);
   };
 
   return (
@@ -205,6 +221,22 @@ const SearchingScreen = () => {
           })}
         </View>
       </View>
+
+      <SuccessModal
+        visible={showSuccessModal}
+        title="🎉 Found 'Em All!"
+        message="Great job! You found all the matching small letters correctly!"
+        onRestart={handleRestart}
+        onClose={() => {
+          updateProgress({
+            key: data.navigate?.toLowerCase() as ActivitiesKey,
+            progress: screenProgress,
+          });
+          setShowSuccessModal(false);
+          navigation.goBack();
+        }}
+        characterImage={require('../../assets/images/character/yay.gif')}
+      />
     </View>
   );
 };

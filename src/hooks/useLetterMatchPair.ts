@@ -333,19 +333,29 @@ export const useLetterMatchPair = ({ data }: { data: ActivityCard }) => {
 
   const isRoundComplete = matchedLetters.length === 5;
 
+  const restartGame = () => {
+    const newRounds = createRounds();
+    setRounds(newRounds);
+    setCurrentRound(0);
+    setEmojis(shuffleArray(newRounds[0]));
+    setMatchedLetters([]);
+    setMatchedConnections([]);
+    setActiveLine(null);
+    setShowSuccessModal(false);
+    setRoundStatus({ isCorrect: null, isFinished: false, round: 1 });
+  };
+
   return {
-    // round
+    // state
     rounds,
     currentRound,
     currentPairs,
     emojis,
-    isLastRound,
-    isRoundComplete,
-
-    // matching
     matchedLetters,
     matchedConnections,
     activeLine,
+    isLastRound,
+    isRoundComplete,
 
     // positions
     letterPositions,
@@ -361,6 +371,7 @@ export const useLetterMatchPair = ({ data }: { data: ActivityCard }) => {
     // modal
     showSuccessModal,
     setShowSuccessModal,
+    restartGame,
 
     // layout handlers
     handleLetterLayout,

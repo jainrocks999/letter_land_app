@@ -17,12 +17,15 @@ import TTSService from '../../services/tts.service';
 import { praiseMessages, tryAgainMessages } from '../../utils/helperData';
 import TTSEventService from '../../services/ttsEvents.service';
 import SuccessModal from '../../components/customModal/CustomModel';
+import { ActivitiesKey } from '../../services/mmkv.service';
+import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
 
 const MatchingScreen: React.FC = () => {
   const route = useRoute<StackRouteProps<typeof ROUTES.MATCHING>>();
   const { data } = route.params;
   const navigation =
     useNavigation<StackNavigationProps<typeof ROUTES.MATCHING>>();
+  const { updateProgress } = useActivityProContext();
 
   const [instruction, setInstruction] = useState<string>('');
   const [isSpeaking, setSpeaking] = useState<boolean>(false);
@@ -61,7 +64,7 @@ const MatchingScreen: React.FC = () => {
       return;
     }
     const textToSpeak = handleInstruction(currentLetter);
-    console.log(textToSpeak);
+    // console.log(textToSpeak);
     setInstruction(textToSpeak);
 
     if (isCorrect === true) {
@@ -284,7 +287,18 @@ const MatchingScreen: React.FC = () => {
 
       <SuccessModal
         visible={matching.showSuccessModal}
+        title="🎉 Perfect Match!"
+        message="Fantastic! You matched all the letter pairs correctly!"
+        onRestart={matching.restartGame}
         onClose={() => {
+          updateProgress({
+            key: data.navigate?.toLowerCase() as ActivitiesKey,
+            progress: Math.round(
+              ((matching.currentRound * 5 + matching.matchedLetters.length) /
+                (matching.rounds.length * 5)) *
+                100,
+            ),
+          });
           matching.setShowSuccessModal(false);
           navigation.goBack();
         }}

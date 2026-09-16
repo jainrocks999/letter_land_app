@@ -1,4 +1,5 @@
 import {
+  DimensionValue,
   StyleSheet,
   TouchableOpacity,
   TouchableOpacityProps,
@@ -7,7 +8,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import React from 'react';
 
 interface CustomButtonProps {
-  width: number;
+  width: number | DimensionValue;
   colors: string[];
   bottomBorderColor: string;
   onPress: TouchableOpacityProps['onPress'];

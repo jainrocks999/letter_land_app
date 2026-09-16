@@ -1,6 +1,6 @@
 import { Image, Pressable, Text, TouchableOpacity, View } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import Animated, {
   useAnimatedStyle,
@@ -24,16 +24,22 @@ import TracingCanvas from './components/tracing/TracingCanvas';
 import useLetterTracing from '../../hooks/useLetterTracing';
 import { tracingConstants } from '../../config/constants';
 import TTSEventService from '../../services/ttsEvents.service';
+import SuccessModal from '../../components/customModal/CustomModel';
+import { ActivitiesKey } from '../../services/mmkv.service';
+import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
 
 const { VIEW_BOX_WIDTH, VIEW_BOX_HEIGHT } = tracingConstants;
 
 const TracingScreen = () => {
   const route = useRoute<StackRouteProps<typeof ROUTES.TRACING>>();
+  const navigation = useNavigation();
   const { data } = route.params;
+  const { updateProgress } = useActivityProContext();
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isSpeaking, setSpeaking] = useState<boolean>(false);
   const [isNext, setIsNext] = useState<boolean>(true);
+  const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
 
   const bubbleOpacity = useSharedValue(0);
   const bubbleTranslateY = useSharedValue(-10);
@@ -90,6 +96,10 @@ const TracingScreen = () => {
     if (currentIndex < traceLetters.length - 1) {
       setIsNext(true);
       setCurrentIndex(prev => prev + 1);
+    } else {
+      setShowSuccessModal(true);
+      TTSService.stop();
+      TTSService.speak('Great job! You traced all the letters!');
     }
   };
   const handlePrev = () => {
@@ -97,6 +107,13 @@ const TracingScreen = () => {
       setIsNext(false);
       setCurrentIndex(prev => prev - 1);
     }
+  };
+
+  const handleRestart = () => {
+    setShowSuccessModal(false);
+    setCurrentIndex(0);
+    setIsNext(true);
+    tracing.resetTrace();
   };
 
   const showHitBubble = useCallback(() => {
@@ -257,10 +274,6 @@ const TracingScreen = () => {
             color="#d84d16ce"
           />
         </ActionButton>
-        {/* {for testing only } */}
-        {/* <TouchableOpacity onPress={handleNext}>
-          <Text>pass</Text>
-        </TouchableOpacity> */}
         <CustomButton
           width={wp(40)}
           bottomBorderColor={tracing.isComplete ? '#0d8f3e' : '#d84e16'}
@@ -286,6 +299,22 @@ const TracingScreen = () => {
           </View>
         </CustomButton>
       </View>
+
+      <SuccessModal
+        visible={showSuccessModal}
+        title="🎉 Perfect Tracing!"
+        message="Fantastic! You traced all the alphabet letters accurately!"
+        onRestart={handleRestart}
+        onClose={() => {
+          updateProgress({
+            key: data.navigate?.toLowerCase() as ActivitiesKey,
+            progress: screenProgress,
+          });
+          setShowSuccessModal(false);
+          navigation.goBack();
+        }}
+        characterImage={require('../../assets/images/character/great.gif')}
+      />
     </View>
   );
 };
