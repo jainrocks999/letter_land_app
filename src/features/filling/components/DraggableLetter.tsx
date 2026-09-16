@@ -64,12 +64,6 @@ const DraggableLetter: React.FC<Props> = ({
     },
   });
 
-  //  const textColor=isCorrect == null
-  //                     ? colors.darkColor
-  //                     : isCorrect == true
-  //                     ? '#4CAF50'
-  //                     : 'red'
-
   return (
     <GestureDetector gesture={panGesture}>
       <Animated.View

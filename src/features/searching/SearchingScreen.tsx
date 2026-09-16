@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { StackRouteProps } from '../../types/navigation.types';
 import { ROUTES } from '../../app/navigation/routeNames';
@@ -6,25 +6,26 @@ import { useRoute } from '@react-navigation/native';
 import { styles } from './Searching.styles';
 import CustomTopbar from '../../components/customTopbar/CustomTopbar';
 import ScreenHeadingSection from '../../components/screenHeadingSection/ScreenHeadingSection';
-import { generateQuestions } from '../../utils/searchingHelper';
+import { generateQuestionsUpgrade } from '../../utils/searchingHelper';
 import { SearchQuestionType } from '../../types/search.types';
-import FeedingChallenge from './components/challenge/FeedingChallenge';
-import FindingChallenge from './components/challenge/FindingChallenge';
-import { searchingConstants } from '../../config/constants';
-import MatchChallenge from './components/challenge/MatchingChallenge';
 import TTSEventService from '../../services/ttsEvents.service';
 import TTSService from '../../services/tts.service';
+import CharacterFeedback from '../../components/characterAnimation/CharacterFeedback';
+import SadEmojiAnimation from '../../components/characterAnimation/SadEmojiAnimation';
+import FontAwesome6 from '@react-native-vector-icons/fontawesome6/static';
+import { praiseMessages, tryAgainMessages } from '../../utils/helperData';
 
 const SearchingScreen = () => {
   const route = useRoute<StackRouteProps<typeof ROUTES.SEARCHING>>();
   const { data } = route.params;
-  const [questions] = useState<SearchQuestionType[]>(() => generateQuestions());
-  const { ACTIVITY } = searchingConstants;
+  const [questions] = useState<SearchQuestionType[]>(() =>
+    generateQuestionsUpgrade(false, 3),
+  );
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
   const [questionAsk, setQuestionAsk] = useState<string>('');
-
-  const { MONSTER, FIND, MATCH } = searchingConstants.ACTIVITY;
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
   const currentQues = questions[currentIndex];
   const screenProgress = Math.round(
@@ -48,22 +49,38 @@ const SearchingScreen = () => {
 
   const getQuestionText = (question: SearchQuestionType): string => {
     const letter = question.target.letter;
-    switch (question.activity) {
-      case MONSTER: {
-        const texts = [
-          `I'm hungry! Feed me the letter ${letter}!`,
-          `Can you find the letter ${letter} for me? I'm hungry!`,
-          `I'm so hungry! Can you feed me the letter ${letter}?`,
-        ];
-        return texts[Math.floor(Math.random() * texts.length)];
-      }
-      case FIND:
-        return `Find the small letter of ${letter} ?`;
-      case MATCH:
-        return `Can you find ${letter} and put it in the right spot?`;
+    const texts = [
+      `Find the small letter of ${letter}.`,
+      `Can you find the lowercase letter of ${letter}?`,
+      `Which one is the small letter of ${letter}?`,
+      `Pick the small letter that matches ${letter}.`,
+      `Can you spot the lowercase ${letter}?`,
+      `Find the lowercase version of ${letter}!`,
+    ];
+    return texts[Math.floor(Math.random() * texts.length)];
+  };
 
-      default:
-        return 'Find the Letter';
+  const handleOnPress = (letter: string) => {
+    setSelectedOption(letter);
+    if (letter === currentQues.target.letter.toLowerCase()) {
+      TTSService.speak(
+        praiseMessages[Math.floor(Math.random() * praiseMessages.length)],
+      );
+      setIsCorrect(true);
+      setTimeout(() => {
+        setIsCorrect(null);
+        setSelectedOption(null);
+        handleCorrectAnswer();
+      }, 2000);
+    } else {
+      TTSService.speak(
+        tryAgainMessages[Math.floor(Math.random() * praiseMessages.length)],
+      );
+      setIsCorrect(false);
+      setTimeout(() => {
+        setSelectedOption(null);
+        setIsCorrect(null);
+      }, 3000);
     }
   };
 
@@ -109,41 +126,85 @@ const SearchingScreen = () => {
           {currentQues?.activity} Challenge
         </Text>
         <Text style={[styles.normalHeadingText, { color: data.midColor }]}>
-          {currentQues?.activity === ACTIVITY.MONSTER
-            ? `Coco is looking for the letter ${currentQues?.target.letter}! Can you help?`
-            : `Find the Letter "${currentQues?.target.letter}" and Make Coco Happy!`}
+          {`Find "${currentQues?.target.letter}" and make Coco smile!`}
         </Text>
       </View>
-      {currentQues?.activity === ACTIVITY.MONSTER && (
-        <FeedingChallenge
+      <View style={styles.playArea}>
+        <CharacterFeedback
           colors={data}
-          currentQuest={currentQues}
-          onCorrectAnswer={handleCorrectAnswer}
+          selectedOption={selectedOption}
+          isCorrect={isCorrect}
           isSpeaking={isSpeaking}
-          questionAsk={questionAsk}
-          handlePlay={handlePlay}
         />
-      )}
-      {currentQues?.activity === ACTIVITY.FIND && (
-        <FindingChallenge
-          colors={data}
-          currentQuest={currentQues}
-          onCorrectAnswer={handleCorrectAnswer}
-          isSpeaking={isSpeaking}
-          questionAsk={questionAsk}
-          handlePlay={handlePlay}
-        />
-      )}
-      {currentQues?.activity === ACTIVITY.MATCH && (
-        <MatchChallenge
-          colors={data}
-          currentQuest={currentQues}
-          onCorrectAnswer={handleCorrectAnswer}
-          isSpeaking={isSpeaking}
-          questionAsk={questionAsk}
-          handlePlay={handlePlay}
-        />
-      )}
+        {isCorrect === false && <SadEmojiAnimation />}
+        <Pressable
+          onPress={handlePlay}
+          style={({ pressed }) => [
+            styles.playBtn,
+            {
+              opacity: pressed ? 0.6 : 1,
+              borderColor: data.darkColor,
+            },
+          ]}
+        >
+          <FontAwesome6
+            name={isSpeaking ? 'volume-high' : 'play'}
+            iconStyle="solid"
+            size={18}
+            color={data.darkColor}
+          />
+        </Pressable>
+        <Text style={[styles.questionText, { color: data.darkColor }]}>
+          {questionAsk}
+        </Text>
+        <View style={styles.optionsContianer}>
+          {currentQues.options.map((option, index) => {
+            const optionText = option.data.letter.toLowerCase();
+            const isSelected = selectedOption === optionText;
+
+            return (
+              <Pressable
+                key={index.toString()}
+                disabled={isCorrect !== null}
+                onPress={() => {
+                  handleOnPress(optionText);
+                }}
+                style={({ pressed }) => [
+                  styles.optionBtn,
+                  {
+                    opacity: pressed ? 0.6 : 1,
+                    borderColor: !isSelected
+                      ? data.darkColor
+                      : isCorrect
+                      ? '#0d7024'
+                      : '#bbbaba',
+                    backgroundColor: !isSelected
+                      ? `${data.lightColor}66`
+                      : isCorrect
+                      ? '#28a745'
+                      : '#e7e5e5',
+                  },
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.optionTxt,
+                    {
+                      color: !isSelected
+                        ? data.darkColor
+                        : isCorrect
+                        ? '#0d7024'
+                        : '#bbbaba',
+                    },
+                  ]}
+                >
+                  {optionText}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      </View>
     </View>
   );
 };

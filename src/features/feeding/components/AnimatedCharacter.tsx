@@ -19,13 +19,6 @@ const AnimatedCharacter = ({ state }: Props) => {
   const translateY = useSharedValue(0);
 
   const image =
-    // state === 'feed'
-    //   ? require('../../../assets/images/character/feedme.png')
-    //   : state === 'enjoy'
-    //   ? require('../../../assets/images/character/yummy.png')
-    //   : state === 'oops'
-    //   ? require('../../../assets/images/character/uhha.png')
-    //   : require('../../../assets/images/character/standing.png');
     state === 'feed'
       ? require('../../../assets/images/character/feedme.gif')
       : state === 'enjoy'
@@ -33,7 +26,7 @@ const AnimatedCharacter = ({ state }: Props) => {
       : state === 'oops'
       ? require('../../../assets/images/character/uhha.gif')
       : state === 'speaking'
-      ? require('../../../assets/images/character/speaking.png')
+      ? require('../../../assets/images/character/speaking.gif')
       : require('../../../assets/images/character/standing.gif');
 
   const animatedStyle = useAnimatedStyle(() => {

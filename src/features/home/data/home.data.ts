@@ -4,8 +4,10 @@ import { ROUTES } from '../../../app/navigation/routeNames';
 type ActivityRoutes =
   | typeof ROUTES.LEARNING
   | typeof ROUTES.TRACING
+  | typeof ROUTES.FEEDING
   | typeof ROUTES.SEARCHING
   | typeof ROUTES.MATCHING
+  | typeof ROUTES.FILLING;
 
 export interface Castle {
   id: string;
@@ -66,18 +68,25 @@ export const activityData: Castle[] = [
   {
     id: '3',
     image: require('../../../assets/images/castles/level_3.png'),
-    title: 'Searching',
+    // title: 'Searching',
+    title: 'Picking',
     topSkyCol: '#00b894',
     bottomSkyCol: '#c8f7e5',
     innerCard: {
-      icon: '🔍',
-      cardTitle: 'Find the Letter',
-      shortDes: 'Find the correct letter and improve your letter recognition!',
-      tag: "Let's find",
+      // icon: '🔍',
+      icon: '🍪',
+      // cardTitle: 'Find the Letter',
+      cardTitle: 'Feed the Letter',
+      // shortDes: 'Find the correct letter and improve your letter recognition!',
+      shortDes:
+        'Find the correct letter and feed it to the hungry character coco!',
+      // tag: "Let's find",
+      tag: 'Feed It',
       darkColor: '#c09e74',
       midColor: '#3d3a45',
       lightColor: '#dbc68d',
-      navigate: ROUTES.SEARCHING,
+      // navigate: ROUTES.SEARCHING,
+      navigate: ROUTES.FEEDING,
     },
   },
   {
@@ -95,24 +104,30 @@ export const activityData: Castle[] = [
       darkColor: '#e0a2b6',
       midColor: '#8c662e',
       lightColor: '#eec2d8',
-      navigate:ROUTES.MATCHING
+      navigate: ROUTES.MATCHING,
     },
   },
   {
     id: '5',
     image: require('../../../assets/images/castles/level_5.png'),
-    title: 'Choosing',
+    // title: 'Choosing',
+    title: 'Searching',
     topSkyCol: '#2c3e90',
     bottomSkyCol: '#6dd5fa',
     innerCard: {
-      icon: '🧩',
-      cardTitle: 'Complete Letter',
-      shortDes:
-        'Choose the missing piece to complete each letter and improve letter recognition.',
-      tag: 'Complete It',
+      // icon: '🧩',
+      icon: '🔍',
+      // cardTitle: 'Complete Letter',
+      cardTitle: 'Find the Letter',
+      // shortDes:
+      //   'Choose the missing piece to complete each letter and improve letter recognition.',
+      shortDes: 'Find the correct letter and improve your letter recognition!',
+      // tag: 'Complete It',
+      tag: "Let's find",
       darkColor: '#9e6b38',
       midColor: '#d8493a',
       lightColor: '#eba75e',
+      navigate: ROUTES.SEARCHING,
     },
   },
   {
@@ -125,11 +140,14 @@ export const activityData: Castle[] = [
       icon: '🖍',
       cardTitle: 'Letter Fill',
       shortDes:
-        'Fill in the missing letter to complete simple words and build vocabulary.',
-      tag: 'Fill the Gap',
+        // 'Fill in the missing letter to complete simple words and build vocabulary.',
+        'Fill the letter shape with the correct letter and improve your letter recognition!',
+      // tag: 'Fill the Gap',
+      tag: 'Fill It',
       darkColor: '#a59aaa',
       midColor: '#d87b76',
       lightColor: '#eedeec',
+      navigate: ROUTES.FILLING,
     },
   },
   {

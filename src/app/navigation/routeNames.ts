@@ -4,6 +4,8 @@ export const ROUTES = {
   HOME: 'Home',
   LEARNING: 'Learning',
   TRACING: 'Tracing',
+  FEEDING: 'Feeding',
   SEARCHING: 'Searching',
-  MATCHING:'Matching'
+  MATCHING: 'Matching',
+  FILLING: 'Filling',
 } as const;
