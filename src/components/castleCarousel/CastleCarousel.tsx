@@ -59,6 +59,9 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
   });
 
   const activityCardData: ActivityCard = item.innerCard;
+  const isLocked = Boolean(
+    activityCardData.isLocked || !activityCardData.navigate,
+  );
 
   return (
     <View style={styles.pageContainer}>
@@ -66,37 +69,43 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
       <View
         style={[
           styles.activityCard,
-          { borderColor: activityCardData.darkColor },
+          { borderColor: isLocked ? '#9e9e9e' : activityCardData.darkColor },
         ]}
       >
         <View
           style={[
             styles.iconContainer,
             {
-              backgroundColor: activityCardData.lightColor,
-              borderColor: activityCardData.darkColor,
+              backgroundColor: isLocked
+                ? '#e5e5e5'
+                : activityCardData.lightColor,
+              borderColor: isLocked ? '#9e9e9e' : activityCardData.darkColor,
             },
           ]}
         >
-          <Text style={styles.icon}>{activityCardData.icon}</Text>
+          <Text style={[styles.icon, isLocked && { opacity: 0.5 }]}>
+            {activityCardData.icon}
+          </Text>
         </View>
         <View style={styles.contentSection}>
           <Text
             style={[
               styles.cardTitleText,
-              { color: activityCardData.darkColor },
+              { color: isLocked ? '#555555' : activityCardData.darkColor },
             ]}
           >
             {activityCardData.cardTitle}
           </Text>
           <Text style={styles.descText}>{activityCardData.shortDes}</Text>
-          <ProgressBar progress={progress} />
+          <ProgressBar progress={isLocked ? 0 : progress} />
           <Text
             style={[
               styles.tagText,
               {
-                backgroundColor: activityCardData.lightColor,
-                color: activityCardData.midColor,
+                backgroundColor: isLocked
+                  ? '#e5e5e5'
+                  : activityCardData.lightColor,
+                color: isLocked ? '#777777' : activityCardData.midColor,
               },
             ]}
           >
@@ -105,22 +114,31 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
         </View>
 
         <TouchableOpacity
+          disabled={isLocked}
+          activeOpacity={0.7}
           style={[
             styles.cardBtnContainer,
             {
-              backgroundColor: activityCardData.darkColor,
-              borderColor: activityCardData.lightColor,
+              backgroundColor: isLocked
+                ? '#888888'
+                : activityCardData.darkColor,
+              borderColor: isLocked ? '#cccccc' : activityCardData.lightColor,
             },
           ]}
           onPress={() => {
-            if (item.innerCard.navigate) {
+            if (!isLocked && item.innerCard.navigate) {
               navigation.navigate(item.innerCard.navigate, {
                 data: activityCardData,
               });
             }
           }}
         >
-          <FontAwesome6 name="play" iconStyle="solid" size={18} color="#fff" />
+          <FontAwesome6
+            name={isLocked ? 'lock' : 'play'}
+            iconStyle="solid"
+            size={18}
+            color="#fff"
+          />
         </TouchableOpacity>
       </View>
 

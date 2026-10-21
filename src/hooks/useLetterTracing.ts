@@ -44,6 +44,8 @@ const useLetterTracing = ({
   const strokeTrailsRef = useRef<string[]>([]);
   const isTracingRef = useRef<boolean>(false);
   const isCompleteRef = useRef<boolean>(false);
+  const lastStateUpdateLengthRef = useRef<number>(0);
+  const lastTrailPointRef = useRef<Point | null>(null);
 
   //   Derived data
   const currentStroke =
@@ -97,79 +99,90 @@ const useLetterTracing = ({
   const updateStatus = useCallback(
     (text: string) => {
       setStatusText(text);
+      onStatusChange?.(text);
     },
     [onStatusChange],
   );
 
   const syncProgress = useCallback(
     (nextLength: number, nearestPoint: Point) => {
-      if(isCompleteRef.current){
+      if (isCompleteRef.current) {
         return;
       }
+
       tracedLengthRef.current = nextLength;
-      setTracedLength(nextLength);
 
-      trailPathRef.current +=
-        trailPathRef.current.length === 0
-          ? `M ${nearestPoint.x} ${nearestPoint.y}`
-          : ` L ${nearestPoint.x} ${nearestPoint.y}`;
+      const lastPoint = lastTrailPointRef.current;
+      const pointMovedFarEnough =
+        !lastPoint ||
+        Math.hypot(nearestPoint.x - lastPoint.x, nearestPoint.y - lastPoint.y) >=
+          2.0;
 
-      const updatedTrails = [...strokeTrailsRef.current];
-      updatedTrails[activeStrokeIndexRef.current] = trailPathRef.current;
+      if (pointMovedFarEnough) {
+        trailPathRef.current +=
+          trailPathRef.current.length === 0
+            ? `M ${nearestPoint.x.toFixed(1)} ${nearestPoint.y.toFixed(1)}`
+            : ` L ${nearestPoint.x.toFixed(1)} ${nearestPoint.y.toFixed(1)}`;
+        lastTrailPointRef.current = nearestPoint;
 
-      strokeTrailsRef.current = updatedTrails;
-      setStrokeTrails(updatedTrails);
+        const updatedTrails = [...strokeTrailsRef.current];
+        updatedTrails[activeStrokeIndexRef.current] = trailPathRef.current;
+        strokeTrailsRef.current = updatedTrails;
+      }
 
       const nextCheckpoint = currentStroke.checkpoints.findIndex(
         checkpoint => nextLength < totalLength * checkpoint,
       );
-     
-      setCheckpointIndex(
+      const computedCheckpoint =
         nextCheckpoint === -1
           ? currentStroke.checkpoints.length
-          : nextCheckpoint,
-      );
+          : nextCheckpoint;
 
-      if (nextLength < totalLength * 0.96) {
+      const strokeCompleting = nextLength >= totalLength * 0.96;
+      const lengthAdvancedEnough =
+        nextLength - lastStateUpdateLengthRef.current >= 1.5;
+
+      if (lengthAdvancedEnough || strokeCompleting || pointMovedFarEnough) {
+        lastStateUpdateLengthRef.current = nextLength;
+        setTracedLength(nextLength);
+        setStrokeTrails(strokeTrailsRef.current);
+        setCheckpointIndex(computedCheckpoint);
+      }
+
+      if (!strokeCompleting) {
         return;
       }
-      
-      
 
       if (activeStrokeIndexRef.current < current.strokes.length - 1) {
         const nextStroke = activeStrokeIndexRef.current + 1;
 
         activeStrokeIndexRef.current = nextStroke;
-
         setActiveStrokeIndex(nextStroke);
 
         tracedLengthRef.current = 0;
+        lastStateUpdateLengthRef.current = 0;
+        lastTrailPointRef.current = null;
         setTracedLength(0);
         trailPathRef.current = '';
         setCheckpointIndex(0);
-      
-        updateStatus(`${
-          praiseMessages[Math.floor(Math.random() * praiseMessages.length)]
-        } Now trace stroke ${nextStroke + 1}.`);
+
+        const praiseMsg =
+          praiseMessages[Math.floor(Math.random() * praiseMessages.length)];
+        updateStatus(`${praiseMsg} Now trace stroke ${nextStroke + 1}.`);
         onStrokeComplete?.(activeStrokeIndexRef.current);
-         onSpeak?.(`${
-          praiseMessages[Math.floor(Math.random() * praiseMessages.length)]
-        } ${current.hint2?.[nextStroke ]}.`);
+        onSpeak?.(`${praiseMsg} ${current.hint2?.[nextStroke]}.`);
         return;
       }
 
       isCompleteRef.current = true;
-
       setIsComplete(true);
 
-      let completeText=`${
-          praiseMessages[Math.floor(Math.random() * praiseMessages.length)]
-        } ${current.letter} is complete.`
+      const completeMsg = `${
+        praiseMessages[Math.floor(Math.random() * praiseMessages.length)]
+      } ${current.letter} is complete.`;
 
-      updateStatus(completeText);
-
-      onSpeak?.(completeText);
-     
+      updateStatus(completeMsg);
+      onSpeak?.(completeMsg);
       onLetterComplete?.();
     },
     [
@@ -221,6 +234,7 @@ const useLetterTracing = ({
       isTracingRef.current = true;
       setIsTracing(true);
       trailPathRef.current = nextTrailPath;
+      lastTrailPointRef.current = nearest;
     },
     [canvasBounds, pathMeasure, totalLength, syncProgress, updateStatus],
   );
@@ -238,14 +252,14 @@ const useLetterTracing = ({
         totalLength,
       );
       if (nearest.distance > HIT_RADIUS) {
-        updateStatus('Stay on the letter path.')
+        updateStatus('Stay on the letter path.');
         return;
       }
       if (nearest.length < tracedLengthRef.current - 4) {
         return;
       }
       if (nearest.length > tracedLengthRef.current + PROGRESS_LOOKAHEAD) {
-         updateStatus('Slow down and follow the dots.');
+        updateStatus('Slow down and follow the dots.');
         return;
       }
       syncProgress(nearest.length, nearest);
@@ -266,11 +280,14 @@ const useLetterTracing = ({
         : 'Touch the first dot.',
     );
     trailPathRef.current = '';
+    lastTrailPointRef.current = null;
   }, [updateStatus]);
 
   const resetTrace = useCallback(() => {
     activeStrokeIndexRef.current = 0;
     tracedLengthRef.current = 0;
+    lastStateUpdateLengthRef.current = 0;
+    lastTrailPointRef.current = null;
     trailPathRef.current = '';
     strokeTrailsRef.current = [];
     isTracingRef.current = false;

@@ -37,7 +37,7 @@ export const getNearestPathPoint = (
   let bestDistance = Number.MAX_VALUE;
 
   const SEARCH_BEHIND = 20;
-  const SEARCH_AHEAD = 35;
+  const SEARCH_AHEAD = 70;
 
   const start = Math.max(0, currentLength - SEARCH_BEHIND);
 

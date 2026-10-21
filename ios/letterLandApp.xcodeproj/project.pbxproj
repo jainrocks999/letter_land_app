@@ -7,16 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		06089CA25D9041A4BDCC3683 /* Fredoka-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F4C557A274AC41A48501F72D /* Fredoka-SemiBold.ttf */; };
 		0C80B921A6F3F58F76C31292 /* libPods-letterLandApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-letterLandApp.a */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		1CE71823FFF241DB8B84EE21 /* Fredoka-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6CA7227454B94BF7915658B9 /* Fredoka-Light.ttf */; };
 		27639B20A40C0BD2721CB72A /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
+		596D0B450987447FA1AB063A /* Fredoka-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F94599696DD54262900F213F /* Fredoka-Regular.ttf */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		E01A57EF497343169B4AAAD3 /* Fredoka-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 82D942319A4A430DA451455A /* Fredoka-Medium.ttf */; };
-		1CE71823FFF241DB8B84EE21 /* Fredoka-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6CA7227454B94BF7915658B9 /* Fredoka-Light.ttf */; };
 		B1E9D6E530074060A8636B7B /* Fredoka-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 77AAD3AFF802444CAF50B7E1 /* Fredoka-Bold.ttf */; };
-		596D0B450987447FA1AB063A /* Fredoka-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F94599696DD54262900F213F /* Fredoka-Regular.ttf */; };
-		06089CA25D9041A4BDCC3683 /* Fredoka-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F4C557A274AC41A48501F72D /* Fredoka-SemiBold.ttf */; };
+		E01A57EF497343169B4AAAD3 /* Fredoka-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 82D942319A4A430DA451455A /* Fredoka-Medium.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,14 +27,14 @@
 		3B4392A12AC88292D35C810B /* Pods-letterLandApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-letterLandApp.debug.xcconfig"; path = "Target Support Files/Pods-letterLandApp/Pods-letterLandApp.debug.xcconfig"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-letterLandApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-letterLandApp.release.xcconfig"; path = "Target Support Files/Pods-letterLandApp/Pods-letterLandApp.release.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-letterLandApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-letterLandApp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6CA7227454B94BF7915658B9 /* Fredoka-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 511881251769; includeInIndex = 0; lastKnownFileType = unknown; name = "Fredoka-Light.ttf"; path = "../src/assets/fonts/Fredoka-Light.ttf"; sourceTree = "<group>"; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = letterLandApp/AppDelegate.swift; sourceTree = "<group>"; };
+		77AAD3AFF802444CAF50B7E1 /* Fredoka-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 511881251769; includeInIndex = 0; lastKnownFileType = unknown; name = "Fredoka-Bold.ttf"; path = "../src/assets/fonts/Fredoka-Bold.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = letterLandApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		82D942319A4A430DA451455A /* Fredoka-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 511881251769; includeInIndex = 0; lastKnownFileType = unknown; name = "Fredoka-Medium.ttf"; path = "../src/assets/fonts/Fredoka-Medium.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		82D942319A4A430DA451455A /* Fredoka-Medium.ttf */ = {isa = PBXFileReference; name = "Fredoka-Medium.ttf"; path = "../src/assets/fonts/Fredoka-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		6CA7227454B94BF7915658B9 /* Fredoka-Light.ttf */ = {isa = PBXFileReference; name = "Fredoka-Light.ttf"; path = "../src/assets/fonts/Fredoka-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		77AAD3AFF802444CAF50B7E1 /* Fredoka-Bold.ttf */ = {isa = PBXFileReference; name = "Fredoka-Bold.ttf"; path = "../src/assets/fonts/Fredoka-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		F94599696DD54262900F213F /* Fredoka-Regular.ttf */ = {isa = PBXFileReference; name = "Fredoka-Regular.ttf"; path = "../src/assets/fonts/Fredoka-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		F4C557A274AC41A48501F72D /* Fredoka-SemiBold.ttf */ = {isa = PBXFileReference; name = "Fredoka-SemiBold.ttf"; path = "../src/assets/fonts/Fredoka-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F4C557A274AC41A48501F72D /* Fredoka-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 511881251769; includeInIndex = 0; lastKnownFileType = unknown; name = "Fredoka-SemiBold.ttf"; path = "../src/assets/fonts/Fredoka-SemiBold.ttf"; sourceTree = "<group>"; };
+		F94599696DD54262900F213F /* Fredoka-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 511881251769; includeInIndex = 0; lastKnownFileType = unknown; name = "Fredoka-Regular.ttf"; path = "../src/assets/fonts/Fredoka-Regular.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,7 +110,7 @@
 			sourceTree = "<group>";
 		};
 		C80498D25B61463886B6275F /* Resources */ = {
-			isa = "PBXGroup";
+			isa = PBXGroup;
 			children = (
 				82D942319A4A430DA451455A /* Fredoka-Medium.ttf */,
 				6CA7227454B94BF7915658B9 /* Fredoka-Light.ttf */,
@@ -120,7 +120,6 @@
 			);
 			name = Resources;
 			sourceTree = "<group>";
-			path = "";
 		};
 /* End PBXGroup section */
 
@@ -220,9 +219,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-letterLandApp/Pods-letterLandApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-letterLandApp/Pods-letterLandApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -259,9 +262,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-letterLandApp/Pods-letterLandApp-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-letterLandApp/Pods-letterLandApp-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -291,7 +298,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = letterLandApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				IPHONEOS_DEPLOYMENT_TARGET = "$(RECOMMENDED_IPHONEOS_DEPLOYMENT_TARGET)";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -320,7 +327,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = letterLandApp/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
+				IPHONEOS_DEPLOYMENT_TARGET = "$(RECOMMENDED_IPHONEOS_DEPLOYMENT_TARGET)";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

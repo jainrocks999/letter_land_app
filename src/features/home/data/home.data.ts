@@ -27,8 +27,8 @@ export interface ActivityCard {
   midColor: string;
   lightColor: string;
   navigate?: ActivityRoutes;
+  isLocked?: boolean;
 }
-
 export const activityData: Castle[] = [
   {
     id: '1',
@@ -69,7 +69,7 @@ export const activityData: Castle[] = [
     id: '3',
     image: require('../../../assets/images/castles/level_3.png'),
     // title: 'Searching',
-    title: 'Picking',
+    title: 'Feeding',
     topSkyCol: '#00b894',
     bottomSkyCol: '#c8f7e5',
     innerCard: {
@@ -152,53 +152,68 @@ export const activityData: Castle[] = [
   },
   {
     id: '7',
-    image: require('../../../assets/images/castles/level_7.png'),
+    // image: require('../../../assets/images/castles/level_7.png'),
+    image: require('../../../assets/images/castles/level_7_lock.png'),
     title: 'Building',
-    topSkyCol: '#ff6b6b',
-    bottomSkyCol: '#ffe66d',
+    // topSkyCol: '#ff6b6b',
+    // bottomSkyCol: '#ffe66d',
+    topSkyCol: '#9CA3AF',
+    bottomSkyCol: '#E5E7EB',
     innerCard: {
       icon: '🔤',
       cardTitle: 'Build Words',
       shortDes:
         'Arrange letters in the correct order to build fun and easy words.',
+      // tag: 'Coming Soon',
       tag: 'Build Words',
       darkColor: '#6a7da0',
       midColor: '#5a4940',
       lightColor: '#e6d7b7',
+      isLocked: true,
     },
   },
   {
     id: '8',
-    image: require('../../../assets/images/castles/level_8.png'),
+    // image: require('../../../assets/images/castles/level_8.png'),
+    image: require('../../../assets/images/castles/level_8_lock.png'),
     title: 'Matching 2.0',
-    topSkyCol: '#8e44ad',
-    bottomSkyCol: '#eedcff',
+    // topSkyCol: '#8e44ad',
+    // bottomSkyCol: '#eedcff',
+    topSkyCol: '#9CA3AF',
+    bottomSkyCol: '#E5E7EB',
     innerCard: {
       icon: '🖼️',
       cardTitle: 'Match Words',
       shortDes:
         'Match each word with the correct picture and learn new vocabulary.',
+      // tag: 'Coming Soon',
       tag: 'Start Matching',
       darkColor: '#75a5a7',
       midColor: '#5386b1',
       lightColor: '#9ad7d7',
+      isLocked: true,
     },
   },
   {
     id: '9',
-    image: require('../../../assets/images/castles/level_9.png'),
+    // image: require('../../../assets/images/castles/level_9.png'),
+    image: require('../../../assets/images/castles/level_9_lock.png'),
     title: 'Reading',
-    topSkyCol: '#3f87f5',
-    bottomSkyCol: '#b6e3ff',
+    // topSkyCol: '#3f87f5',
+    // bottomSkyCol: '#b6e3ff',
+    topSkyCol: '#9CA3AF',
+    bottomSkyCol: '#E5E7EB',
     innerCard: {
       icon: '📖',
       cardTitle: 'Read Words',
       shortDes:
         'Read simple words aloud to improve reading confidence and pronunciation.',
-      tag: 'Start Reading',
+      // tag: 'Coming Soon',
+      tag: 'Start Matching',
       darkColor: '#cd4a35',
       midColor: '#ceb200',
       lightColor: '#efdfc6',
+      isLocked: true,
     },
   },
 ];

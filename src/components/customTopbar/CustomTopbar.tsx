@@ -20,6 +20,7 @@ const CustomTopbar: React.FC<CustomTopbarProps> = ({ data, progress }) => {
   const navigation =
     useNavigation<StackNavigationProps<typeof ROUTES.LEARNING>>();
   const handleGoback = () => {
+    console.log(data.navigate?.toLowerCase(), progress);
     updateProgress({
       // key: STORAGE_KEYS.PERFORMANCE.LEARNING as ActivitiesKey,
       key: data.navigate?.toLowerCase() as ActivitiesKey,

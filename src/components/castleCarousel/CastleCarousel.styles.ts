@@ -56,7 +56,7 @@ export const styles = StyleSheet.create({
   },
   cardBtnContainer: {
     paddingVertical: 14,
-    borderRadius: '100%',
+    borderRadius: 999,
     width: '17%',
     alignItems: 'center',
     justifyContent: 'center',

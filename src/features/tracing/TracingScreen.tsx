@@ -51,6 +51,7 @@ const TracingScreen = () => {
   }, []);
 
   const handleSpeak = useCallback((text: string) => {
+    TTSService.stop();
     TTSService.speak(text);
   }, []);
 
@@ -88,8 +89,10 @@ const TracingScreen = () => {
   }, []);
 
   useEffect(() => {
-    handleStrokeComplete(0);
-    handleSpeak(`${current.hint2?.[0]}`);
+    showHitBubble();
+    if (current.hint2?.[0]) {
+      handleSpeak(current.hint2[0]);
+    }
   }, [currentIndex]);
 
   const handleNext = () => {

@@ -8,6 +8,7 @@ export interface UserActivitiesType {
   searching?: number;
   matching?: number;
   choosing?: number;
+  feeding?: number;
   filling?: number;
   building?: number;
   matching2?: number;
