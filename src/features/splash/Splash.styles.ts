@@ -6,11 +6,5 @@ export const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#90d5fc',
-  },
-  imgSection: {
-    width: wp(90),
-    height: wp(90),
-    resizeMode: 'contain',
   },
 });

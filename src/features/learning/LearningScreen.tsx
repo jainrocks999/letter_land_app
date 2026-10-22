@@ -90,7 +90,7 @@ const LearningScreen: React.FC = () => {
 
       <ScreenHeadingSection
         heading={data.cardTitle}
-        subText="Learn letters with Coco! - tap, listen, and repeat!"
+        subText="Learn letters with Buddy! - tap, listen, and repeat!"
       />
 
       <AnimatedSwitcher animatedKey={currentIndex} isNext={isNext}>
@@ -164,7 +164,7 @@ const LearningScreen: React.FC = () => {
               color="#e85216"
             />
             <Text style={[styles.subText, { color: '#e85216', fontSize: 10 }]}>
-              Coco is {isSpeaking ? 'Speaking' : 'Listing'}...
+              Buddy is {isSpeaking ? 'Speaking' : 'Listing'}...
             </Text>
           </View>
           <View style={styles.wordContainer}>
@@ -252,7 +252,7 @@ const LearningScreen: React.FC = () => {
       <SuccessModal
         visible={showSuccessModal}
         title="🎉 Alphabet Master!"
-        message="Awesome job! You learned all A to Z letters with Coco!"
+        message="Awesome job! You learned all A to Z letters with buddy!"
         onRestart={handleRestart}
         onClose={() => {
           updateProgress({

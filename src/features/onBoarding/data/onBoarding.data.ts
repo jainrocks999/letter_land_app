@@ -15,7 +15,7 @@ export const onBoardingSlidesData: OnBoardingSlideType[] = [
   {
     id: '1',
     image: require('../../../assets/images/onboarding/illustration1.png'),
-    title: 'Welcome to Letter Land.',
+    title: 'Welcome to eLetter.',
     description:
       'Join your little learning buddy and explore magical castles filled with fun alphabet adventures.',
     topColor: '#7b61ff',

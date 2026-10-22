@@ -1,4 +1,4 @@
-package com.letterlandapp
+package com.eflashapps.eletter
 
 import android.app.Application
 import com.facebook.react.PackageList
