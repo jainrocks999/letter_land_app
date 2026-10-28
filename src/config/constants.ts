@@ -1,6 +1,8 @@
 export const STORAGE_KEYS = {
   IS_ONBORDING: 'isOnboarding',
   USER_PERFORMANCE: 'userPermance',
+  REWARDS: 'rewards',
+  SETTINGS: 'settings',
   PERFORMANCE: {
     LEARNING: 'learning',
     TRACING: 'tracing',
@@ -42,4 +44,19 @@ export const searchingConstants = {
     MATCH:'Match'
   },
   TOTAL_ROUNDS: 15,
+};
+
+export const REWARD_POINTS = {
+  CORRECT: 2,
+  LEARN_LETTER: 1,
+  TRACE_LETTER: 3,
+  COMBO_EVERY: 5,
+  COMBO_BONUS: 5,
+  ACTIVITY_COMPLETE: 20,
+};
+
+export const VOICE_SPEED_MULTIPLIER = {
+  slow: 0.75,
+  normal: 1,
+  fast: 1.3,
 };

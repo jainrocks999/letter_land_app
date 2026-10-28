@@ -11,6 +11,7 @@ import SearchingScreen from '../../features/searching/SearchingScreen';
 import MatchingScreen from '../../features/matching/MatchingScreen';
 import FeedingScreen from '../../features/feeding/FeedingScreen';
 import FillingLetterScreen from '../../features/filling/FillingLetterScreen';
+import RewardsScreen from '../../features/rewards/RewardsScreen';
 
 const RootNavigator = () => {
   const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -30,6 +31,7 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.SEARCHING} component={SearchingScreen} />
         <Stack.Screen name={ROUTES.MATCHING} component={MatchingScreen} />
         <Stack.Screen name={ROUTES.FILLING} component={FillingLetterScreen} />
+        <Stack.Screen name={ROUTES.REWARDS} component={RewardsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

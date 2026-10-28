@@ -8,4 +8,5 @@ export const ROUTES = {
   SEARCHING: 'Searching',
   MATCHING: 'Matching',
   FILLING: 'Filling',
+  REWARDS: 'Rewards',
 } as const;

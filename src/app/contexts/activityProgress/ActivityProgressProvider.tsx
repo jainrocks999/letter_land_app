@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import StorageService, {
   UserActivitiesType,
 } from '../../../services/mmkv.service';
@@ -18,39 +18,48 @@ export const ActivityProProvider = ({ children }: Props) => {
     DEFAULT_ACTIVITIES_PRPOGRESS,
   );
 
-  const getProgress = () => {
+  const getProgress = useCallback(() => {
     const data = StorageService.getUserPerformance(
       STORAGE_KEYS.USER_PERFORMANCE,
     );
     setProgressData(data);
-  };
+  }, []);
 
-  const updateProgress = ({ key, progress }: updateProgressProp) => {
-    StorageService.setUserPerformance(
-      STORAGE_KEYS.USER_PERFORMANCE,
-      key,
-      progress,
-    );
-    const updatedData = StorageService.getUserPerformance(
-      STORAGE_KEYS.USER_PERFORMANCE,
-    );
-    setProgressData({
-      ...updatedData,
-      [key]: progress,
-    });
-  };
+  const updateProgress = useCallback(
+    ({ key, progress }: updateProgressProp) => {
+      StorageService.setUserPerformance(
+        STORAGE_KEYS.USER_PERFORMANCE,
+        key,
+        progress,
+      );
+      const updatedData = StorageService.getUserPerformance(
+        STORAGE_KEYS.USER_PERFORMANCE,
+      );
+      setProgressData({
+        ...updatedData,
+        [key]: progress,
+      });
+    },
+    [],
+  );
+
+  const resetProgress = useCallback(() => {
+    StorageService.removeItem(STORAGE_KEYS.USER_PERFORMANCE);
+    setProgressData(DEFAULT_ACTIVITIES_PRPOGRESS);
+  }, []);
 
   useEffect(() => {
     getProgress();
-  }, []);
+  }, [getProgress]);
 
   const value = useMemo(
     () => ({
       progressData,
       getProgress,
       updateProgress,
+      resetProgress,
     }),
-    [progressData, getProgress, updateProgress],
+    [progressData, getProgress, updateProgress, resetProgress],
   );
 
   return (

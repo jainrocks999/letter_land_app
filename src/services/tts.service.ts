@@ -1,4 +1,10 @@
 import Tts from 'react-native-tts';
+
+// voice settings chosen by the parent in the settings modal
+let isMuted = false;
+let rateMultiplier = 1;
+let baseRate = 0.25;
+
 // speechRate = 0.45
 const TTSService = {
   init: async (language = 'en-US', speechRate = 0.25, pitch = 1.0) => {
@@ -6,7 +12,7 @@ const TTSService = {
       await Tts.getInitStatus();
 
       Tts.setDefaultLanguage(language);
-      Tts.setDefaultRate(speechRate);
+      TTSService.setSpeechRate(speechRate);
       Tts.setDefaultPitch(pitch);
     } catch (error) {
       console.log('TTs init Error:', error);
@@ -15,7 +21,18 @@ const TTSService = {
 
   speak: (text: string) => {
     Tts.stop();
+    if (isMuted) return;
     Tts.speak(text);
+  },
+
+  setMuted: (muted: boolean) => {
+    isMuted = muted;
+    if (muted) Tts.stop();
+  },
+
+  setRateMultiplier: (multiplier: number) => {
+    rateMultiplier = multiplier;
+    TTSService.setSpeechRate(baseRate);
   },
 
   stop: () => {
@@ -31,7 +48,8 @@ const TTSService = {
   },
 
   setSpeechRate: (speechRate: number = 0.25) => {
-    Tts.setDefaultRate(speechRate);
+    baseRate = speechRate;
+    Tts.setDefaultRate(Math.min(speechRate * rateMultiplier, 1));
   },
   //    speakCorrectAnswer: () => {
   //     Tts.stop();

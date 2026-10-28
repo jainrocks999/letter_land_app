@@ -20,6 +20,7 @@ import Svg, { Text as SvgText } from 'react-native-svg';
 import { praiseMessages, tryAgainMessages } from '../../utils/helperData';
 import DraggableLetter from './components/DraggableLetter';
 import SuccessModal from '../../components/customModal/CustomModel';
+import useActivityRewards from '../../hooks/useActivityRewards';
 import { ActivitiesKey } from '../../services/mmkv.service';
 import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
 
@@ -28,6 +29,8 @@ const FillingLetterScreen = () => {
   const navigation = useNavigation();
   const { data } = route.params;
   const { updateProgress } = useActivityProContext();
+  const { rewardCorrect, rewardWrong, rewardComplete } =
+    useActivityRewards(data);
 
   const [questions] = useState<SearchQuestionType[]>(() =>
     generateQuestionsUpgrade(false, 5),
@@ -111,6 +114,7 @@ const FillingLetterScreen = () => {
       );
       setIsPlaced(true);
       setIsCorrect(true);
+      rewardCorrect();
 
       if (timerRef.current) clearTimeout(timerRef.current);
       timerRef.current = setTimeout(() => {
@@ -124,6 +128,7 @@ const FillingLetterScreen = () => {
         tryAgainMessages[Math.floor(Math.random() * tryAgainMessages.length)],
       );
       setIsCorrect(false);
+      rewardWrong();
 
       if (timerRef.current) clearTimeout(timerRef.current);
       timerRef.current = setTimeout(() => {
@@ -139,6 +144,7 @@ const FillingLetterScreen = () => {
       setCurrentIndex(prev => prev + 1);
     } else {
       setIsCompleted(true);
+      rewardComplete();
       setShowSuccessModal(true);
       TTSService.stop();
       TTSService.speak('Great job! You filled all the missing letters!');

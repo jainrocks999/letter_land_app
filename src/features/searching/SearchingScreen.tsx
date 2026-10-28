@@ -15,6 +15,7 @@ import SadEmojiAnimation from '../../components/characterAnimation/SadEmojiAnima
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6/static';
 import { praiseMessages, tryAgainMessages } from '../../utils/helperData';
 import SuccessModal from '../../components/customModal/CustomModel';
+import useActivityRewards from '../../hooks/useActivityRewards';
 import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
 import { ActivitiesKey } from '../../services/mmkv.service';
 
@@ -23,6 +24,8 @@ const SearchingScreen = () => {
   const navigation = useNavigation();
   const { data } = route.params;
   const { updateProgress } = useActivityProContext();
+  const { rewardCorrect, rewardWrong, rewardComplete } =
+    useActivityRewards(data);
 
   const [questions] = useState<SearchQuestionType[]>(() =>
     generateQuestionsUpgrade(false, 3),
@@ -74,6 +77,7 @@ const SearchingScreen = () => {
         praiseMessages[Math.floor(Math.random() * praiseMessages.length)],
       );
       setIsCorrect(true);
+      rewardCorrect();
       setTimeout(() => {
         setIsCorrect(null);
         setSelectedOption(null);
@@ -84,6 +88,7 @@ const SearchingScreen = () => {
         tryAgainMessages[Math.floor(Math.random() * praiseMessages.length)],
       );
       setIsCorrect(false);
+      rewardWrong();
       setTimeout(() => {
         setSelectedOption(null);
         setIsCorrect(null);
@@ -95,6 +100,7 @@ const SearchingScreen = () => {
     if (currentIndex < questions.length - 1) {
       setCurrentIndex(prev => prev + 1);
     } else {
+      rewardComplete();
       setShowSuccessModal(true);
       TTSService.stop();
       TTSService.speak('Great job! You found all the correct letters!');

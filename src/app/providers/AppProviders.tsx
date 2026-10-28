@@ -1,8 +1,18 @@
 import { PropsWithChildren } from 'react';
-import { ActivityProProvider } from '../contexts';
+import {
+  ActivityProProvider,
+  RewardsProvider,
+  SettingsProvider,
+} from '../contexts';
 
 const AppProviders = ({ children }: PropsWithChildren) => {
-  return <ActivityProProvider>{children}</ActivityProProvider>;
+  return (
+    <SettingsProvider>
+      <ActivityProProvider>
+        <RewardsProvider>{children}</RewardsProvider>
+      </ActivityProProvider>
+    </SettingsProvider>
+  );
 };
 
 export default AppProviders;

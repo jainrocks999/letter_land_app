@@ -12,4 +12,5 @@ export interface activityProgressType {
   progressData: UserActivitiesType;
   getProgress: () => void;
   updateProgress: ({ key, progress }: updateProgressProp) => void;
+  resetProgress: () => void;
 }

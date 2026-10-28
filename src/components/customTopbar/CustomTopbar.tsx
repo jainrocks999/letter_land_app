@@ -9,6 +9,7 @@ import { ROUTES } from '../../app/navigation/routeNames';
 import { ActivitiesKey } from '../../services/mmkv.service';
 import { STORAGE_KEYS } from '../../config/constants';
 import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
+import StarCounter from '../starCounter/StarCounter';
 
 interface CustomTopbarProps {
   data: ActivityCard;
@@ -37,6 +38,7 @@ const CustomTopbar: React.FC<CustomTopbarProps> = ({ data, progress }) => {
       <View style={{ flex: 1 }}>
         <ProgressBar progress={progress} bgColor="#ffffffcc" />
       </View>
+      {/* <StarCounter /> */}
       <View
         style={[
           styles.badgeContainer,
@@ -57,7 +59,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     // gap: 10,
-    gap: 20,
+    gap: 12,
     paddingTop: 10,
   },
   badgeContainer: {

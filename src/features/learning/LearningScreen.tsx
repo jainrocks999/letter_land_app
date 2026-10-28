@@ -25,11 +25,15 @@ import AnimatedSwitcher from '../../components/animatedSwitcher/AnimatedSwitcher
 import SuccessModal from '../../components/customModal/CustomModel';
 import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
 import { ActivitiesKey } from '../../services/mmkv.service';
+import useActivityRewards from '../../hooks/useActivityRewards';
+import { REWARD_POINTS } from '../../config/constants';
 const LearningScreen: React.FC = () => {
   const route = useRoute<StackRouteProps<typeof ROUTES.LEARNING>>();
   const navigation = useNavigation();
   const { data } = route.params;
   const { updateProgress } = useActivityProContext();
+  const { addStars, rewardComplete } = useActivityRewards(data);
+  const learnedRef = useRef<Set<number>>(new Set([0]));
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isNext, setIsNext] = useState<boolean>(true);
   const [isSpeaking, setSpeaking] = useState<boolean>(false);
@@ -51,9 +55,15 @@ const LearningScreen: React.FC = () => {
 
   const handleNext = () => {
     if (currentIndex < alphabetData.length - 1) {
+      const nextIndex = currentIndex + 1;
+      if (!learnedRef.current.has(nextIndex)) {
+        learnedRef.current.add(nextIndex);
+        addStars(REWARD_POINTS.LEARN_LETTER);
+      }
       setIsNext(true);
-      setCurrentIndex(prev => prev + 1);
+      setCurrentIndex(nextIndex);
     } else {
+      rewardComplete();
       setShowSuccessModal(true);
       TTSService.stop();
       TTSService.speak('Great job! You learned all the letters!');

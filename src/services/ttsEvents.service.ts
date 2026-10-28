@@ -25,4 +25,3 @@ const TTSEventService = {
 };
 
 export default TTSEventService;
-

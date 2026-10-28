@@ -1,5 +1,5 @@
 import { View, Text, Image, Pressable } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ROUTES } from '../../app/navigation/routeNames';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import {
@@ -19,6 +19,7 @@ import TTSEventService from '../../services/ttsEvents.service';
 import SuccessModal from '../../components/customModal/CustomModel';
 import { ActivitiesKey } from '../../services/mmkv.service';
 import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
+import useActivityRewards from '../../hooks/useActivityRewards';
 
 const MatchingScreen: React.FC = () => {
   const route = useRoute<StackRouteProps<typeof ROUTES.MATCHING>>();
@@ -31,6 +32,29 @@ const MatchingScreen: React.FC = () => {
   const [isSpeaking, setSpeaking] = useState<boolean>(false);
 
   const matching = useLetterMatchPair({ data });
+  const { rewardCorrect, rewardWrong, rewardComplete } =
+    useActivityRewards(data);
+  const matchedCountRef = useRef(0);
+
+  useEffect(() => {
+    const matchedCount = matching.matchedLetters.length;
+    if (matchedCount > matchedCountRef.current) {
+      rewardCorrect();
+    }
+    matchedCountRef.current = matchedCount;
+  }, [matching.matchedLetters.length]);
+
+  useEffect(() => {
+    if (matching.roundStatus.isCorrect === false) {
+      rewardWrong();
+    }
+  }, [matching.roundStatus.isCorrect]);
+
+  useEffect(() => {
+    if (matching.showSuccessModal) {
+      rewardComplete();
+    }
+  }, [matching.showSuccessModal]);
 
   useEffect(() => {
     TTSService.setSpeechRate(0.55);

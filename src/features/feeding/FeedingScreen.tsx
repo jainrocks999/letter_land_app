@@ -25,12 +25,15 @@ import BackerySVG from './components/svgs/BackerySvg';
 import SuccessModal from '../../components/customModal/CustomModel';
 import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
 import { ActivitiesKey } from '../../services/mmkv.service';
+import useActivityRewards from '../../hooks/useActivityRewards';
 
 const FeedingScreen = () => {
   const route = useRoute<StackRouteProps<typeof ROUTES.FEEDING>>();
   const navigation = useNavigation();
   const { data } = route.params;
   const { updateProgress } = useActivityProContext();
+  const { rewardCorrect, rewardWrong, rewardComplete } =
+    useActivityRewards(data);
 
   const [questions] = useState<SearchQuestionType[]>(() =>
     generateQuestionsUpgrade(true),
@@ -121,6 +124,7 @@ const FeedingScreen = () => {
     isResolvingRef.current = true;
     TTSService.stop();
     if (letter === currentQues.target.letter) {
+      rewardCorrect();
       setCharacterState('enjoy');
       const praise =
         feedingPraiseMessages[
@@ -136,6 +140,7 @@ const FeedingScreen = () => {
         // }, 5000);
       }, 2200);
     } else {
+      rewardWrong();
       setCharacterState('oops');
       const tryAgain =
         feedingTryAgainMessages[
@@ -157,6 +162,7 @@ const FeedingScreen = () => {
       setCurrentIndex(prev => prev + 1);
     } else {
       setIsCompleted(true);
+      rewardComplete();
       setShowSuccessModal(true);
       TTSService.stop();
       TTSService.speak('Great job! You fed Coco all the correct letters!');

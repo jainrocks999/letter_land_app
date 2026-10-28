@@ -1,5 +1,5 @@
 import { Image, Pressable, Text, TouchableOpacity, View } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import Animated, {
@@ -22,11 +22,12 @@ import TTSService from '../../services/tts.service';
 import TracingGestureHandler from './components/tracing/TracingGestureHandler';
 import TracingCanvas from './components/tracing/TracingCanvas';
 import useLetterTracing from '../../hooks/useLetterTracing';
-import { tracingConstants } from '../../config/constants';
+import { REWARD_POINTS, tracingConstants } from '../../config/constants';
 import TTSEventService from '../../services/ttsEvents.service';
 import SuccessModal from '../../components/customModal/CustomModel';
 import { ActivitiesKey } from '../../services/mmkv.service';
 import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
+import useActivityRewards from '../../hooks/useActivityRewards';
 
 const { VIEW_BOX_WIDTH, VIEW_BOX_HEIGHT } = tracingConstants;
 
@@ -35,6 +36,8 @@ const TracingScreen = () => {
   const navigation = useNavigation();
   const { data } = route.params;
   const { updateProgress } = useActivityProContext();
+  const { rewardCorrect, rewardComplete } = useActivityRewards(data);
+  const tracedRef = useRef<Set<string>>(new Set());
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isSpeaking, setSpeaking] = useState<boolean>(false);
@@ -69,6 +72,13 @@ const TracingScreen = () => {
     ((currentIndex + 1) / traceLetters.length) * 100,
   );
 
+  useEffect(() => {
+    if (tracing.isComplete && !tracedRef.current.has(current.letter)) {
+      tracedRef.current.add(current.letter);
+      rewardCorrect(REWARD_POINTS.TRACE_LETTER);
+    }
+  }, [tracing.isComplete, current.letter]);
+
   const bubbleStyle = useAnimatedStyle(() => {
     return {
       opacity: bubbleOpacity.value,
@@ -100,6 +110,7 @@ const TracingScreen = () => {
       setIsNext(true);
       setCurrentIndex(prev => prev + 1);
     } else {
+      rewardComplete();
       setShowSuccessModal(true);
       TTSService.stop();
       TTSService.speak('Great job! You traced all the letters!');
