@@ -45,7 +45,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
   };
 
   const handleTestVoice = () => {
-    TTSService.speak('Hello friend! A is for Apple!');
+    TTSService.speak(
+      "Hello, little learner! I'm here to help you learn your letters. Let's learn and have fun together!",
+    );
   };
 
   const handleReset = () => {
@@ -87,9 +89,52 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
           {step === 'settings' && (
             <Animated.View entering={FadeIn.duration(250)} style={styles.body}>
               <View style={styles.row}>
-                <View style={[styles.rowIcon, styles.voiceIcon]}>
+                <View style={[styles.rowIcon, styles.musicIcon]}>
+                  <FontAwesome6
+                    name="music"
+                    iconStyle="solid"
+                    size={18}
+                    color="#fff"
+                  />
+                </View>
+                <View style={styles.rowInfo}>
+                  <Text style={styles.rowTitle}>Music</Text>
+                  <Text style={styles.rowSubText}>
+                    Happy tunes while you play
+                  </Text>
+                </View>
+                <ToggleSwitch
+                  value={settings.musicOn}
+                  onChange={musicOn => updateSettings({ musicOn })}
+                />
+              </View>
+
+              {/* <View style={styles.row}>
+                <View style={[styles.rowIcon, styles.soundIcon]}>
                   <FontAwesome6
                     name={settings.voiceOn ? 'volume-high' : 'volume-xmark'}
+                    iconStyle="solid"
+                    size={18}
+                    color="#fff"
+                  />
+                </View>
+                <View style={styles.rowInfo}>
+                  <Text style={styles.rowTitle}>Sound</Text>
+                  <Text style={styles.rowSubText}>
+                    Sound tunes while you play
+                  </Text>
+                </View>
+                <ToggleSwitch
+                  value={settings.musicOn}
+                  onChange={musicOn => updateSettings({ musicOn })}
+                />
+              </View> */}
+
+              <View style={styles.row}>
+                <View style={[styles.rowIcon, styles.voiceIcon]}>
+                  <FontAwesome6
+                    // name={settings.voiceOn ? 'volume-high' : 'volume-xmark'}
+                    name={'bullhorn'}
                     iconStyle="solid"
                     size={18}
                     color="#fff"

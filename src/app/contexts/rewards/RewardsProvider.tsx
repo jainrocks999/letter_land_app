@@ -11,7 +11,6 @@ import {
 import { RewardsContext } from './RewardsContext';
 import { PointsToastType } from './types';
 import PointsToast from '../../../components/pointsToast/PointsToast';
-import RewardUnlockedModal from '../../../components/rewardUnlockedModal/RewardUnlockedModal';
 
 interface Props {
   children: React.ReactNode;
@@ -118,7 +117,6 @@ export const RewardsProvider = ({ children }: Props) => {
     <RewardsContext.Provider value={value}>
       {children}
       <PointsToast />
-      <RewardUnlockedModal />
     </RewardsContext.Provider>
   );
 };

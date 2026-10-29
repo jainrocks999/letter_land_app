@@ -1,4 +1,4 @@
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SplashScreen from '../../features/splash/SplashScreen';
 import OnBoardingScreen from '../../features/onBoarding/OnBoardingScreen';
@@ -12,12 +12,32 @@ import MatchingScreen from '../../features/matching/MatchingScreen';
 import FeedingScreen from '../../features/feeding/FeedingScreen';
 import FillingLetterScreen from '../../features/filling/FillingLetterScreen';
 import RewardsScreen from '../../features/rewards/RewardsScreen';
+import MusicService from '../../services/music.service';
+
+const ACTIVITY_ROUTES: string[]=[
+  ROUTES.LEARNING,
+  ROUTES.TRACING,
+  ROUTES.FEEDING,
+  ROUTES.SEARCHING,
+  ROUTES.MATCHING,
+  ROUTES.FILLING
+]
 
 const RootNavigator = () => {
   const Stack = createNativeStackNavigator<RootStackParamList>();
+  const navigationRef=useNavigationContainerRef<RootStackParamList>();
+
+  const syncMusicTrack=()=>{
+    const routeName=navigationRef.getCurrentRoute()?.name;
+    MusicService.setTrack(routeName && ACTIVITY_ROUTES.includes(routeName)?'activity':'home');
+  }
 
   return (
-    <NavigationContainer>
+    <NavigationContainer
+    ref={navigationRef}
+    onReady={syncMusicTrack}
+    onStateChange={syncMusicTrack}
+    >
       <Stack.Navigator
         initialRouteName={ROUTES.SPLASH}
         screenOptions={{ headerShown: false }}

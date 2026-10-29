@@ -8,6 +8,7 @@ import {
 } from '../../../config/constants';
 import TTSService from '../../../services/tts.service';
 import { SettingsContext } from './SettingsContext';
+import MusicService from '../../../services/music.service';
 
 interface Props {
   children: React.ReactNode;
@@ -23,6 +24,10 @@ export const SettingsProvider = ({ children }: Props) => {
     TTSService.setMuted(!settings.voiceOn);
     TTSService.setRateMultiplier(VOICE_SPEED_MULTIPLIER[settings.voiceSpeed]);
   }, [settings.voiceOn, settings.voiceSpeed]);
+
+  useEffect(()=>{
+    MusicService.setEnabled(settings.musicOn);
+  },[settings.musicOn])
 
   const updateSettings = useCallback((changes: Partial<UserSettingsType>) => {
     setSettings(prev => {

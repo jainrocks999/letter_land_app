@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import LottieAnimation from '../LottieAnimation/LottieAnimation';
 import CustomButton from '../customButton/CustomButton';
 import { wp } from '../../utils/responsive';
+import MusicService from '../../services/music.service';
 
 interface SuccessModalProps {
   visible: boolean;
@@ -26,6 +27,13 @@ const SuccessModal = ({
   closeBtnText = 'Home',
   restartBtnText = 'Play Again',
 }: SuccessModalProps) => {
+
+  useEffect(()=>{
+    if(visible){
+      MusicService.playEffect('levelComplete');
+    }
+  },[visible]);
+
   if (!visible) {
     return null;
   }

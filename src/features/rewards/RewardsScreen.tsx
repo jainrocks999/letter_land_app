@@ -15,6 +15,7 @@ import { StackNavigationProps } from '../../types/navigation.types';
 import { ROUTES } from '../../app/navigation/routeNames';
 import StickerSlot, { SlotRect, StickerStatus } from './components/StickerSlot';
 import CollectStickerOverlay from './components/CollectStickerOverlay';
+import MusicService from '../../services/music.service';
 
 interface CollectingState {
   sticker: StickerType;
@@ -49,27 +50,24 @@ const RewardsScreen = () => {
     status: StickerStatus,
     rect: SlotRect,
   ) => {
-    if (status === 'collected') {
-      TTSService.speak(`This is your ${sticker.name} sticker!`);
-      return;
-    }
     if (status === 'locked') {
-      TTSService.speak(
-        `You need ${sticker.cost - rewards.stars} more stars for the ${
-          sticker.name
-        }. Keep playing!`,
-      );
+      // TTSService.speak(
+      //   `You need ${sticker.cost - rewards.stars} more stars for the ${
+      //     sticker.name
+      //   }. Keep playing!`,
+      // );
       return;
     }
     containerRef.current?.measureInWindow((x, y, width, height) => {
       if (!collectSticker(sticker.id)) return;
       setLandedId(null);
+      MusicService.playEffect('getReward');
       setCollecting({
         sticker,
         target: { ...rect, x: rect.x - x, y: rect.y - y },
         overlaySize: { width, height },
       });
-      TTSService.speak(`Yay! You collected the ${sticker.name} sticker!`);
+      // TTSService.speak(`Yay! You collected the ${sticker.name} sticker!`);
     });
   };
 
@@ -79,14 +77,13 @@ const RewardsScreen = () => {
   };
 
   const handleTrophyPress = (trophyId: string, title: string) => {
-    if (rewards.trophies.includes(trophyId)) {
-      TTSService.speak(`Hooray! You won the ${title} trophy!`);
-      return;
-    }
+    // if (rewards.trophies.includes(trophyId)) {
+    //   TTSService.speak(`Hooray! You won the ${title} trophy!`);
+    //   return;
+    // }
     const card = activityData.find(
       castle => castle.innerCard.navigate?.toLowerCase() === trophyId,
     )?.innerCard;
-    TTSService.speak(`Finish ${title} to win this trophy!`);
     if (card?.navigate) {
       navigation.navigate(card.navigate, { data: card });
     }

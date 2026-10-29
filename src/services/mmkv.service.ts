@@ -32,12 +32,16 @@ export interface UserSettingsType {
   voiceOn: boolean;
   voiceSpeed: VoiceSpeedType;
   starPopups: boolean;
+  musicOn:boolean;
+  // soundOn:boolean;
 }
 
 export const DEFAULT_SETTINGS: UserSettingsType = {
   voiceOn: true,
   voiceSpeed: 'normal',
   starPopups: true,
+  musicOn:true,
+  // soundOn:true,
 };
 
 export const DEFAULT_REWARDS: UserRewardsType = {
