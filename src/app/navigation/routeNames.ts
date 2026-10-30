@@ -9,6 +9,7 @@ export const ROUTES = {
   SEARCHING: 'Searching',
   MATCHING: 'Matching',
   FILLING: 'Filling',
+  SPELLING:'Spelling',
   REWARDS: 'Rewards',
   PARENT_DASHBOARD: 'ParentDashboard',
 } as const;

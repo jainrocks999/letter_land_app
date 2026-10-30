@@ -12,6 +12,7 @@ export type RootStackParamList = {
   [ROUTES.SEARCHING]: { data: ActivityCard };
   [ROUTES.MATCHING]: { data: ActivityCard };
   [ROUTES.FILLING]: { data: ActivityCard };
+  [ROUTES.SPELLING]: { data: ActivityCard };
   [ROUTES.REWARDS]: undefined;
   [ROUTES.PARENT_DASHBOARD]: undefined;
 };

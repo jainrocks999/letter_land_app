@@ -16,6 +16,7 @@ interface CustomButtonProps {
   padding?: number;
   paddingBottom?: number;
   btnRadius?: number;
+  disabled?: boolean;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
@@ -27,9 +28,12 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   padding,
   paddingBottom,
   btnRadius,
+  disabled = false,
 }) => {
   return (
     <TouchableOpacity
+      disabled={disabled}
+      accessibilityState={{ disabled }}
       style={{
         width: width,
         backgroundColor: bottomBorderColor,

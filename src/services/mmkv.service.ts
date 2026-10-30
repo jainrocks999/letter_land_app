@@ -13,6 +13,7 @@ export interface UserActivitiesType {
   choosing?: number;
   feeding?: number;
   filling?: number;
+  spelling?: number;
   building?: number;
   matching2?: number;
   reading?: number;

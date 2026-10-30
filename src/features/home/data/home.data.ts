@@ -7,7 +7,8 @@ type ActivityRoutes =
   | typeof ROUTES.FEEDING
   | typeof ROUTES.SEARCHING
   | typeof ROUTES.MATCHING
-  | typeof ROUTES.FILLING;
+  | typeof ROUTES.FILLING
+  | typeof ROUTES.SPELLING;
 
 export interface Castle {
   id: string;
@@ -140,9 +141,7 @@ export const activityData: Castle[] = [
       icon: '🖍',
       cardTitle: 'Letter Fill',
       shortDes:
-        // 'Fill in the missing letter to complete simple words and build vocabulary.',
         'Fill the letter shape with the correct letter and improve your letter recognition!',
-      // tag: 'Fill the Gap',
       tag: 'Fill It',
       darkColor: '#a59aaa',
       midColor: '#d87b76',
@@ -152,42 +151,44 @@ export const activityData: Castle[] = [
   },
   {
     id: '7',
-    // image: require('../../../assets/images/castles/level_7.png'),
-    image: require('../../../assets/images/castles/level_7_lock.png'),
-    title: 'Building',
-    // topSkyCol: '#ff6b6b',
-    // bottomSkyCol: '#ffe66d',
-    topSkyCol: '#9CA3AF',
-    bottomSkyCol: '#E5E7EB',
+    image: require('../../../assets/images/castles/level_7.png'),
+    title: 'Spelling',
+    topSkyCol: '#ff6b6b',
+    bottomSkyCol: '#ffe66d',
     innerCard: {
-      icon: '🔤',
-      cardTitle: 'Build Words',
+      icon: '🗣',
+      cardTitle: 'Spell Words',
       shortDes:
-        'Arrange letters in the correct order to build fun and easy words.',
-      // tag: 'Coming Soon',
-      tag: 'Build Words',
+        'Put letters in the correct order to spell words and improve your spelling skills.',
+      tag: 'Spell Words',
       darkColor: '#6a7da0',
       midColor: '#5a4940',
       lightColor: '#e6d7b7',
-      isLocked: true,
+      navigate: ROUTES.SPELLING,
     },
   },
   {
     id: '8',
     // image: require('../../../assets/images/castles/level_8.png'),
     image: require('../../../assets/images/castles/level_8_lock.png'),
-    title: 'Matching 2.0',
+    // title: 'Matching 2.0',
+    title: 'Building',
     // topSkyCol: '#8e44ad',
     // bottomSkyCol: '#eedcff',
     topSkyCol: '#9CA3AF',
     bottomSkyCol: '#E5E7EB',
     innerCard: {
-      icon: '🖼️',
-      cardTitle: 'Match Words',
+      // icon: '🖼️',
+      // cardTitle: 'Match Words',
+      // shortDes:
+      //   'Match each word with the correct picture and learn new vocabulary.',
+      icon: '🔤',
+      cardTitle: 'Build Words',
       shortDes:
-        'Match each word with the correct picture and learn new vocabulary.',
+        'Arrange letters in the correct order to build fun and easy words.',
       // tag: 'Coming Soon',
-      tag: 'Start Matching',
+      tag: 'Build Words',
+      // tag: 'Start Matching',
       darkColor: '#75a5a7',
       midColor: '#5386b1',
       lightColor: '#9ad7d7',
