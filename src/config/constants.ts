@@ -3,6 +3,8 @@ export const STORAGE_KEYS = {
   USER_PERFORMANCE: 'userPermance',
   REWARDS: 'rewards',
   SETTINGS: 'settings',
+  PROFILES: 'profiles',
+  STATS: 'stats',
   PERFORMANCE: {
     LEARNING: 'learning',
     TRACING: 'tracing',
@@ -41,7 +43,7 @@ export const searchingConstants = {
   ACTIVITY: {
     FIND: 'Find',
     MONSTER: 'Feeding',
-    MATCH:'Match'
+    MATCH: 'Match',
   },
   TOTAL_ROUNDS: 15,
 };
@@ -60,3 +62,29 @@ export const VOICE_SPEED_MULTIPLIER = {
   normal: 1,
   fast: 1.3,
 };
+
+export const PROFILE_AVATARS = [
+  '🦁',
+  '🐼',
+  '🦊',
+  '🐰',
+  '🐸',
+  '🐯',
+  '🦄',
+  '🐨',
+  '🐵',
+  '🐧',
+  '🐙',
+  '🦖',
+];
+
+export const PROFILE_COLORS = [
+  '#ff7b38',
+  '#7b61ff',
+  '#35c46b',
+  '#ff5fa2',
+  '#2fa8e0',
+  '#ffb300',
+];
+
+export const MAX_PROFILES = 6;

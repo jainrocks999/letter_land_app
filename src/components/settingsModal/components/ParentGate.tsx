@@ -12,6 +12,7 @@ import CustomButton from '../../customButton/CustomButton';
 interface ParentGateProps {
   onConfirm: () => void;
   onCancel: () => void;
+  message?: string;
 }
 
 const createQuestion = () => {
@@ -30,7 +31,11 @@ const createQuestion = () => {
 };
 
 // a simple multiplication check so kids can't wipe their progress by accident
-const ParentGate: React.FC<ParentGateProps> = ({ onConfirm, onCancel }) => {
+const ParentGate: React.FC<ParentGateProps> = ({
+  onConfirm,
+  onCancel,
+  message = 'This will erase all stars, stickers, trophies and progress. Solve this to continue:',
+}) => {
   const [question, setQuestion] = useState(createQuestion);
   const [isWrong, setIsWrong] = useState(false);
   const shakeX = useSharedValue(0);
@@ -57,10 +62,7 @@ const ParentGate: React.FC<ParentGateProps> = ({ onConfirm, onCancel }) => {
   return (
     <Animated.View entering={FadeIn.duration(250)} style={styles.container}>
       <Text style={styles.title}>👨‍👩‍👧 Grown-ups only</Text>
-      <Text style={styles.message}>
-        This will erase all stars, stickers, trophies and progress. Solve this
-        to continue:
-      </Text>
+      <Text style={styles.message}>{message}</Text>
 
       <Animated.View style={[styles.questionBox, shakeStyle]}>
         <Text style={styles.question}>{question.text} = ?</Text>

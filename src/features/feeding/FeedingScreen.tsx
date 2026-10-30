@@ -32,7 +32,7 @@ const FeedingScreen = () => {
   const navigation = useNavigation();
   const { data } = route.params;
   const { updateProgress } = useActivityProContext();
-  const { rewardCorrect, rewardWrong, rewardComplete } =
+  const { rewardCorrect, rewardWrong, rewardComplete, startNewRound } =
     useActivityRewards(data);
 
   const [questions] = useState<SearchQuestionType[]>(() =>
@@ -176,6 +176,7 @@ const FeedingScreen = () => {
   };
 
   const handleRestart = () => {
+    startNewRound();
     setIsCompleted(false);
     setCurrentIndex(0);
     isResolvingRef.current = false;

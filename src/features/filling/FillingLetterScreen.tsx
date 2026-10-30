@@ -29,7 +29,7 @@ const FillingLetterScreen = () => {
   const navigation = useNavigation();
   const { data } = route.params;
   const { updateProgress } = useActivityProContext();
-  const { rewardCorrect, rewardWrong, rewardComplete } =
+  const { rewardCorrect, rewardWrong, rewardComplete, startNewRound } =
     useActivityRewards(data);
 
   const [questions] = useState<SearchQuestionType[]>(() =>
@@ -159,6 +159,7 @@ const FillingLetterScreen = () => {
   };
 
   const handleRestart = () => {
+    startNewRound();
     setIsCompleted(false);
     setCurrentIndex(0);
     setSelectedOption(null);

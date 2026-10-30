@@ -1,4 +1,10 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import StorageService, {
   DEFAULT_REWARDS,
   UserRewardsType,
@@ -11,15 +17,27 @@ import {
 import { RewardsContext } from './RewardsContext';
 import { PointsToastType } from './types';
 import PointsToast from '../../../components/pointsToast/PointsToast';
+import useProfilesContext from '../profiles/useProfiles';
+import { getProfileKey } from '../../../services/profile.service';
+
+// players from before run tracking already finished their trophy activities once
+const getActivityRuns = (rewards: UserRewardsType, activityId: string) =>
+  Math.max(
+    rewards.activityRuns[activityId] ?? 0,
+    rewards.trophies.includes(activityId) ? 1 : 0,
+  );
 
 interface Props {
   children: React.ReactNode;
 }
 
 export const RewardsProvider = ({ children }: Props) => {
+  const { activeProfileId } = useProfilesContext();
+  const rewardsKey = getProfileKey(STORAGE_KEYS.REWARDS, activeProfileId);
+  const rewardsKeyRef = useRef(rewardsKey);
   // ref is the source of truth so callbacks fired from timers never read stale data
   const rewardsRef = useRef<UserRewardsType>(
-    StorageService.getRewards(STORAGE_KEYS.REWARDS),
+    StorageService.getRewards(rewardsKey),
   );
   const [rewards, setRewards] = useState<UserRewardsType>(rewardsRef.current);
   const [pointsToast, setPointsToast] = useState<PointsToastType | null>(null);
@@ -27,9 +45,19 @@ export const RewardsProvider = ({ children }: Props) => {
 
   const saveRewards = (updated: UserRewardsType) => {
     rewardsRef.current = updated;
-    StorageService.setRewards(STORAGE_KEYS.REWARDS, updated);
+    StorageService.setRewards(rewardsKeyRef.current, updated);
     setRewards(updated);
   };
+
+  // load the other kid's stars when the parent switches profiles
+  useEffect(() => {
+    if (rewardsKeyRef.current === rewardsKey) return;
+    rewardsKeyRef.current = rewardsKey;
+    rewardsRef.current = StorageService.getRewards(rewardsKey);
+    setRewards(rewardsRef.current);
+    setUnlockedQueue([]);
+    setPointsToast(null);
+  }, [rewardsKey]);
 
   const addStars = useCallback((amount: number, label?: string) => {
     if (amount <= 0) return;
@@ -80,6 +108,22 @@ export const RewardsProvider = ({ children }: Props) => {
     saveRewards({ ...current, trophies: [...current.trophies, trophyId] });
   }, []);
 
+  // first finish pays full stars, every replay pays half of the run before it
+  const getRewardMultiplier = useCallback((activityId: string) => {
+    return Math.pow(0.5, getActivityRuns(rewardsRef.current, activityId));
+  }, []);
+
+  const completeActivityRun = useCallback((activityId: string) => {
+    const current = rewardsRef.current;
+    saveRewards({
+      ...current,
+      activityRuns: {
+        ...current.activityRuns,
+        [activityId]: getActivityRuns(current, activityId) + 1,
+      },
+    });
+  }, []);
+
   const resetRewards = useCallback(() => {
     saveRewards(DEFAULT_REWARDS);
     setUnlockedQueue([]);
@@ -97,6 +141,8 @@ export const RewardsProvider = ({ children }: Props) => {
       unlockedQueue,
       addStars,
       addTrophy,
+      getRewardMultiplier,
+      completeActivityRun,
       collectSticker,
       resetRewards,
       dismissUnlocked,
@@ -107,6 +153,8 @@ export const RewardsProvider = ({ children }: Props) => {
       unlockedQueue,
       addStars,
       addTrophy,
+      getRewardMultiplier,
+      completeActivityRun,
       collectSticker,
       resetRewards,
       dismissUnlocked,

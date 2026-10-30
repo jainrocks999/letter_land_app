@@ -8,45 +8,44 @@ import {
 } from '../../../config/constants';
 import { ActivityProgressContext } from './ActivityProgressContext';
 import { updateProgressProp } from './types';
+import useProfilesContext from '../profiles/useProfiles';
+import { getProfileKey } from '../../../services/profile.service';
 
 interface Props {
   children: React.ReactNode;
 }
 
 export const ActivityProProvider = ({ children }: Props) => {
+  const { activeProfileId } = useProfilesContext();
+  const progressKey = getProfileKey(
+    STORAGE_KEYS.USER_PERFORMANCE,
+    activeProfileId,
+  );
   const [progressData, setProgressData] = useState<UserActivitiesType>(
     DEFAULT_ACTIVITIES_PRPOGRESS,
   );
 
   const getProgress = useCallback(() => {
-    const data = StorageService.getUserPerformance(
-      STORAGE_KEYS.USER_PERFORMANCE,
-    );
+    const data = StorageService.getUserPerformance(progressKey);
     setProgressData(data);
-  }, []);
+  }, [progressKey]);
 
   const updateProgress = useCallback(
     ({ key, progress }: updateProgressProp) => {
-      StorageService.setUserPerformance(
-        STORAGE_KEYS.USER_PERFORMANCE,
-        key,
-        progress,
-      );
-      const updatedData = StorageService.getUserPerformance(
-        STORAGE_KEYS.USER_PERFORMANCE,
-      );
+      StorageService.setUserPerformance(progressKey, key, progress);
+      const updatedData = StorageService.getUserPerformance(progressKey);
       setProgressData({
         ...updatedData,
         [key]: progress,
       });
     },
-    [],
+    [progressKey],
   );
 
   const resetProgress = useCallback(() => {
-    StorageService.removeItem(STORAGE_KEYS.USER_PERFORMANCE);
+    StorageService.removeItem(progressKey);
     setProgressData(DEFAULT_ACTIVITIES_PRPOGRESS);
-  }, []);
+  }, [progressKey]);
 
   useEffect(() => {
     getProgress();

@@ -1,6 +1,7 @@
 export const ROUTES = {
   SPLASH: 'Splash',
   ONBOARDING: 'OnBoarding',
+  CREATE_PROFILE: 'CreateProfile',
   HOME: 'Home',
   LEARNING: 'Learning',
   TRACING: 'Tracing',
@@ -9,4 +10,5 @@ export const ROUTES = {
   MATCHING: 'Matching',
   FILLING: 'Filling',
   REWARDS: 'Rewards',
+  PARENT_DASHBOARD: 'ParentDashboard',
 } as const;

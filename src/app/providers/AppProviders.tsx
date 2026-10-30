@@ -1,6 +1,7 @@
 import { PropsWithChildren } from 'react';
 import {
   ActivityProProvider,
+  ProfilesProvider,
   RewardsProvider,
   SettingsProvider,
 } from '../contexts';
@@ -8,9 +9,11 @@ import {
 const AppProviders = ({ children }: PropsWithChildren) => {
   return (
     <SettingsProvider>
-      <ActivityProProvider>
-        <RewardsProvider>{children}</RewardsProvider>
-      </ActivityProProvider>
+      <ProfilesProvider>
+        <ActivityProProvider>
+          <RewardsProvider>{children}</RewardsProvider>
+        </ActivityProProvider>
+      </ProfilesProvider>
     </SettingsProvider>
   );
 };

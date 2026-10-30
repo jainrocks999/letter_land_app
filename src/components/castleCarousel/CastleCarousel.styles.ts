@@ -4,10 +4,10 @@ import { hp, wp } from '../../utils/responsive';
 export const styles = StyleSheet.create({
   pageContainer: {
     width: wp(85),
-    justifyContent: 'flex-end',
+    // justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    height: hp(95),
-    gap: '18%',
+    // height: hp(95),
   },
   activityCard: {
     width: '96%',

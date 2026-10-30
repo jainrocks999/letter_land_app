@@ -7,9 +7,8 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProps } from '../../types/navigation.types';
 import { ROUTES } from '../../app/navigation/routeNames';
 import { ActivitiesKey } from '../../services/mmkv.service';
-import { STORAGE_KEYS } from '../../config/constants';
 import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
-import StarCounter from '../starCounter/StarCounter';
+import StarCounterStatic from '../starCounter/StarCounterStatic';
 
 interface CustomTopbarProps {
   data: ActivityCard;
@@ -23,7 +22,6 @@ const CustomTopbar: React.FC<CustomTopbarProps> = ({ data, progress }) => {
   const handleGoback = () => {
     console.log(data.navigate?.toLowerCase(), progress);
     updateProgress({
-      // key: STORAGE_KEYS.PERFORMANCE.LEARNING as ActivitiesKey,
       key: data.navigate?.toLowerCase() as ActivitiesKey,
       progress: progress,
     });
@@ -38,7 +36,7 @@ const CustomTopbar: React.FC<CustomTopbarProps> = ({ data, progress }) => {
       <View style={{ flex: 1 }}>
         <ProgressBar progress={progress} bgColor="#ffffffcc" />
       </View>
-      {/* <StarCounter /> */}
+      <StarCounterStatic/>
       <View
         style={[
           styles.badgeContainer,
@@ -58,7 +56,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    // gap: 10,
     gap: 12,
     paddingTop: 10,
   },

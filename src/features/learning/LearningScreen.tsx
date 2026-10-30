@@ -32,7 +32,7 @@ const LearningScreen: React.FC = () => {
   const navigation = useNavigation();
   const { data } = route.params;
   const { updateProgress } = useActivityProContext();
-  const { addStars, rewardComplete } = useActivityRewards(data);
+  const { addStars, rewardComplete, startNewRound } = useActivityRewards(data);
   const learnedRef = useRef<Set<number>>(new Set([0]));
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isNext, setIsNext] = useState<boolean>(true);
@@ -77,6 +77,8 @@ const LearningScreen: React.FC = () => {
   };
 
   const handleRestart = () => {
+    startNewRound();
+    learnedRef.current = new Set([0]);
     setShowSuccessModal(false);
     setCurrentIndex(0);
     setIsNext(true);

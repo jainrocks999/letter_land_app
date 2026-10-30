@@ -7,14 +7,16 @@ import { StackNavigationProps } from '../../types/navigation.types';
 import StorageService from '../../services/mmkv.service';
 import { STORAGE_KEYS } from '../../config/constants';
 import Video from 'react-native-video';
+import useProfilesContext from '../../app/contexts/profiles/useProfiles';
 
 const SplashScreen = () => {
   const navigation =
     useNavigation<StackNavigationProps<typeof ROUTES.SPLASH>>();
+  const { needsSetup } = useProfilesContext();
 
   const handleVideoEnd = () => {
     if (StorageService.getIsOnBorading(STORAGE_KEYS.IS_ONBORDING)) {
-      navigation.replace(ROUTES.HOME);
+      navigation.replace(needsSetup ? ROUTES.CREATE_PROFILE : ROUTES.HOME);
     } else {
       navigation.replace(ROUTES.ONBOARDING);
     }

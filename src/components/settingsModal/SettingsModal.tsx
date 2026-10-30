@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import { Modal, Text, TouchableOpacity, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import Animated, { FadeIn, ZoomIn } from 'react-native-reanimated';
 import useSettingsContext from '../../app/contexts/settings/useSettings';
 import useRewardsContext from '../../app/contexts/rewards/useRewards';
 import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
+import useProfilesContext from '../../app/contexts/profiles/useProfiles';
 import { VoiceSpeedType } from '../../services/mmkv.service';
+import StatsService from '../../services/stats.service';
+import { StackNavigationProps } from '../../types/navigation.types';
+import { ROUTES } from '../../app/navigation/routeNames';
 import TTSService from '../../services/tts.service';
 import CustomButton from '../customButton/CustomButton';
 import ToggleSwitch from './components/ToggleSwitch';
@@ -17,7 +22,7 @@ interface SettingsModalProps {
   onClose: () => void;
 }
 
-type ModalStep = 'settings' | 'parentGate' | 'resetDone';
+type ModalStep = 'settings' | 'parentGate' | 'dashboardGate' | 'resetDone';
 
 const speedOptions: { key: VoiceSpeedType; icon: string; label: string }[] = [
   { key: 'slow', icon: '🐢', label: 'Slow' },
@@ -29,6 +34,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
   const { settings, updateSettings } = useSettingsContext();
   const { resetRewards } = useRewardsContext();
   const { resetProgress } = useActivityProContext();
+  const { activeProfile } = useProfilesContext();
+  const navigation = useNavigation<StackNavigationProps<typeof ROUTES.HOME>>();
   const [step, setStep] = useState<ModalStep>('settings');
 
   const handleClose = () => {
@@ -53,7 +60,13 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
   const handleReset = () => {
     resetRewards();
     resetProgress();
+    StatsService.clearStats(activeProfile.id);
     setStep('resetDone');
+  };
+
+  const handleOpenDashboard = () => {
+    handleClose();
+    navigation.navigate(ROUTES.PARENT_DASHBOARD);
   };
 
   return (
@@ -235,6 +248,32 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
               </View>
 
               <TouchableOpacity
+                style={styles.row}
+                onPress={() => setStep('dashboardGate')}
+              >
+                <View style={[styles.rowIcon, styles.parentIcon]}>
+                  <FontAwesome6
+                    name="chart-line"
+                    iconStyle="solid"
+                    size={18}
+                    color="#fff"
+                  />
+                </View>
+                <View style={styles.rowInfo}>
+                  <Text style={styles.rowTitle}>Parent Dashboard</Text>
+                  <Text style={styles.rowSubText}>
+                    Kid profiles and progress reports
+                  </Text>
+                </View>
+                <FontAwesome6
+                  name="lock"
+                  iconStyle="solid"
+                  size={14}
+                  color="#9e9e9e"
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity
                 style={styles.resetBtn}
                 onPress={() => setStep('parentGate')}
               >
@@ -244,7 +283,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
                   size={16}
                   color="#d8493a"
                 />
-                <Text style={styles.resetText}>Reset all progress</Text>
+                <Text style={styles.resetText}>
+                  Reset {activeProfile.name}'s progress
+                </Text>
                 <FontAwesome6
                   name="lock"
                   iconStyle="solid"
@@ -269,7 +310,16 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
 
           {step === 'parentGate' && (
             <ParentGate
+              message={`This will erase ${activeProfile.name}'s stars, stickers, trophies and progress. Solve this to continue:`}
               onConfirm={handleReset}
+              onCancel={() => setStep('settings')}
+            />
+          )}
+
+          {step === 'dashboardGate' && (
+            <ParentGate
+              message="The parent dashboard is for grown-ups. Solve this to open it:"
+              onConfirm={handleOpenDashboard}
               onCancel={() => setStep('settings')}
             />
           )}

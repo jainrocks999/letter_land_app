@@ -4,6 +4,7 @@ import { ROUTES } from './routeNames';
 export type RootStackParamList = {
   [ROUTES.SPLASH]: undefined;
   [ROUTES.ONBOARDING]: undefined;
+  [ROUTES.CREATE_PROFILE]: undefined;
   [ROUTES.HOME]: undefined;
   [ROUTES.LEARNING]: { data: ActivityCard };
   [ROUTES.TRACING]: { data: ActivityCard };
@@ -12,4 +13,5 @@ export type RootStackParamList = {
   [ROUTES.MATCHING]: { data: ActivityCard };
   [ROUTES.FILLING]: { data: ActivityCard };
   [ROUTES.REWARDS]: undefined;
+  [ROUTES.PARENT_DASHBOARD]: undefined;
 };

@@ -25,9 +25,9 @@ export const SettingsProvider = ({ children }: Props) => {
     TTSService.setRateMultiplier(VOICE_SPEED_MULTIPLIER[settings.voiceSpeed]);
   }, [settings.voiceOn, settings.voiceSpeed]);
 
-  useEffect(()=>{
+  useEffect(() => {
     MusicService.setEnabled(settings.musicOn);
-  },[settings.musicOn])
+  }, [settings.musicOn]);
 
   const updateSettings = useCallback((changes: Partial<UserSettingsType>) => {
     setSettings(prev => {

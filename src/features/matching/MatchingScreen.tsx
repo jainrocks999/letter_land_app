@@ -32,7 +32,7 @@ const MatchingScreen: React.FC = () => {
   const [isSpeaking, setSpeaking] = useState<boolean>(false);
 
   const matching = useLetterMatchPair({ data });
-  const { rewardCorrect, rewardWrong, rewardComplete } =
+  const { rewardCorrect, rewardWrong, rewardComplete, startNewRound } =
     useActivityRewards(data);
   const matchedCountRef = useRef(0);
 
@@ -313,7 +313,10 @@ const MatchingScreen: React.FC = () => {
         visible={matching.showSuccessModal}
         title="🎉 Perfect Match!"
         message="Fantastic! You matched all the letter pairs correctly!"
-        onRestart={matching.restartGame}
+        onRestart={() => {
+          startNewRound();
+          matching.restartGame();
+        }}
         onClose={() => {
           updateProgress({
             key: data.navigate?.toLowerCase() as ActivitiesKey,

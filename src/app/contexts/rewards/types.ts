@@ -13,6 +13,8 @@ export interface rewardsType {
   unlockedQueue: StickerType[];
   addStars: (amount: number, label?: string) => void;
   addTrophy: (trophyId: string) => void;
+  getRewardMultiplier: (activityId: string) => number;
+  completeActivityRun: (activityId: string) => void;
   collectSticker: (stickerId: string) => boolean;
   resetRewards: () => void;
   dismissUnlocked: () => void;

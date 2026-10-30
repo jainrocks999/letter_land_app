@@ -24,7 +24,7 @@ const SearchingScreen = () => {
   const navigation = useNavigation();
   const { data } = route.params;
   const { updateProgress } = useActivityProContext();
-  const { rewardCorrect, rewardWrong, rewardComplete } =
+  const { rewardCorrect, rewardWrong, rewardComplete, startNewRound } =
     useActivityRewards(data);
 
   const [questions] = useState<SearchQuestionType[]>(() =>
@@ -114,6 +114,7 @@ const SearchingScreen = () => {
   };
 
   const handleRestart = () => {
+    startNewRound();
     setShowSuccessModal(false);
     setCurrentIndex(0);
     setSelectedOption(null);

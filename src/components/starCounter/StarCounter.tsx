@@ -37,7 +37,6 @@ const StarCounter: React.FC<StarCounterProps> = ({
   const bgColor = useSharedValue(targetBg);
   const borderColor = useSharedValue(targetBorder);
 
-  // fade to the new castle colors instead of jumping when the carousel changes
   useEffect(() => {
     bgColor.value = withTiming(targetBg, { duration: COLOR_DURATION });
     borderColor.value = withTiming(targetBorder, { duration: COLOR_DURATION });

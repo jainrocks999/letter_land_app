@@ -179,17 +179,7 @@ const RewardsScreen = () => {
             </View>
           </View>
           <View style={[styles.flexRow, { justifyContent: 'space-between' }]}>
-            <View
-              style={[
-                {
-                  backgroundColor: '#fff',
-                  height: 70,
-                  width: 70,
-                  borderRadius: 10,
-                  justifyContent: 'center',
-                },
-              ]}
-            >
+            <View style={styles.starContainer}>
               <Text style={[styles.heroStar, { alignSelf: 'center' }]}>⭐</Text>
             </View>
             <Text style={[styles.heroSubText, styles.heroMessage]}>
@@ -255,7 +245,7 @@ const RewardsScreen = () => {
                 ]}
               >
                 {!isEarned && (
-                  <View style={{ position: 'absolute', top: 9, right: 10 }}>
+                  <View style={styles.trophiesLockIcon}>
                     <FontAwesome6
                       name="lock"
                       iconStyle="solid"

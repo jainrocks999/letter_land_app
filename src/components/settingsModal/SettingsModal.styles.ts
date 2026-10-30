@@ -132,4 +132,5 @@ export const styles = StyleSheet.create({
   resetDoneEmoji: { fontSize: 60 },
   musicIcon: { backgroundColor: '#00b894', borderColor: '#008a6e' },
   soundIcon: { backgroundColor: '#bd33d5', borderColor: '#5c1768' },
+  parentIcon: { backgroundColor: '#2fa8e0', borderColor: '#1a7cab' },
 });

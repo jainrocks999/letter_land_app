@@ -1,8 +1,12 @@
-import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
+import {
+  NavigationContainer,
+  useNavigationContainerRef,
+} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SplashScreen from '../../features/splash/SplashScreen';
 import OnBoardingScreen from '../../features/onBoarding/OnBoardingScreen';
 import HomeScreen from '../../features/home/HomeScreen';
+import CreateProfileScreen from '../../features/createProfile/CreateProfileScreen';
 import LearningScreen from '../../features/learning/LearningScreen';
 import { RootStackParamList } from './types';
 import { ROUTES } from './routeNames';
@@ -12,31 +16,34 @@ import MatchingScreen from '../../features/matching/MatchingScreen';
 import FeedingScreen from '../../features/feeding/FeedingScreen';
 import FillingLetterScreen from '../../features/filling/FillingLetterScreen';
 import RewardsScreen from '../../features/rewards/RewardsScreen';
+import ParentDashboardScreen from '../../features/parentDashboard/ParentDashboardScreen';
 import MusicService from '../../services/music.service';
 
-const ACTIVITY_ROUTES: string[]=[
+const ACTIVITY_ROUTES: string[] = [
   ROUTES.LEARNING,
   ROUTES.TRACING,
   ROUTES.FEEDING,
   ROUTES.SEARCHING,
   ROUTES.MATCHING,
-  ROUTES.FILLING
-]
+  ROUTES.FILLING,
+];
 
 const RootNavigator = () => {
   const Stack = createNativeStackNavigator<RootStackParamList>();
-  const navigationRef=useNavigationContainerRef<RootStackParamList>();
+  const navigationRef = useNavigationContainerRef<RootStackParamList>();
 
-  const syncMusicTrack=()=>{
-    const routeName=navigationRef.getCurrentRoute()?.name;
-    MusicService.setTrack(routeName && ACTIVITY_ROUTES.includes(routeName)?'activity':'home');
-  }
+  const syncMusicTrack = () => {
+    const routeName = navigationRef.getCurrentRoute()?.name;
+    MusicService.setTrack(
+      routeName && ACTIVITY_ROUTES.includes(routeName) ? 'activity' : 'home',
+    );
+  };
 
   return (
     <NavigationContainer
-    ref={navigationRef}
-    onReady={syncMusicTrack}
-    onStateChange={syncMusicTrack}
+      ref={navigationRef}
+      onReady={syncMusicTrack}
+      onStateChange={syncMusicTrack}
     >
       <Stack.Navigator
         initialRouteName={ROUTES.SPLASH}
@@ -44,6 +51,10 @@ const RootNavigator = () => {
       >
         <Stack.Screen name={ROUTES.SPLASH} component={SplashScreen} />
         <Stack.Screen name={ROUTES.ONBOARDING} component={OnBoardingScreen} />
+        <Stack.Screen
+          name={ROUTES.CREATE_PROFILE}
+          component={CreateProfileScreen}
+        />
         <Stack.Screen name={ROUTES.HOME} component={HomeScreen} />
         <Stack.Screen name={ROUTES.LEARNING} component={LearningScreen} />
         <Stack.Screen name={ROUTES.TRACING} component={TracingScreen} />
@@ -52,6 +63,10 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.MATCHING} component={MatchingScreen} />
         <Stack.Screen name={ROUTES.FILLING} component={FillingLetterScreen} />
         <Stack.Screen name={ROUTES.REWARDS} component={RewardsScreen} />
+        <Stack.Screen
+          name={ROUTES.PARENT_DASHBOARD}
+          component={ParentDashboardScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

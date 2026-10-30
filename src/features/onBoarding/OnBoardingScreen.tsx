@@ -27,10 +27,13 @@ import { STORAGE_KEYS } from '../../config/constants';
 import { styles } from './OnBoarding.styles';
 import Dot from '../../components/siderDot/Dot';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
+import useProfilesContext from '../../app/contexts/profiles/useProfiles';
 
 const OnBoardingScreen = () => {
   const navigation =
     useNavigation<StackNavigationProps<typeof ROUTES.ONBOARDING>>();
+  const { needsSetup } = useProfilesContext();
+  const nextRoute = needsSetup ? ROUTES.CREATE_PROFILE : ROUTES.HOME;
 
   const flatListRef = useRef<Animated.FlatList>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -74,7 +77,7 @@ const OnBoardingScreen = () => {
       });
     } else {
       StorageService.setIsOnBoarding(STORAGE_KEYS.IS_ONBORDING, true);
-      navigation.replace(ROUTES.HOME);
+      navigation.replace(nextRoute);
     }
   };
 
@@ -107,7 +110,7 @@ const OnBoardingScreen = () => {
           style={styles.skipBtn}
           onPress={() => {
             StorageService.setIsOnBoarding(STORAGE_KEYS.IS_ONBORDING, true),
-              navigation.replace(ROUTES.HOME);
+              navigation.replace(nextRoute);
           }}
         >
           <Text style={styles.skipBtnText}>Skip</Text>

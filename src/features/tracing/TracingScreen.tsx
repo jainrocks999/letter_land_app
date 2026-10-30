@@ -36,7 +36,8 @@ const TracingScreen = () => {
   const navigation = useNavigation();
   const { data } = route.params;
   const { updateProgress } = useActivityProContext();
-  const { rewardCorrect, rewardComplete } = useActivityRewards(data);
+  const { rewardCorrect, rewardComplete, startNewRound } =
+    useActivityRewards(data);
   const tracedRef = useRef<Set<string>>(new Set());
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -124,6 +125,8 @@ const TracingScreen = () => {
   };
 
   const handleRestart = () => {
+    startNewRound();
+    tracedRef.current = new Set();
     setShowSuccessModal(false);
     setCurrentIndex(0);
     setIsNext(true);

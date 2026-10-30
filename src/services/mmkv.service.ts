@@ -24,6 +24,8 @@ export interface UserRewardsType {
   totalEarned: number;
   unlockedStickers: string[];
   trophies: string[];
+  // how many times each activity was finished, used to halve replay stars
+  activityRuns: Record<string, number>;
 }
 
 export type VoiceSpeedType = keyof typeof VOICE_SPEED_MULTIPLIER;
@@ -49,6 +51,7 @@ export const DEFAULT_REWARDS: UserRewardsType = {
   totalEarned: 0,
   unlockedStickers: [],
   trophies: [],
+  activityRuns: {},
 };
 
 const StorageService = {
