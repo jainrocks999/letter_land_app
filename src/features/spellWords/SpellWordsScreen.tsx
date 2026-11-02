@@ -92,7 +92,7 @@ const SpellWordsScreen = () => {
     (prefix = '') => {
       TTSService.stop();
       TTSService.speak(
-        `${prefix}${current.word}. ${letters.join(', ')}. ${current.word}!`,
+        `${prefix}, ${pickRandom(praiseMessages)},${current.word}. ${letters.join(', ')}. ${current.word}!`,
       );
     },
     [current.word],
@@ -156,31 +156,33 @@ const SpellWordsScreen = () => {
     },
     [filledSlots],
   );
-
-  const handleWordComplete = () => {
+  const handleWordComplete = (lastPickLetter:string) => {
     if (wordDoneRef.current) return;
     wordDoneRef.current = true;
-    rewardCorrect();
+    // rewardCorrect();
     // setSolvedCount(prev => prev + 1);
     if (!solvedWordsRef.current.has(currentIndex)) {
       solvedWordsRef.current.add(currentIndex);
       setSolvedCount(solvedWordsRef.current.size);
+    rewardCorrect();
+
     }
     showFeedback('yay');
-    speakSpelling();
-    TTSService.speak(pickRandom(praiseMessages));
+    speakSpelling(lastPickLetter);
   };
 
   const handleTilePlaced = (tileId: string, slotIndex: number) => {
+    let lastValue;
     const updated = filledRef.current.map((value, index) =>
       index === slotIndex ? true : value,
+      lastValue=slotIndex
     );
     filledRef.current = updated;
     setFilled(updated);
     setPlacedTileIds(prev => [...prev, tileId]);
-
+     
     if (updated.every(Boolean)) {
-      handleWordComplete();
+      handleWordComplete(current.word[lastValue]);
     } else {
       TTSService.stop();
       TTSService.speak(current.word[slotIndex]);
