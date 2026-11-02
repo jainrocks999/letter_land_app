@@ -156,7 +156,7 @@ const SpellWordsScreen = () => {
     },
     [filledSlots],
   );
-  const handleWordComplete = (lastPickLetter:string) => {
+  const handleWordComplete = (lastPickLetter: string) => {
     if (wordDoneRef.current) return;
     wordDoneRef.current = true;
     // rewardCorrect();
@@ -164,8 +164,7 @@ const SpellWordsScreen = () => {
     if (!solvedWordsRef.current.has(currentIndex)) {
       solvedWordsRef.current.add(currentIndex);
       setSolvedCount(solvedWordsRef.current.size);
-    rewardCorrect();
-
+      rewardCorrect();
     }
     showFeedback('yay');
     speakSpelling(lastPickLetter);
@@ -173,14 +172,14 @@ const SpellWordsScreen = () => {
 
   const handleTilePlaced = (tileId: string, slotIndex: number) => {
     let lastValue;
-    const updated = filledRef.current.map((value, index) =>
-      index === slotIndex ? true : value,
-      lastValue=slotIndex
+    const updated = filledRef.current.map(
+      (value, index) => (index === slotIndex ? true : value),
+      (lastValue = slotIndex),
     );
     filledRef.current = updated;
     setFilled(updated);
     setPlacedTileIds(prev => [...prev, tileId]);
-     
+
     if (updated.every(Boolean)) {
       handleWordComplete(current.word[lastValue]);
     } else {
@@ -314,25 +313,25 @@ const SpellWordsScreen = () => {
       </View>
 
       <View style={[styles.playArea, { borderColor: data.midColor }]}>
-        <View style={{width:'100%',gap:15}}>
-        <Text style={[styles.roundBadge, { backgroundColor: data.midColor }]}>
-          Word {currentIndex + 1} of {words.length}
-        </Text>
-        <View style={styles.dashborder}/>
+        <View style={{ width: '100%', gap: 15 }}>
+          <Text style={[styles.roundBadge, { backgroundColor: data.midColor }]}>
+            Word {currentIndex + 1} of {words.length}
+          </Text>
+          <View style={styles.dashborder} />
         </View>
-          <View style={[styles.slotsRow, { gap: SLOT_GAP }]}>
-            {letters.map((letter, index) => (
-              <LetterSlot
-                key={`${current.word}-${index}`}
-                index={index}
-                letter={letter}
-                size={tileSize}
-                isFilled={!!filled[index]}
-                colors={data}
-                onMeasure={handleSlotMeasure}
-              />
-            ))}
-          </View>
+        <View style={[styles.slotsRow, { gap: SLOT_GAP }]}>
+          {letters.map((letter, index) => (
+            <LetterSlot
+              key={`${current.word}-${index}`}
+              index={index}
+              letter={letter}
+              size={tileSize}
+              isFilled={!!filled[index]}
+              colors={data}
+              onMeasure={handleSlotMeasure}
+            />
+          ))}
+        </View>
 
         <View
           style={[
@@ -360,7 +359,7 @@ const SpellWordsScreen = () => {
           ))}
         </View>
       </View>
-      <View style={[styles.rowSpacebetween,{marginBottom: 15,}]}>
+      <View style={[styles.rowSpacebetween, { marginBottom: 15 }]}>
         <ActionButton
           bottomBorderWidth={8}
           radius={18}
