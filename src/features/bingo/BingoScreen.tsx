@@ -1,43 +1,267 @@
-import { View, Text, FlatList } from 'react-native';
-import React from 'react';
+import { View, Text, FlatList, useWindowDimensions } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import Animated, {
+  BounceIn,
+  FadeIn,
+  FadeInDown,
+  FadeOut,
+  ZoomIn,
+} from 'react-native-reanimated';
 import { styles } from './Bingo.styles';
 import { ROUTES } from '../../app/navigation/routeNames';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackRouteProps } from '../../types/navigation.types';
 import CustomTopbar from '../../components/customTopbar/CustomTopbar';
 import ScreenHeadingSection from '../../components/screenHeadingSection/ScreenHeadingSection';
 import CharacterFeedback from '../../components/characterAnimation/CharacterFeedback';
 import CustomButton from '../../components/customButton/CustomButton';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
-import ActionButton from '../../components/customButton/ActionButton';
+import LottieAnimation from '../../components/LottieAnimation/LottieAnimation';
+import SuccessModal from '../../components/customModal/CustomModel';
+import TTSService from '../../services/tts.service';
+import TTSEventService from '../../services/ttsEvents.service';
+import MusicService from '../../services/music.service';
+import useActivityRewards from '../../hooks/useActivityRewards';
+import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
+import { ActivitiesKey } from '../../services/mmkv.service';
+import { praiseMessages, tryAgainMessages } from '../../utils/helperData';
+import BingoCell from './components/BingoCell';
+import {
+  BINGO_ROUNDS,
+  createBingoRound,
+  findBingoLine,
+  getBingoRoundConfig,
+} from './data/bingo.data';
 
-const LETTERS = [
-  { id: '1', letter: 'B', active: true },
-  { id: '2', letter: 'M', active: true },
-  { id: '3', letter: 'S', active: false },
-  { id: '4', letter: 'K', active: false },
-  { id: '5', letter: 'D', active: false },
-  { id: '6', letter: 'A', active: true },
-  { id: '7', letter: 'R', active: false },
-  { id: '8', letter: 'F', active: false },
-  { id: '9', letter: 'T', active: false },
-  { id: '10', letter: 'H', active: true },
-  { id: '11', letter: 'E', active: false },
-  { id: '12', letter: 'N', active: false },
-  { id: '13', letter: 'G', active: false },
-  { id: '14', letter: 'P', active: false },
-  { id: '15', letter: 'L', active: false },
-  { id: '16', letter: 'C', active: false },
-];
+const pickRandom = (messages: string[]) =>
+  messages[Math.floor(Math.random() * messages.length)];
 
 const BingoScreen = () => {
   const route = useRoute<StackRouteProps<typeof ROUTES.BINGO>>();
+  const navigation = useNavigation();
+  const { width } = useWindowDimensions();
   const { data } = route.params;
+  const { updateProgress } = useActivityProContext();
+  const {
+    rewardCorrect,
+    rewardWrong,
+    rewardComplete,
+    startNewRound,
+    addStars,
+  } = useActivityRewards(data);
+
+  const [roundData, setRoundData] = useState(() => createBingoRound(0));
+  const [round, setRound] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [foundLetters, setFoundLetters] = useState<string[]>([]);
+  const [selectedLetter, setSelectedLetter] = useState<string | null>(null);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [wrongLetter, setWrongLetter] = useState<string | null>(null);
+  const [bingoLine, setBingoLine] = useState<number[]>([]);
+  const [isBingo, setIsBingo] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pendingBingoRef = useRef<number[] | null>(null);
+
+  const { board, calls } = roundData;
+  const currentTarget = calls[currentIndex];
+  const roundConfig = getBingoRoundConfig(round);
+  const canAdvance = isBingo || isCorrect === true;
+  const isLastRound = round === BINGO_ROUNDS - 1;
+  const screenProgress = isBingo
+    ? Math.round(((round + 1) / BINGO_ROUNDS) * 100)
+    : Math.round(
+        ((round + foundLetters.length / calls.length) / BINGO_ROUNDS) * 100,
+      );
+  const statusText = isBingo
+    ? 'BINGO!'
+    : isCorrect === true
+    ? 'Great!'
+    : isCorrect === false
+    ? 'Try again'
+    : `Round ${round + 1}/${BINGO_ROUNDS}`;
+  const statusColor = isCorrect === false ? '#C0392B' : '#277630';
+
+  const clearTimer = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
+  useEffect(() => {
+    const removeListeners = TTSEventService.addListeners({
+      onStart: () => setIsSpeaking(true),
+      onFinish: () => setIsSpeaking(false),
+      onCancel: () => setIsSpeaking(false),
+    });
+    TTSService.setSpeechRate(0.4);
+
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      removeListeners();
+      TTSService.stop();
+    };
+  }, []);
+
+  // Buddy calls a new letter every time the target changes
+  useEffect(() => {
+    if (isBingo || showSuccessModal) return;
+    const target = calls[currentIndex];
+    if (!target) return;
+    const intro =
+      currentIndex === 0 ? `Round ${round + 1}, ${roundConfig.label}. ` : '';
+    TTSService.speak(`${intro}Buddy says, find the letter ${target}!`);
+  }, [calls, currentIndex, round, roundConfig, isBingo, showSuccessModal]);
+
+  const startRound = (nextRound: number) => {
+    clearTimer();
+    pendingBingoRef.current = null;
+    setRoundData(createBingoRound(nextRound));
+    setRound(nextRound);
+    setCurrentIndex(0);
+    setFoundLetters([]);
+    setSelectedLetter(null);
+    setIsCorrect(null);
+    setWrongLetter(null);
+    setBingoLine([]);
+    setIsBingo(false);
+    setShowSuccessModal(false);
+  };
+
+  const handleBingo = (line: number[]) => {
+    clearTimer();
+    pendingBingoRef.current = null;
+    setBingoLine(line);
+    setIsBingo(true);
+    setIsCorrect(true);
+    addStars(3, 'BINGO!');
+    MusicService.playEffect('getReward');
+    TTSService.stop();
+    TTSService.speak('Bingo! You completed a line!');
+
+    const finalRound = round === BINGO_ROUNDS - 1;
+    if (finalRound) {
+      // save the completion right away in case the kid leaves during the party
+      rewardComplete();
+    }
+
+    timerRef.current = setTimeout(() => {
+      if (!finalRound) {
+        startRound(round + 1);
+      } else {
+        setShowSuccessModal(true);
+        TTSService.stop();
+        TTSService.speak('Amazing! You got Bingo in every round!');
+      }
+    }, 2600);
+  };
+
+  const advanceCall = (found: string[] = foundLetters) => {
+    clearTimer();
+    setIsCorrect(null);
+    setSelectedLetter(null);
+    setWrongLetter(null);
+    if (currentIndex < calls.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    } else {
+      handleBingo(findBingoLine(found, board) ?? []);
+    }
+  };
+
+  const handleLetterPress = (letter: string) => {
+    if (isBingo || isCorrect !== null || showSuccessModal) return;
+    if (foundLetters.includes(letter)) return;
+
+    if (letter !== currentTarget) {
+      setSelectedLetter(letter);
+      setIsCorrect(false);
+      setWrongLetter(letter);
+      rewardWrong();
+      TTSService.speak(pickRandom(tryAgainMessages));
+
+      clearTimer();
+      timerRef.current = setTimeout(() => {
+        setIsCorrect(null);
+        setSelectedLetter(null);
+        setWrongLetter(null);
+      }, 1300);
+      return;
+    }
+
+    const nextFound = [...foundLetters, letter];
+    const line = findBingoLine(nextFound, board);
+    setFoundLetters(nextFound);
+    setSelectedLetter(letter);
+    setIsCorrect(true);
+    rewardCorrect();
+    TTSService.speak(
+      `${pickRandom(praiseMessages)} You found the letter ${letter}!`,
+    );
+
+    clearTimer();
+    if (line) {
+      pendingBingoRef.current = line;
+      timerRef.current = setTimeout(() => handleBingo(line), 700);
+    } else {
+      timerRef.current = setTimeout(() => advanceCall(nextFound), 1600);
+    }
+  };
+
+  const handleNext = () => {
+    if (showSuccessModal) return;
+
+    if (pendingBingoRef.current) {
+      const line = pendingBingoRef.current;
+      pendingBingoRef.current = null;
+      handleBingo(line);
+      return;
+    }
+
+    if (isBingo) {
+      clearTimer();
+      if (isLastRound) {
+        rewardComplete();
+        setShowSuccessModal(true);
+        TTSService.stop();
+        TTSService.speak('Amazing! You got Bingo in every round!');
+      } else {
+        startRound(round + 1);
+      }
+      return;
+    }
+
+    if (isCorrect === true) {
+      advanceCall();
+    }
+  };
+
+  const handleHearAgain = () => {
+    if (isBingo || showSuccessModal || !currentTarget) return;
+    TTSService.speak(`Buddy says, find the letter ${currentTarget}!`);
+  };
+
+  const handleRestart = () => {
+    startNewRound();
+    startRound(0);
+  };
+
+  const handleClose = () => {
+    updateProgress({
+      key: data.navigate?.toLowerCase() as ActivitiesKey,
+      progress: screenProgress,
+    });
+    setShowSuccessModal(false);
+    navigation.goBack();
+  };
+
   return (
     <View
       style={[styles.container, { backgroundColor: `${data.lightColor}33` }]}
     >
-      <CustomTopbar data={data} progress={10} />
+      <CustomTopbar data={data} progress={screenProgress} />
       <ScreenHeadingSection
         heading={data.cardTitle}
         subText="Listen to Buddy and find the letter!"
@@ -47,153 +271,119 @@ const BingoScreen = () => {
           styles.askingCard,
           {
             borderColor: data.darkColor,
-            alignItems: 'center',
             backgroundColor: `${data.darkColor}1A`,
           },
         ]}
       >
         <CharacterFeedback
           colors={data}
-          selectedOption={null}
-          isCorrect={false}
+          selectedOption={selectedLetter}
+          isCorrect={isCorrect}
           styles={styles.characterFeeback}
-          isSpeaking={false}
+          isSpeaking={isSpeaking}
           imgTop={25}
         />
-        <View>
+        <View style={styles.askingCopy}>
+          <View
+            style={[
+              styles.difficultyBadge,
+              {
+                borderColor: data.darkColor,
+                backgroundColor: `${data.darkColor}1A`,
+              },
+            ]}
+          >
+            <Text style={[styles.difficultyText, { color: data.darkColor }]}>
+              {`${roundConfig.label} · ${roundConfig.calls} letters`}
+            </Text>
+          </View>
           <Text style={[styles.cardText, { color: data.darkColor }]}>
             Buddy says, find…
           </Text>
-          <Text style={[styles.cardText, { fontSize: 22, color: '#1a105f' }]}>
+          <Text style={[styles.cardText, styles.askingLetterLabel]}>
             the letter
           </Text>
         </View>
-        <Text style={[styles.letterText, styles.smallLetterCard]}>H</Text>
+        <Animated.Text
+          key={`${round}-${currentTarget}`}
+          entering={BounceIn.springify().damping(9)}
+          style={[styles.letterText, styles.smallLetterCard]}
+        >
+          {currentTarget}
+        </Animated.Text>
       </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          gap: 10,
-          alignItems: 'center',
-          marginVertical: 10,
-        }}
-      >
-        <Text style={[styles.cardText, { color: '#9e9e9e' }]}>Called:</Text>
-        <View style={{ flexDirection: 'row', flex: 1, gap: 5 }}>
-          <Text
-            style={[
-              styles.letterCalledText,
-              { color: data.midColor, borderColor: `${data.midColor}A1` },
-            ]}
-          >
-            S
-          </Text>
-          <Text
-            style={[
-              styles.letterCalledText,
-              { color: data.midColor, borderColor: `${data.midColor}A1` },
-            ]}
-          >
-            A
-          </Text>
-          <Text
-            style={[
-              styles.letterCalledText,
-              { color: data.midColor, borderColor: `${data.midColor}A1` },
-            ]}
-          >
-            J
-          </Text>
-          <Text
-            style={[
-              styles.letterCalledText,
-              { color: data.midColor, borderColor: `${data.midColor}A1` },
-            ]}
-          >
-            W
-          </Text>
-          <Text
-            style={[
-              styles.letterCalledText,
-              { color: data.midColor, borderColor: `${data.midColor}A1` },
-            ]}
-          >
-            B
-          </Text>
-          <Text
-            style={[
-              styles.letterCalledText,
-              { color: data.midColor, borderColor: `${data.midColor}A1` },
-            ]}
-          >
-            T
-          </Text>
-        </View>
-        <Text style={[styles.cardText, { fontSize: 15, color: '#277630' }]}>
-          Great!
-        </Text>
-      </View>
-      <View style={{ backgroundColor: '#fff', padding: 15, borderRadius: 10 }}>
-        <FlatList
-          data={LETTERS}
-          keyExtractor={item => item.id}
-          numColumns={4}
-          scrollEnabled={false}
-          columnWrapperStyle={{ gap: 12 }}
-          contentContainerStyle={{ gap: 12 }}
-          renderItem={({ item }) => (
-            <ActionButton
-              bottomBorderWidth={5}
-              radius={10}
-              backgroundColor={item.active ? '#FCE2D1' : '#DCCDE6'}
-              bottomBorderColor={item.active ? '#F58C62' : '#A986BC'}
-              onPress={() => {}}
-              styles={{ flex: 1, height: 70 }}
+      <View style={styles.calledRow}>
+        <Text style={[styles.cardText, styles.calledLabel]}>Called:</Text>
+        <View style={styles.calledList}>
+          {foundLetters.slice(-6).map(letter => (
+            <Animated.Text
+              key={`${round}-${letter}`}
+              entering={ZoomIn.springify()}
+              style={[
+                styles.letterCalledText,
+                {
+                  color: data.midColor,
+                  borderColor: `${data.midColor}A1`,
+                },
+              ]}
             >
-              <Text
-                style={[
-                  styles.cardText,
-                  { fontSize: 29 },
-                  item.active ? { color: '#C8460E' } : { color: '#604080' },
-                ]}
-              >
-                {item.letter}
-              </Text>
-              {item.active && (
-                <Text
-                  style={{
-                    position: 'absolute',
-                    top: 1,
-                    right: 3,
-                    fontSize: 17,
-                    color: '#F7B51B',
-                    textShadowColor: '#8B4B12',
-                    textShadowOffset: { width: 0.5, height: 1 },
-                    textShadowRadius: 1,
-                  }}
-                >
-                  ★
-                </Text>
-              )}
-            </ActionButton>
+              {letter}
+            </Animated.Text>
+          ))}
+          {foundLetters.length === 0 && (
+            <Text style={styles.calledEmptyText}>Find the first letter!</Text>
           )}
-        />
+        </View>
+        <Animated.Text
+          key={statusText}
+          entering={FadeIn.duration(180)}
+          style={[styles.statusText, { color: statusColor }]}
+        >
+          {statusText}
+        </Animated.Text>
       </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          paddingVertical: 10,
-        }}
-      >
+      <View style={styles.boardCard}>
+        <Animated.View
+          key={`board-${round}`}
+          entering={FadeInDown.duration(320)}
+        >
+          <FlatList
+            data={board}
+            keyExtractor={item => item.id}
+            numColumns={4}
+            scrollEnabled={false}
+            columnWrapperStyle={styles.bingoColumnWrapper}
+            contentContainerStyle={styles.bingoListContent}
+            extraData={`${foundLetters.join('')}-${bingoLine.join(',')}-${
+              wrongLetter ?? ''
+            }-${isBingo}-${isCorrect}-${showSuccessModal}`}
+            renderItem={({ item, index }) => (
+              <BingoCell
+                letter={item.letter}
+                marked={foundLetters.includes(item.letter)}
+                isInBingoLine={bingoLine.includes(index)}
+                isWrong={wrongLetter === item.letter}
+                disabled={
+                  isBingo ||
+                  isCorrect !== null ||
+                  showSuccessModal ||
+                  foundLetters.includes(item.letter)
+                }
+                onPress={handleLetterPress}
+              />
+            )}
+          />
+        </Animated.View>
+      </View>
+      <View style={styles.footerRow}>
         <CustomButton
           width={'48%'}
           paddingBottom={9}
           btnRadius={15}
           padding={12}
-          bottomBorderColor={true ? '#0d8f3e' : '#b3b3b3'}
-          colors={true ? ['#35c46b', '#1ca952'] : ['#d9d9d9', '#c4c4c4']}
-          onPress={() => {}}
+          bottomBorderColor={'#0d8f3e'}
+          colors={['#35c46b', '#1ca952']}
+          onPress={handleHearAgain}
         >
           <View style={styles.buttonContent}>
             <Text style={styles.buttonText}>Hear again</Text>
@@ -202,7 +392,7 @@ const BingoScreen = () => {
               iconStyle="solid"
               size={18}
               color="#fff"
-              style={{ paddingVertical: 8 }}
+              style={styles.hearAgainIcon}
             />
           </View>
         </CustomButton>
@@ -211,14 +401,17 @@ const BingoScreen = () => {
           paddingBottom={9}
           btnRadius={15}
           padding={12}
-          bottomBorderColor={'#d84e16'}
-          colors={['#ff7b38', '#ff6425']}
-          onPress={() => {}}
+          bottomBorderColor={canAdvance ? '#d84e16' : '#b3b3b3'}
+          colors={canAdvance ? ['#ff7b38', '#ff6425'] : ['#d9d9d9', '#c4c4c4']}
+          onPress={handleNext}
+          disabled={!canAdvance}
         >
           <View style={styles.buttonContent}>
-            <Text style={styles.buttonText}>Next</Text>
+            <Text style={styles.buttonText}>
+              {isBingo ? (isLastRound ? 'Finish' : 'Next Round') : 'Next'}
+            </Text>
             <FontAwesome6
-              name={'chevron-right'}
+              name={isBingo ? 'star' : 'chevron-right'}
               iconStyle="solid"
               size={18}
               color="#fff"
@@ -227,6 +420,44 @@ const BingoScreen = () => {
           </View>
         </CustomButton>
       </View>
+
+      {isBingo && (
+        <Animated.View
+          pointerEvents="none"
+          entering={FadeIn.duration(120)}
+          exiting={FadeOut.duration(200)}
+          style={styles.bingoOverlay}
+        >
+          <View style={styles.confettiLayer}>
+            <LottieAnimation
+              animation={require('../../assets/animations/Confetti.json')}
+              size={width}
+              loop={false}
+            />
+          </View>
+          <Animated.Text
+            entering={BounceIn.springify().damping(8)}
+            style={styles.bingoTitle}
+          >
+            BINGO!
+          </Animated.Text>
+          <Animated.Text
+            entering={ZoomIn.delay(180)}
+            style={styles.bingoSubtitle}
+          >
+            You found a whole line!
+          </Animated.Text>
+        </Animated.View>
+      )}
+
+      <SuccessModal
+        visible={showSuccessModal}
+        title="🎉 BINGO Champion!"
+        message={`Wonderful! You got Bingo in all ${BINGO_ROUNDS} rounds!`}
+        onRestart={handleRestart}
+        onClose={handleClose}
+        characterImage={require('../../assets/images/character/yay.gif')}
+      />
     </View>
   );
 };

@@ -14,6 +14,7 @@ export interface UserActivitiesType {
   feeding?: number;
   filling?: number;
   spelling?: number;
+  bingo?: number;
   building?: number;
   matching2?: number;
   reading?: number;

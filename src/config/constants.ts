@@ -25,6 +25,8 @@ export const DEFAULT_ACTIVITIES_PRPOGRESS = {
   matching: 0,
   choosing: 0,
   filling: 0,
+  spelling: 0,
+  bingo: 0,
   building: 0,
   matching2: 0,
   reading: 0,

@@ -11,6 +11,7 @@ export const styles = StyleSheet.create({
     height: '17%',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     padding: 15,
     borderWidth: 1,
     borderRadius: 15,
@@ -26,6 +27,24 @@ export const styles = StyleSheet.create({
     fontFamily: 'Fredoka-Bold',
     fontSize: 13,
     letterSpacing: 0.5,
+  },
+  askingCopy: {
+    flex: 1,
+    gap: 3,
+    // borderWidth:1,
+    alignItems: 'center',
+  },
+  difficultyBadge: {
+    borderWidth: 1,
+    borderRadius: 20,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    marginBottom: 2,
+  },
+  difficultyText: {
+    fontFamily: 'Fredoka-Bold',
+    fontSize: 9,
+    letterSpacing: 0.4,
   },
   letterText: {
     fontFamily: 'Fredoka-Bold',
@@ -69,5 +88,105 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 11,
     paddingVertical: 8,
     borderRadius: 20,
+  },
+  calledRow: {
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  askingLetterLabel: {
+    fontSize: 22,
+    color: '#1a105f',
+  },
+  calledLabel: {
+    color: '#9e9e9e',
+  },
+  calledList: {
+    flexDirection: 'row',
+    flex: 1,
+    gap: 5,
+    alignItems: 'center',
+  },
+  calledEmptyText: {
+    fontFamily: 'Fredoka-Medium',
+    fontSize: 12,
+    color: '#9e9e9e',
+  },
+  statusText: {
+    fontFamily: 'Fredoka-Bold',
+    fontSize: 15,
+    textAlign: 'right',
+  },
+  boardCard: {
+    backgroundColor: '#fff',
+    padding: 15,
+    borderRadius: 10,
+  },
+  bingoColumnWrapper: {
+    gap: 10,
+  },
+  bingoListContent: {
+    gap: 10,
+  },
+  footerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 10,
+  },
+  hearAgainIcon: {
+    paddingVertical: 8,
+  },
+  bingoCell: {
+    flex: 1,
+    aspectRatio: 1,
+  },
+  bingoCellButton: {
+    flex: 1,
+  },
+  bingoCellText: {
+    fontFamily: 'Fredoka-Bold',
+    fontSize: 29,
+  },
+  bingoCellStar: {
+    position: 'absolute',
+    top: 1,
+    right: 3,
+    fontSize: 17,
+    color: '#F7B51B',
+    textShadowColor: '#8B4B12',
+    textShadowOffset: { width: 0.5, height: 1 },
+    textShadowRadius: 1,
+  },
+  bingoOverlay: {
+    ...StyleSheet.absoluteFill,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(26, 16, 95, 0.22)',
+    zIndex: 999,
+    elevation: 999,
+  },
+  confettiLayer: {
+    position: 'absolute',
+  },
+  bingoTitle: {
+    fontFamily: 'Fredoka-Bold',
+    fontSize: 64,
+    letterSpacing: 4,
+    color: '#fff',
+    textShadowColor: 'rgba(26, 16, 95, 0.45)',
+    textShadowOffset: { width: 0, height: 5 },
+    textShadowRadius: 1,
+  },
+  bingoSubtitle: {
+    fontFamily: 'Fredoka-Bold',
+    fontSize: 17,
+    color: '#fff',
+    backgroundColor: 'rgba(26, 16, 95, 0.55)',
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+    borderRadius: 20,
+    overflow: 'hidden',
+    marginTop: 6,
   },
 });
