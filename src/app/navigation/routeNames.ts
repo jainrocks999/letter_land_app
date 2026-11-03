@@ -10,6 +10,7 @@ export const ROUTES = {
   MATCHING: 'Matching',
   FILLING: 'Filling',
   SPELLING:'Spelling',
+  BINGO:'Bingo',
   REWARDS: 'Rewards',
   PARENT_DASHBOARD: 'ParentDashboard',
 } as const;

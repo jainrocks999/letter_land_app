@@ -19,6 +19,7 @@ import RewardsScreen from '../../features/rewards/RewardsScreen';
 import ParentDashboardScreen from '../../features/parentDashboard/ParentDashboardScreen';
 import MusicService from '../../services/music.service';
 import SpellWordsScreen from '../../features/spellWords/SpellWordsScreen';
+import BingoScreen from '../../features/bingo/BingoScreen';
 
 const ACTIVITY_ROUTES: string[] = [
   ROUTES.LEARNING,
@@ -28,6 +29,7 @@ const ACTIVITY_ROUTES: string[] = [
   ROUTES.MATCHING,
   ROUTES.FILLING,
   ROUTES.SPELLING,
+  ROUTES.BINGO,
 ];
 
 const RootNavigator = () => {
@@ -66,6 +68,7 @@ const RootNavigator = () => {
         <Stack.Screen name={ROUTES.FILLING} component={FillingLetterScreen} />
         <Stack.Screen name={ROUTES.SPELLING} component={SpellWordsScreen} />
         <Stack.Screen name={ROUTES.REWARDS} component={RewardsScreen} />
+        <Stack.Screen name={ROUTES.BINGO} component={BingoScreen} />
         <Stack.Screen
           name={ROUTES.PARENT_DASHBOARD}
           component={ParentDashboardScreen}

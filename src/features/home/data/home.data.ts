@@ -8,7 +8,8 @@ type ActivityRoutes =
   | typeof ROUTES.SEARCHING
   | typeof ROUTES.MATCHING
   | typeof ROUTES.FILLING
-  | typeof ROUTES.SPELLING;
+  | typeof ROUTES.SPELLING
+  | typeof ROUTES.BINGO;
 
 export interface Castle {
   id: string;
@@ -169,30 +170,30 @@ export const activityData: Castle[] = [
   },
   {
     id: '8',
-    // image: require('../../../assets/images/castles/level_8.png'),
-    image: require('../../../assets/images/castles/level_8_lock.png'),
+    image: require('../../../assets/images/castles/level_8.png'),
+    // image: require('../../../assets/images/castles/level_8_lock.png'),
     // title: 'Matching 2.0',
-    title: 'Building',
-    // topSkyCol: '#8e44ad',
-    // bottomSkyCol: '#eedcff',
-    topSkyCol: '#9CA3AF',
-    bottomSkyCol: '#E5E7EB',
+    title: 'Letter Bingo',
+    topSkyCol: '#8e44ad',
+    bottomSkyCol: '#eedcff',
+    // topSkyCol: '#9CA3AF',
+    // bottomSkyCol: '#E5E7EB',
     innerCard: {
       // icon: '🖼️',
       // cardTitle: 'Match Words',
       // shortDes:
       //   'Match each word with the correct picture and learn new vocabulary.',
       icon: '🔤',
-      cardTitle: 'Build Words',
+      cardTitle: 'Letter Bingo',
       shortDes:
-        'Arrange letters in the correct order to build fun and easy words.',
-      // tag: 'Coming Soon',
-      tag: 'Build Words',
+        'Play an exciting bingo game by finding and matching the correct letters.',
+      tag: 'Bingo',
       // tag: 'Start Matching',
       darkColor: '#75a5a7',
       midColor: '#5386b1',
       lightColor: '#9ad7d7',
-      isLocked: true,
+      // isLocked: true,
+      navigate: ROUTES.BINGO,
     },
   },
   {
@@ -200,6 +201,7 @@ export const activityData: Castle[] = [
     // image: require('../../../assets/images/castles/level_9.png'),
     image: require('../../../assets/images/castles/level_9_lock.png'),
     title: 'Reading',
+    // cardTitle: 'Build Words',
     // topSkyCol: '#3f87f5',
     // bottomSkyCol: '#b6e3ff',
     topSkyCol: '#9CA3AF',
@@ -209,8 +211,9 @@ export const activityData: Castle[] = [
       cardTitle: 'Read Words',
       shortDes:
         'Read simple words aloud to improve reading confidence and pronunciation.',
-      // tag: 'Coming Soon',
-      tag: 'Start Matching',
+        // 'Arrange letters in the correct order to build fun and easy words.',
+        tag: 'Start Matching',
+        // tag: 'Build Words',
       darkColor: '#cd4a35',
       midColor: '#ceb200',
       lightColor: '#efdfc6',
