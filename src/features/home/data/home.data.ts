@@ -173,7 +173,7 @@ export const activityData: Castle[] = [
     image: require('../../../assets/images/castles/level_8.png'),
     // image: require('../../../assets/images/castles/level_8_lock.png'),
     // title: 'Matching 2.0',
-    title: 'Letter Bingo',
+    title: 'Bingo',
     topSkyCol: '#8e44ad',
     bottomSkyCol: '#eedcff',
     // topSkyCol: '#9CA3AF',

@@ -112,6 +112,7 @@ export const styles = StyleSheet.create({
     fontFamily: 'Fredoka-Medium',
     fontSize: 12,
     color: '#9e9e9e',
+    paddingVertical:5
   },
   statusText: {
     fontFamily: 'Fredoka-Bold',
@@ -120,7 +121,7 @@ export const styles = StyleSheet.create({
   },
   boardCard: {
     backgroundColor: '#fff',
-    padding: 15,
+    // padding: 10,
     borderRadius: 10,
   },
   bingoColumnWrapper: {
@@ -142,7 +143,8 @@ export const styles = StyleSheet.create({
     aspectRatio: 1,
   },
   bingoCellButton: {
-    flex: 1,
+    width: '100%',
+    height: '100%',
   },
   bingoCellText: {
     fontFamily: 'Fredoka-Bold',

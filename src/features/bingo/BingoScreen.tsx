@@ -112,8 +112,8 @@ const BingoScreen = () => {
     const target = calls[currentIndex];
     if (!target) return;
     const intro =
-      currentIndex === 0 ? `Round ${round + 1}, ${roundConfig.label}. ` : '';
-    TTSService.speak(`${intro}Buddy says, find the letter ${target}!`);
+      currentIndex === 0 ? `Round ${round + 1}. ` : '';
+    TTSService.speak(`${intro} find the letter ${target}!`);
   }, [calls, currentIndex, round, roundConfig, isBingo, showSuccessModal]);
 
   const startRound = (nextRound: number) => {
@@ -206,7 +206,7 @@ const BingoScreen = () => {
       pendingBingoRef.current = line;
       timerRef.current = setTimeout(() => handleBingo(line), 700);
     } else {
-      timerRef.current = setTimeout(() => advanceCall(nextFound), 1600);
+      timerRef.current = setTimeout(() => advanceCall(nextFound), 3000);
     }
   };
 
@@ -346,6 +346,7 @@ const BingoScreen = () => {
         <Animated.View
           key={`board-${round}`}
           entering={FadeInDown.duration(320)}
+          style={{padding:10}}
         >
           <FlatList
             data={board}
@@ -381,8 +382,8 @@ const BingoScreen = () => {
           paddingBottom={9}
           btnRadius={15}
           padding={12}
-          bottomBorderColor={'#0d8f3e'}
-          colors={['#35c46b', '#1ca952']}
+          bottomBorderColor={'#d84e16'}
+          colors={['#ff7b38', '#ff6425']}
           onPress={handleHearAgain}
         >
           <View style={styles.buttonContent}>
@@ -401,8 +402,8 @@ const BingoScreen = () => {
           paddingBottom={9}
           btnRadius={15}
           padding={12}
-          bottomBorderColor={canAdvance ? '#d84e16' : '#b3b3b3'}
-          colors={canAdvance ? ['#ff7b38', '#ff6425'] : ['#d9d9d9', '#c4c4c4']}
+          bottomBorderColor={canAdvance ? '#0d8f3e' : '#b3b3b3'}
+          colors={canAdvance ? ['#35c46b', '#1ca952'] : ['#d9d9d9', '#c4c4c4']}
           onPress={handleNext}
           disabled={!canAdvance}
         >
