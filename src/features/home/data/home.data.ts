@@ -9,7 +9,8 @@ type ActivityRoutes =
   | typeof ROUTES.MATCHING
   | typeof ROUTES.FILLING
   | typeof ROUTES.SPELLING
-  | typeof ROUTES.BINGO;
+  | typeof ROUTES.BINGO
+  | typeof ROUTES.STORYTELLINGLIST;
 
 export interface Castle {
   id: string;
@@ -172,23 +173,17 @@ export const activityData: Castle[] = [
     id: '8',
     image: require('../../../assets/images/castles/level_8.png'),
     // image: require('../../../assets/images/castles/level_8_lock.png'),
-    // title: 'Matching 2.0',
     title: 'Bingo',
     topSkyCol: '#8e44ad',
     bottomSkyCol: '#eedcff',
     // topSkyCol: '#9CA3AF',
     // bottomSkyCol: '#E5E7EB',
     innerCard: {
-      // icon: '🖼️',
-      // cardTitle: 'Match Words',
-      // shortDes:
-      //   'Match each word with the correct picture and learn new vocabulary.',
       icon: '🔤',
       cardTitle: 'Letter Bingo',
       shortDes:
         'Play an exciting bingo game by finding and matching the correct letters.',
       tag: 'Bingo',
-      // tag: 'Start Matching',
       darkColor: '#75a5a7',
       midColor: '#5386b1',
       lightColor: '#9ad7d7',
@@ -198,26 +193,24 @@ export const activityData: Castle[] = [
   },
   {
     id: '9',
-    // image: require('../../../assets/images/castles/level_9.png'),
-    image: require('../../../assets/images/castles/level_9_lock.png'),
-    title: 'Reading',
-    // cardTitle: 'Build Words',
-    // topSkyCol: '#3f87f5',
-    // bottomSkyCol: '#b6e3ff',
-    topSkyCol: '#9CA3AF',
-    bottomSkyCol: '#E5E7EB',
+    image: require('../../../assets/images/castles/level_9.png'),
+    // image: require('../../../assets/images/castles/level_9_lock.png'),
+    title: 'Storytellinglist',
+    topSkyCol: '#3f87f5',
+    bottomSkyCol: '#b6e3ff',
+    // topSkyCol: '#9CA3AF',
+    // bottomSkyCol: '#E5E7EB',
     innerCard: {
       icon: '📖',
-      cardTitle: 'Read Words',
+      cardTitle: 'Read Stories',
       shortDes:
-        'Read simple words aloud to improve reading confidence and pronunciation.',
-        // 'Arrange letters in the correct order to build fun and easy words.',
-        tag: 'Start Matching',
-        // tag: 'Build Words',
+        'Read fun stories aloud and improve your reading and pronunciation skills.',
+        tag: 'Start Reading',
       darkColor: '#cd4a35',
       midColor: '#ceb200',
       lightColor: '#efdfc6',
-      isLocked: true,
+      // isLocked: true,
+      navigate:ROUTES.STORYTELLINGLIST
     },
   },
 ];

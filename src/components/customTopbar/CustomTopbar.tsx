@@ -12,7 +12,7 @@ import StarCounterStatic from '../starCounter/StarCounterStatic';
 
 interface CustomTopbarProps {
   data: ActivityCard;
-  progress: number;
+  progress?: number;
 }
 
 const CustomTopbar: React.FC<CustomTopbarProps> = ({ data, progress }) => {
@@ -20,10 +20,10 @@ const CustomTopbar: React.FC<CustomTopbarProps> = ({ data, progress }) => {
   const navigation =
     useNavigation<StackNavigationProps<typeof ROUTES.LEARNING>>();
   const handleGoback = () => {
-    console.log(data.navigate?.toLowerCase(), progress);
+    // console.log(data.navigate?.toLowerCase(), progress);
     updateProgress({
       key: data.navigate?.toLowerCase() as ActivitiesKey,
-      progress: progress,
+      progress: progress ?? 0,
     });
     navigation.goBack();
   };
@@ -34,7 +34,8 @@ const CustomTopbar: React.FC<CustomTopbarProps> = ({ data, progress }) => {
         <FontAwesome6 name="xmark" iconStyle="solid" size={30} />
       </TouchableOpacity>
       <View style={{ flex: 1 }}>
-        <ProgressBar progress={progress} bgColor="#ffffffcc" />
+        {progress!=null &&
+        <ProgressBar progress={progress} bgColor="#ffffffcc" />}
       </View>
       <StarCounterStatic/>
       <View

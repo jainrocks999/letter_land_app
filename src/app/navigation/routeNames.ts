@@ -11,6 +11,7 @@ export const ROUTES = {
   FILLING: 'Filling',
   SPELLING:'Spelling',
   BINGO:'Bingo',
+  STORYTELLINGLIST:'Storytellinglist',
   REWARDS: 'Rewards',
   PARENT_DASHBOARD: 'ParentDashboard',
 } as const;
