@@ -63,6 +63,20 @@ export const STORY_ACTIVITY_LABELS: Record<StoryActivityType, string> = {
   find: 'Find the word',
 };
 
+// spelling pages without hand-written choices get three taps so the child can
+// still answer without a keyboard
+const SPELL_CHOICES: Record<string, string[]> = {
+  a: ['a', 'e', 'o'],
+  e: ['e', 'a', 'i'],
+  i: ['i', 'e', 'o'],
+  o: ['o', 'a', 'u'],
+  kite: ['kite', 'kit', 'kate'],
+  ride: ['ride', 'rid', 'rode'],
+};
+
+const getSpellChoices = (answer: string): string[] | undefined =>
+  SPELL_CHOICES[answer.toLowerCase()];
+
 const storyPage = (
   image: ImageSourcePropType,
   text: string,
@@ -73,8 +87,22 @@ const storyPage = (
 ): StoryPage => ({
   image,
   text,
-  activity: { type, prompt, answer, options },
+  activity: {
+    type,
+    prompt,
+    answer,
+    options:
+      options ?? (type === 'spell' ? getSpellChoices(answer) : undefined),
+  },
 });
+
+// every choice-based exercise exposes its options through one helper, so the
+// reader does not need to know how a page stores them
+export const getActivityOptions = (activity: StoryActivity): string[] => {
+  if (activity.options?.length) return activity.options;
+  if (activity.type === 'spell') return getSpellChoices(activity.answer) ?? [];
+  return [];
+};
 
 export const storyData: Story[] = [
   // ---------------------------------------------------------------- Level 1
@@ -117,7 +145,7 @@ export const storyData: Story[] = [
       ),
       storyPage(
         require('../../../assets/stories/story_1/page_5.webp'),
-        'Sam and the rat nap.',
+        'Sam and the rat take a nap.',
         'spell',
         'n _ p',
         'a',

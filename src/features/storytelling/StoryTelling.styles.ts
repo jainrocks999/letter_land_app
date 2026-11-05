@@ -37,6 +37,60 @@ export const styles = StyleSheet.create({
     height: 215,
     // borderRadius: 20,
   },
+  readContainer: {
+    flex: 1,
+  },
+  readHeader: {
+    paddingHorizontal: 15,
+    paddingTop: 14,
+    gap: 14,
+  },
+  readContent: {
+    paddingHorizontal: 15,
+    paddingVertical: 14,
+  },
+  readFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 15,
+    paddingTop: 14,
+  },
+  playButton: {
+    height: 70,
+    width: 70,
+  },
+  navButtonDisabled: {
+    opacity: 0.4,
+  },
+  buddyRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginTop: -65,
+  },
+  readPageText: {
+    fontSize: 45,
+  },
+  readPageTextRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    rowGap: 8,
+  },
+  readWord: {
+    paddingHorizontal: 5,
+    paddingVertical: 2,
+    marginRight: 2,
+    borderRadius: 10,
+    lineHeight: 54,
+  },
+  readSpokenHighlight: {
+    borderRadius: 10,
+  },
+  readHintText: {
+    color: '#9e9e9e',
+  },
   readCoverCard: {
     padding: 0,
     overflow: 'hidden',
