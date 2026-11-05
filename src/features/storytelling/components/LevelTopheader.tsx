@@ -1,58 +1,59 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text } from 'react-native';
 import React from 'react';
 import ActionButton from '../../../components/customButton/ActionButton';
 import { ActivityCard } from '../../home/data/home.data';
-import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
+import { StoryLevel, StoryLevelInfo } from '../data/storytelling.data';
 
 interface LevelTopheaderProps {
   data: ActivityCard;
+  levels: StoryLevelInfo[];
+  activeLevel: StoryLevel;
+  onSelectLevel: (level: StoryLevel) => void;
 }
 
-const LevelTopheader = ({ data }: LevelTopheaderProps) => {
-  const renderItem = ({ item }: { item: (typeof LevelData)[0] }) => (
-    <ActionButton
-      bottomBorderWidth={0}
-      radius={50}
-      backgroundColor={ item.active?data.darkColor:`${data.lightColor}4D`}
-      bottomBorderColor={`${data.midColor}00`}
-      onPress={() => {
-        if (item.isLock) return;
-      }}
-      styles={[styles.itemButton, { borderColor: data.lightColor }]}
-    >
-      {item.isLock && (
-        <FontAwesome6
-          name="lock"
-          iconStyle="solid"
-          size={16}
-          color={`${data.midColor}99`}
-        />
-      )}
-      <Text style={[styles.listText, { color: item.active?data.lightColor:`${data.midColor}99` }]}>
-        {item.lable}
-      </Text>
-    </ActionButton>
-  );
+const LevelTopheader = ({
+  data,
+  levels,
+  activeLevel,
+  onSelectLevel,
+}: LevelTopheaderProps) => {
+  const renderItem = ({ item }: { item: StoryLevelInfo }) => {
+    const isActive = item.level === activeLevel;
+
+    return (
+      <ActionButton
+        bottomBorderWidth={0}
+        radius={50}
+        backgroundColor={isActive ? data.darkColor : `${data.lightColor}4D`}
+        bottomBorderColor={`${data.midColor}00`}
+        onPress={() => onSelectLevel(item.level)}
+        styles={[styles.itemButton, { borderColor: data.lightColor }]}
+      >
+        <Text
+          style={[
+            styles.listText,
+            { color: isActive ? data.lightColor : `${data.midColor}99` },
+          ]}
+        >
+          {item.label}
+        </Text>
+      </ActionButton>
+    );
+  };
 
   return (
     <FlatList
-      data={LevelData}
+      data={levels}
       horizontal
-      keyExtractor={(item, index) => index.toString()}
+      keyExtractor={item => item.level.toString()}
       showsHorizontalScrollIndicator={false}
-      contentContainerStyle={[styles.listContainer]}
+      contentContainerStyle={styles.listContainer}
       renderItem={renderItem}
     />
   );
 };
 
 export default LevelTopheader;
-
-const LevelData = [
-  { lable: 'Level 1', isLock: false,active:true},
-  { lable: 'Level 2', isLock: false,active:false },
-  { lable: 'Level 3', isLock: true,active:false},
-];
 
 const styles = StyleSheet.create({
   listContainer: {
@@ -63,6 +64,7 @@ const styles = StyleSheet.create({
     borderWidth: 2.5,
     height: '100%',
     width: 108,
+    borderRadius: 50,
   },
   listText: {
     fontFamily: 'Fredoka-Bold',

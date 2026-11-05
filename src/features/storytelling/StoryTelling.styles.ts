@@ -3,9 +3,8 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    
   },
-  scrollContainer:{
+  scrollContainer: {
     paddingHorizontal: 15,
     paddingVertical: 14,
     gap: 14,
@@ -19,6 +18,60 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
     padding: 15,
+  },
+  bannerImage: {
+    height: 115,
+    width: 115,
+    borderRadius: 10,
+  },
+  bannerContent: {
+    justifyContent: 'space-between',
+    width: '48%',
+  },
+  levelHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  readCover: {
+    width: '100%',
+    height: 215,
+    // borderRadius: 20,
+  },
+  readCoverCard: {
+    padding: 0,
+    overflow: 'hidden',
+    gap: 0,
+  },
+  readProgressRow: {
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'center',
+  },
+  flexOne: {
+    flex: 1,
+  },
+  readInfoCard: {
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderBottomWidth: 6,
+    borderRadius: 20,
+    padding: 15,
+    gap: 6,
+  },
+  storyReadCard: {
+    borderTopWidth: 2.5,
+    borderStyle: 'dashed',
+    borderColor: '#9e9e9e',
+    padding: 15,
+    gap: 6,
+  },
+  storyColumnWrapper: {
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  storyListContent: {
+    marginBottom: 20,
+    gap: 12,
   },
   tagText: {
     fontFamily: 'Fredoka-Bold',
@@ -52,15 +105,37 @@ export const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderRadius: 20,
     borderBottomWidth: 6,
-    overflow:"hidden",
+    overflow: 'hidden',
   },
-  cardTagText:{
-    position:'absolute',
+  cardTagText: {
+    position: 'absolute',
     backgroundColor: '#9e9e9e',
     paddingVertical: 2,
     paddingHorizontal: 8,
     borderRadius: 50,
     alignSelf: 'flex-start',
-    margin :10
-  }
+    margin: 10,
+  },
+  pageCount: {
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+    borderRadius: 50,
+  },
+  flexRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  buddyStatusText: {
+    backgroundColor: '#ffff',
+    borderWidth: 1,
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 50,
+  },
+  characterImage: {
+    height: 90,
+    width: 90,
+    marginTop: 0,
+  },
 });

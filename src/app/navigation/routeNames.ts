@@ -9,9 +9,10 @@ export const ROUTES = {
   SEARCHING: 'Searching',
   MATCHING: 'Matching',
   FILLING: 'Filling',
-  SPELLING:'Spelling',
-  BINGO:'Bingo',
-  STORYTELLINGLIST:'Storytellinglist',
+  SPELLING: 'Spelling',
+  BINGO: 'Bingo',
+  STORYTELLINGLIST: 'Storytellinglist',
+  STORYTELLINGREAD: 'Storytellingread',
   REWARDS: 'Rewards',
   PARENT_DASHBOARD: 'ParentDashboard',
 } as const;

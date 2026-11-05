@@ -15,6 +15,7 @@ export type RootStackParamList = {
   [ROUTES.SPELLING]: { data: ActivityCard };
   [ROUTES.BINGO]: { data: ActivityCard };
   [ROUTES.STORYTELLINGLIST]: { data: ActivityCard };
+  [ROUTES.STORYTELLINGREAD]: { data: ActivityCard; storyId: string };
   [ROUTES.REWARDS]: undefined;
   [ROUTES.PARENT_DASHBOARD]: undefined;
 };
