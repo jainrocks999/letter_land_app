@@ -220,6 +220,10 @@ export const storyData: Story[] = [
       storyPage(
         require('../../../assets/stories/story_2/page_4.webp'),
         'The pig sits in the mud.',
+      ),
+      storyPage(
+        require('../../../assets/stories/story_2/page_5.webp'),
+        'Pig is in it. Big win!',
         storyActivity(
           'feel',
           'How does the pig feel in the mud?',
@@ -227,10 +231,6 @@ export const storyData: Story[] = [
           ['happy', 'scared', 'sad'],
           "Look at the pig's big smile.",
         ),
-      ),
-      storyPage(
-        require('../../../assets/stories/story_2/page_5.webp'),
-        'Pig is in it. Big win!',
       ),
     ],
   },
@@ -388,23 +388,30 @@ export const storyData: Story[] = [
       storyPage(
         require('../../../assets/stories/story_5/page_3.webp'),
         'He lands on a flat rock.',
+        //  storyActivity(
+        //     'feel',
+        //     'How does Frog feel when he sees the crab?',
+        //     'surprised',
+        //     ['surprised', 'sleepy', 'sad'],
+        //     "Look at Frog's eyes.",
+        //   ),
         storyActivity(
-          'predict',
-          'Who is in the pond?',
-          'a crab',
-          ['a crab', 'a cat'],
-          'It lives in water and has claws!',
+          'feel',
+          'How does Frog feel in the picture?',
+          'happy',
+          ['surprised', 'sleepy', 'happy'],
+          'Look at the picture carefully.',
         ),
       ),
       storyPage(
         require('../../../assets/stories/story_5/page_4.webp'),
         'Glub! A crab is in the pond.',
         storyActivity(
-          'feel',
-          'How does Frog feel when he sees the crab?',
-          'surprised',
-          ['surprised', 'sleepy', 'sad'],
-          "Look at Frog's eyes.",
+          'predict',
+          'Who is in the pond?',
+          'a crab',
+          ['a crab', 'a cat'],
+          'It lives in water and has claws!',
         ),
       ),
       storyPage(
@@ -457,7 +464,11 @@ export const storyData: Story[] = [
       storyPage(
         require('../../../assets/stories/story_6/page_3.webp'),
         'The sun is hot. Duck must get wet.',
-        storyActivity(
+      ),
+      storyPage(
+        require('../../../assets/stories/story_6/page_4.webp'),
+        'Duck jumps in. Plop!',
+         storyActivity(
           'predict',
           'What will Duck do?',
           'jump in the pond',
@@ -466,8 +477,8 @@ export const storyData: Story[] = [
         ),
       ),
       storyPage(
-        require('../../../assets/stories/story_6/page_4.webp'),
-        'Duck jumps in. Plop!',
+        require('../../../assets/stories/story_6/page_5.webp'),
+        'Quack, quack! Duck is wet and glad.',
         storyActivity(
           'sound',
           'What sound does a duck make?',
@@ -475,10 +486,6 @@ export const storyData: Story[] = [
           ['quack', 'moo', 'woof'],
           'Listen to page 5!',
         ),
-      ),
-      storyPage(
-        require('../../../assets/stories/story_6/page_5.webp'),
-        'Quack, quack! Duck is wet and glad.',
       ),
     ],
   },

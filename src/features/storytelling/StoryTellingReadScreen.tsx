@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 import React, { useEffect, useMemo, useState } from 'react';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
   FadeIn,
@@ -17,7 +17,10 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { ROUTES } from '../../app/navigation/routeNames';
-import { StackRouteProps } from '../../types/navigation.types';
+import {
+  StackNavigationProps,
+  StackRouteProps,
+} from '../../types/navigation.types';
 import { getStoryById } from './data/storytelling.data';
 import { styles } from './StoryTelling.styles';
 import TopBarRead from './components/TopBarRead';
@@ -26,6 +29,7 @@ import ProgressBar from '../../components/progressBar/ProgressBar';
 import CharacterFeedback from '../../components/characterAnimation/CharacterFeedback';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import ActionButton from '../../components/customButton/ActionButton';
+import SuccessModal from '../../components/customModal/CustomModel';
 import TTSService from '../../services/tts.service';
 import TTSEventService from '../../services/ttsEvents.service';
 
@@ -110,6 +114,8 @@ const StoryWord = ({
 
 const StoryTellingReadScreen = () => {
   const route = useRoute<StackRouteProps<typeof ROUTES.STORYTELLINGREAD>>();
+  const navigation =
+    useNavigation<StackNavigationProps<typeof ROUTES.STORYTELLINGREAD>>();
   const insets = useSafeAreaInsets();
   const { data, storyId } = route.params;
   const story = getStoryById(storyId);
@@ -120,6 +126,7 @@ const StoryTellingReadScreen = () => {
   const [spokenRange, setSpokenRange] = useState<SpokenRange | null>(null);
   const [activeWord, setActiveWord] = useState<WordToken | null>(null);
   const [showExercise, setShowExercise] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(false);
 
   const currentPage = story?.pages[pageIndex];
   const currentActivity = currentPage?.activity;
@@ -187,10 +194,14 @@ const StoryTellingReadScreen = () => {
   };
 
   const goToNextPage = () => {
-    // page five of levels 1 and 2 has no question and nowhere else to go
+    // a final page with no question is finished with the Next button
     if (!currentActivity) {
-      if (isLastPage) return;
       TTSService.stop();
+      setActiveWord(null);
+      if (isLastPage) {
+        setShowCelebration(true);
+        return;
+      }
       setPageIndex(index => Math.min(index + 1, totalPages - 1));
       return;
     }
@@ -206,9 +217,13 @@ const StoryTellingReadScreen = () => {
   const handleExerciseNext = () => {
     TTSService.stop();
     setShowExercise(false);
-    if (!isLastPage) {
-      setPageIndex(index => Math.min(index + 1, totalPages - 1));
+    setActiveWord(null);
+    // passing the final page's exercise completes this story
+    if (isLastPage) {
+      setShowCelebration(true);
+      return;
     }
+    setPageIndex(index => Math.min(index + 1, totalPages - 1));
   };
 
   const handleExercisePrevious = () => {
@@ -224,13 +239,6 @@ const StoryTellingReadScreen = () => {
     TTSService.speak(currentPage.text);
   };
 
-  // tapping a story word sounds it out and updates the helper card below
-  const handleWordPress = (token: WordToken) => {
-    if (showExercise) return;
-    setActiveWord(token);
-    TTSService.speak(token.word);
-  };
-
   // word cards read the letters first, then the completed word: "s, a, m. Sam."
   const handleWordCardPress = (token: WordToken) => {
     if (showExercise) return;
@@ -242,6 +250,20 @@ const StoryTellingReadScreen = () => {
       return;
     }
     TTSService.speak(`${letters.join(', ')}. ${cleanWord}.`);
+  };
+
+  const closeCelebration = () => {
+    setShowCelebration(false);
+    navigation.goBack();
+  };
+
+  const restartStory = () => {
+    TTSService.stop();
+    setShowCelebration(false);
+    setShowExercise(false);
+    setActiveWord(null);
+    setSpokenRange(null);
+    setPageIndex(0);
   };
 
   return (
@@ -309,7 +331,7 @@ const StoryTellingReadScreen = () => {
                     imgTop={8}
                     styles={styles.characterImage}
                   />
-                  <View style={[styles.flexRow, styles.buddyStatusText]}>
+                  <View style={[styles.flexRow, styles.buddyStatusText,{borderColor:data.midColor}]}>
                     <FontAwesome6
                       name="circle"
                       iconStyle="solid"
@@ -353,7 +375,7 @@ const StoryTellingReadScreen = () => {
               ]}
             >
               <View style={styles.wordCardRow}>
-              {/* <ScrollView
+                {/* <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.wordCardRow}
@@ -393,21 +415,18 @@ const StoryTellingReadScreen = () => {
                           iconStyle="solid"
                           size={14}
                           color={isActive ? data.darkColor : data.midColor}
-                          style={{position:'absolute',right:0,top:0}}
+                          style={styles.wordCardSpeaker}
                         />
                       </View>
                       <Text
-                        style={[
-                          styles.secondryText,
-                          { color: data.midColor },
-                        ]}
+                        style={[styles.secondryText, { color: data.midColor }]}
                       >
                         {getWordLetters(token.word)}
                       </Text>
                     </TouchableOpacity>
                   );
                 })}
-              {/* </ScrollView> */}
+                {/* </ScrollView> */}
               </View>
               <Text
                 style={[
@@ -493,11 +512,6 @@ const StoryTellingReadScreen = () => {
               backgroundColor={data.darkColor}
               bottomBorderColor={'#a43726'}
               onPress={goToNextPage}
-              styles={
-                isLastPage && !currentActivity
-                  ? styles.navButtonDisabled
-                  : undefined
-              }
             >
               <FontAwesome6
                 name="chevron-right"
@@ -508,6 +522,19 @@ const StoryTellingReadScreen = () => {
             </ActionButton>
           </View>
         ))}
+
+      {story && (
+        <SuccessModal
+          visible={showCelebration}
+          title="🎉 Story Complete!"
+          message={`Amazing reading! You finished "${story.title}".`}
+          closeBtnText="Stories List"
+          restartBtnText="Read Again"
+          onRestart={restartStory}
+          onClose={closeCelebration}
+          characterImage={require('../../assets/images/character/yay.gif')}
+        />
+      )}
     </View>
   );
 };

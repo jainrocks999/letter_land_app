@@ -489,13 +489,18 @@ export const styles = StyleSheet.create({
   wordCardRow: {
     gap: 10,
     // paddingRight: 4,
-    flexDirection:'row',
-    flexWrap:'wrap'
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
   wordCardTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+  },
+  wordCardSpeaker: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
   },
   wordCardLetters: {
     fontSize: 18,

@@ -132,7 +132,7 @@ const ExerciseOption = ({
         animatedStyle,
       ]}
     >
-      <View style={styles.exerciseOptionContent}>
+      <View style={[styles.exerciseOptionContent,{justifyContent:"space-between"}]}>
         <TouchableOpacity
           accessibilityLabel={option}
           activeOpacity={0.75}
