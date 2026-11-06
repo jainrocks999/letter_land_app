@@ -2,7 +2,10 @@ import { Image, View, Text, ScrollView } from 'react-native';
 import React, { useState } from 'react';
 import { ROUTES } from '../../app/navigation/routeNames';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { StackNavigationProps, StackRouteProps } from '../../types/navigation.types';
+import {
+  StackNavigationProps,
+  StackRouteProps,
+} from '../../types/navigation.types';
 import CustomTopbar from '../../components/customTopbar/CustomTopbar';
 import ScreenHeadingSection from '../../components/screenHeadingSection/ScreenHeadingSection';
 import { styles } from './StoryTelling.styles';
@@ -35,7 +38,7 @@ const StoryTellingListScreen = () => {
 
   return (
     <ScrollView
-      style={[styles.container, { backgroundColor: `${data.lightColor}33`}]}
+      style={[styles.container, { backgroundColor: `${data.lightColor}33` }]}
       contentContainerStyle={styles.scrollContainer}
     >
       <CustomTopbar data={data} />
@@ -93,7 +96,9 @@ const StoryTellingListScreen = () => {
             radius={50}
             backgroundColor={data.darkColor}
             bottomBorderColor={'#a43726'}
-            onPress={() => {openStory(featuredStory?.id)}}
+            onPress={() => {
+              openStory(featuredStory?.id);
+            }}
           >
             <FontAwesome6
               name="play"
@@ -124,7 +129,13 @@ const StoryTellingListScreen = () => {
         numColumns={2}
         columnWrapperStyle={styles.storyColumnWrapper}
         contentContainerStyle={styles.storyListContent}
-        renderItem={({ item }) => <StoryCard data={data} story={item} onPress={()=>openStory(item.id)}/>}
+        renderItem={({ item }) => (
+          <StoryCard
+            data={data}
+            story={item}
+            onPress={() => openStory(item.id)}
+          />
+        )}
       />
     </ScrollView>
   );

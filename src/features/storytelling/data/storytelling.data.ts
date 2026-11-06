@@ -2,19 +2,33 @@ import { ImageSourcePropType } from 'react-native';
 
 export type StoryLevel = 1 | 2 | 3;
 
-export type StoryActivityType = 'spell' | 'build' | 'question' | 'find';
+export type StoryActivityType =
+  | 'spell'
+  | 'tap'
+  | 'predict'
+  | 'fill'
+  | 'feel'
+  | 'count'
+  | 'sound'
+  | 'magic_e'
+  | 'build'
+  | 'find_sound'
+  | 'rhyme'
+  | 'picture_q';
 
 export interface StoryActivity {
   type: StoryActivityType;
   prompt: string;
   answer: string;
   options?: string[];
+  hint?: string;
 }
 
 export interface StoryPage {
   image: ImageSourcePropType;
   text: string;
-  activity: StoryActivity;
+  // Level 1 and 2 finish after page four, so page five has no quick question
+  activity?: StoryActivity;
 }
 
 export interface Story {
@@ -57,52 +71,48 @@ export const STORY_LEVELS: StoryLevelInfo[] = [
 ];
 
 export const STORY_ACTIVITY_LABELS: Record<StoryActivityType, string> = {
-  spell: 'Spell it',
-  build: 'Build the sentence',
-  question: 'Picture question',
-  find: 'Find the word',
+  spell: 'Quick question · Spell it',
+  tap: 'Quick question · Find it',
+  predict: 'Quick question · Guess it',
+  fill: 'Quick question · Fill it',
+  feel: 'Quick question · Feelings',
+  count: 'Quick question · Count it',
+  sound: 'Quick question · Sound it',
+  magic_e: 'Activity · Magic e',
+  build: 'Activity · Build it',
+  find_sound: 'Activity · Find sound',
+  rhyme: 'Activity · Rhyme time',
+  picture_q: 'Activity · Picture Q',
 };
 
-// spelling pages without hand-written choices get three taps so the child can
-// still answer without a keyboard
-const SPELL_CHOICES: Record<string, string[]> = {
-  a: ['a', 'e', 'o'],
-  e: ['e', 'a', 'i'],
-  i: ['i', 'e', 'o'],
-  o: ['o', 'a', 'u'],
-  kite: ['kite', 'kit', 'kate'],
-  ride: ['ride', 'rid', 'rode'],
-};
-
-const getSpellChoices = (answer: string): string[] | undefined =>
-  SPELL_CHOICES[answer.toLowerCase()];
-
-const storyPage = (
-  image: ImageSourcePropType,
-  text: string,
+const storyActivity = (
   type: StoryActivityType,
   prompt: string,
   answer: string,
   options?: string[],
+  hint?: string,
+): StoryActivity => ({
+  type,
+  prompt,
+  answer,
+  options,
+  hint,
+});
+
+const storyPage = (
+  image: ImageSourcePropType,
+  text: string,
+  activity?: StoryActivity,
 ): StoryPage => ({
   image,
   text,
-  activity: {
-    type,
-    prompt,
-    answer,
-    options:
-      options ?? (type === 'spell' ? getSpellChoices(answer) : undefined),
-  },
+  activity,
 });
 
 // every choice-based exercise exposes its options through one helper, so the
 // reader does not need to know how a page stores them
-export const getActivityOptions = (activity: StoryActivity): string[] => {
-  if (activity.options?.length) return activity.options;
-  if (activity.type === 'spell') return getSpellChoices(activity.answer) ?? [];
-  return [];
-};
+export const getActivityOptions = (activity: StoryActivity): string[] =>
+  activity.options ?? [];
 
 export const storyData: Story[] = [
   // ---------------------------------------------------------------- Level 1
@@ -118,37 +128,50 @@ export const storyData: Story[] = [
       storyPage(
         require('../../../assets/stories/story_1/page_1.webp'),
         'Sam is a cat.',
-        'spell',
-        'c _ t',
-        'a',
+        storyActivity(
+          'spell',
+          'Which letter is missing? c _ t',
+          'a',
+          ['o', 'a', 'i'],
+          'Say cat slowly: c… a… t.',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_1/page_2.webp'),
         'Sam has a hat.',
-        'spell',
-        'h _ t',
-        'a',
+        storyActivity(
+          'tap',
+          'Tap the hat in the picture!',
+          'hat',
+          ['cat', 'hat', 'mat'],
+          'Look for something blue!',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_1/page_3.webp'),
         'The hat is on a mat.',
-        'spell',
-        'm _ t',
-        'a',
       ),
       storyPage(
         require('../../../assets/stories/story_1/page_4.webp'),
         'A rat sat on the hat!',
-        'spell',
-        'r _ t',
-        'a',
+        storyActivity(
+          'predict',
+          'Who will sit on the hat?',
+          'a rat',
+          ['a rat', 'a dog'],
+          'Think of a word like cat and hat…',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_1/page_5.webp'),
         'Sam and the rat take a nap.',
-        'spell',
-        'n _ p',
-        'a',
+        storyActivity(
+          'feel',
+          'What are Sam and the rat doing?',
+          'sleeping',
+          ['playing', 'sleeping', 'eating'],
+          'Look at the picture carefully.',
+        ),
       ),
     ],
   },
@@ -164,37 +187,50 @@ export const storyData: Story[] = [
       storyPage(
         require('../../../assets/stories/story_2/page_1.webp'),
         'A big pig sits.',
-        'spell',
-        'b _ g',
-        'i',
+        storyActivity(
+          'spell',
+          'Which letter is missing? b _ g',
+          'i',
+          ['a', 'i', 'o'],
+          'Say big slowly: b… i… g.',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_2/page_2.webp'),
         'The pig can dig.',
-        'spell',
-        'd _ g',
-        'i',
+        storyActivity(
+          'tap',
+          "Tap the pig's curly tail!",
+          'tail',
+          ['tail', 'ear', 'nose'],
+          'Look at the back of the pig!',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_2/page_3.webp'),
         'The pig digs a pit.',
-        'spell',
-        'p _ t',
-        'i',
+        storyActivity(
+          'predict',
+          'What will go in the pit?',
+          'mud',
+          ['mud', 'a ball'],
+          'Look at the title of the story!',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_2/page_4.webp'),
         'The pig sits in the mud.',
-        'spell',
-        's _ t',
-        'i',
+        storyActivity(
+          'feel',
+          'How does the pig feel in the mud?',
+          'happy',
+          ['happy', 'scared', 'sad'],
+          "Look at the pig's big smile.",
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_2/page_5.webp'),
         'Pig is in it. Big win!',
-        'spell',
-        'w _ n',
-        'i',
       ),
     ],
   },
@@ -210,37 +246,50 @@ export const storyData: Story[] = [
       storyPage(
         require('../../../assets/stories/story_3/page_1.webp'),
         'Ten red hens.',
-        'spell',
-        't _ n',
-        'e',
+        storyActivity(
+          'spell',
+          'Which letter is missing? t _ n',
+          'e',
+          ['a', 'e', 'o'],
+          'Say ten slowly: t… e… n.',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_3/page_2.webp'),
         'The hens get wet.',
-        'spell',
-        'w _ t',
-        'e',
+        storyActivity(
+          'tap',
+          'Tap the rain cloud!',
+          'cloud',
+          ['cloud', 'sun', 'tree'],
+          'Look up in the sky!',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_3/page_3.webp'),
         'A hen sits on a bed.',
-        'spell',
-        'b _ d',
-        'e',
+        storyActivity(
+          'fill',
+          'A hen sits on a ___.',
+          'bed',
+          ['bed', 'bag'],
+          'Look at the picture. What is the hen on?',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_3/page_4.webp'),
         'Ten hens get in the pen.',
-        'spell',
-        'p _ n',
-        'e',
+        storyActivity(
+          'count',
+          'How many hens get in the pen?',
+          '10',
+          ['5', '10', '2'],
+          'Count them with your finger!',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_3/page_5.webp'),
         'Yes! The hens rest in the pen.',
-        'spell',
-        'y _ s',
-        'e',
       ),
     ],
   },
@@ -256,37 +305,50 @@ export const storyData: Story[] = [
       storyPage(
         require('../../../assets/stories/story_4/page_1.webp'),
         'A dog is on a log.',
-        'spell',
-        'd _ g',
-        'o',
+        storyActivity(
+          'spell',
+          'Which letter is missing? d _ g',
+          'o',
+          ['u', 'o', 'a'],
+          'Say dog slowly: d… o… g.',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_4/page_2.webp'),
         'The dog can hop.',
-        'spell',
-        'h _ p',
-        'o',
+        storyActivity(
+          'tap',
+          'Tap the log!',
+          'log',
+          ['log', 'dog', 'rock'],
+          'It is big, round and brown.',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_4/page_3.webp'),
         'Hop, hop! The dog is on top.',
-        'spell',
-        't _ p',
-        'o',
+        storyActivity(
+          'predict',
+          'What will the log do?',
+          'rock',
+          ['rock', 'sleep'],
+          'Logs can roll and wobble…',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_4/page_4.webp'),
         'Oh no! The log rocks.',
-        'spell',
-        'l _ g',
-        'o',
+        storyActivity(
+          'feel',
+          'How does the dog feel?',
+          'surprised',
+          ['surprised', 'sleepy', 'sad'],
+          "Look at the dog's big eyes.",
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_4/page_5.webp'),
         'The dog got off. Stop, log!',
-        'spell',
-        'g _ t',
-        'o',
       ),
     ],
   },
@@ -304,42 +366,50 @@ export const storyData: Story[] = [
       storyPage(
         require('../../../assets/stories/story_5/page_1.webp'),
         'Frog is in the pond.',
-        'spell',
-        '_ _ og',
-        'fr',
-        ['fr', 'fl', 'dr'],
+        storyActivity(
+          'spell',
+          'Which sounds are missing? _ _ og',
+          'fr',
+          ['fr', 'fl', 'dr'],
+          'Say frog slowly: fr… o… g.',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_5/page_2.webp'),
         'Frog can jump up.',
-        'spell',
-        'ju _ _',
-        'mp',
-        ['mp', 'nd', 'st'],
+        storyActivity(
+          'tap',
+          'Tap a lily pad!',
+          'lily pad',
+          ['lily pad', 'rock', 'log'],
+          'It is round and green on the water.',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_5/page_3.webp'),
         'He lands on a flat rock.',
-        'spell',
-        '_ _ at',
-        'fl',
-        ['fl', 'cr', 'st'],
+        storyActivity(
+          'predict',
+          'Who is in the pond?',
+          'a crab',
+          ['a crab', 'a cat'],
+          'It lives in water and has claws!',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_5/page_4.webp'),
         'Glub! A crab is in the pond.',
-        'spell',
-        '_ _ ab',
-        'cr',
-        ['cr', 'fr', 'gl'],
+        storyActivity(
+          'feel',
+          'How does Frog feel when he sees the crab?',
+          'surprised',
+          ['surprised', 'sleepy', 'sad'],
+          "Look at Frog's eyes.",
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_5/page_5.webp'),
         'Frog jumps back in the pond.',
-        'spell',
-        'po _ _',
-        'nd',
-        ['nd', 'mp', 'ck'],
       ),
     ],
   },
@@ -365,42 +435,50 @@ export const storyData: Story[] = [
       storyPage(
         require('../../../assets/stories/story_6/page_1.webp'),
         'Duck is on a rock.',
-        'spell',
-        'ro _ _',
-        'ck',
-        ['ck', 'st', 'nd'],
+        storyActivity(
+          'spell',
+          'Which sounds are missing? ro _ _',
+          'ck',
+          ['ck', 'st', 'nd'],
+          'Say rock slowly: r… o… ck.',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_6/page_2.webp'),
         'Duck pecks at a stick.',
-        'spell',
-        'sti _ _',
-        'ck',
-        ['ck', 'mp', 'st'],
+        storyActivity(
+          'tap',
+          'Tap the stick!',
+          'stick',
+          ['stick', 'rock', 'duck'],
+          'It is thin and brown, near Duck.',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_6/page_3.webp'),
         'The sun is hot. Duck must get wet.',
-        'spell',
-        'mu _ _',
-        'st',
-        ['st', 'ck', 'nd'],
+        storyActivity(
+          'predict',
+          'What will Duck do?',
+          'jump in the pond',
+          ['jump in the pond', 'go to bed'],
+          'Duck is hot. What cools you down?',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_6/page_4.webp'),
         'Duck jumps in. Plop!',
-        'spell',
-        '_ _ op',
-        'pl',
-        ['pl', 'fl', 'st'],
+        storyActivity(
+          'sound',
+          'What sound does a duck make?',
+          'quack',
+          ['quack', 'moo', 'woof'],
+          'Listen to page 5!',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_6/page_5.webp'),
         'Quack, quack! Duck is wet and glad.',
-        'spell',
-        '_ _ ad',
-        'gl',
-        ['gl', 'pl', 'cr'],
       ),
     ],
   },
@@ -418,39 +496,55 @@ export const storyData: Story[] = [
       storyPage(
         require('../../../assets/stories/story_7/page_1.webp'),
         'Kate has a kite.',
-        'spell',
-        'kit + e',
-        'kite',
+        storyActivity(
+          'magic_e',
+          'This says kit. Tap +e to make it kite!',
+          'kite',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_7/page_2.webp'),
         'The kite is red. It can ride on the wind!',
-        'build',
-        'Build the sentence',
-        'The kite is red.',
+        storyActivity(
+          'build',
+          'Build the sentence.',
+          'The kite is red.',
+          undefined,
+          'Start with the word that has a big letter.',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_7/page_3.webp'),
         'Oh no! The kite is in a tree.',
-        'question',
-        'Where is the kite?',
-        'tree',
-        ['bed', 'tree', 'box'],
+        storyActivity(
+          'picture_q',
+          'Where is the kite?',
+          'tree',
+          ['bed', 'tree', 'box'],
+          'Look at the picture again!',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_7/page_4.webp'),
         'Kate and Mike take it home.',
-        'question',
-        'Which word sounds like take?',
-        'cake',
-        ['cat', 'kit', 'cake'],
+        storyActivity(
+          'rhyme',
+          'Which word sounds like take?',
+          'cake',
+          ['cat', 'kit', 'cake'],
+          'Say take, then say each word.',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_7/page_5.webp'),
         'Kate has the kite. She is so happy!',
-        'build',
-        'Build the sentence',
-        'She is so happy!',
+        storyActivity(
+          'build',
+          'Build the sentence.',
+          'She is so happy!',
+          undefined,
+          'Start with the word that has a big letter.',
+        ),
       ),
     ],
   },
@@ -466,40 +560,57 @@ export const storyData: Story[] = [
       storyPage(
         require('../../../assets/stories/story_8/page_1.webp'),
         'Look! The big ship is at the dock.',
-        'find',
-        'Find the sh word',
-        'ship',
-        ['chip', 'ship', 'slip'],
+        storyActivity(
+          'find_sound',
+          'Find the sh word.',
+          'ship',
+          ['chip', 'ship', 'slip'],
+          'Listen for /sh/, like "shh".',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_8/page_2.webp'),
         'A man on the ship has a fish.',
-        'build',
-        'Build the sentence',
-        'A man has a fish.',
+        storyActivity(
+          'build',
+          'Build the sentence.',
+          'A man has a fish.',
+          undefined,
+          'Start with the word that has a big letter.',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_8/page_3.webp'),
         'Splash! The fish jumps in.',
-        'question',
-        'Where did the fish go?',
-        'water',
-        ['water', 'ship', 'shop'],
+        storyActivity(
+          'picture_q',
+          'Where did the fish go?',
+          'water',
+          ['water', 'ship', 'shop'],
+          'Look at the splash!',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_8/page_4.webp'),
         'Shh! The fish is in a shell.',
-        'question',
-        'Which word sounds like fish?',
-        'dish',
-        ['fist', 'dish', 'fan'],
+        storyActivity(
+          'rhyme',
+          'Which word sounds like fish?',
+          'dish',
+          ['fist', 'dish', 'fan'],
+          'Say fish, then say each word.',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_8/page_5.webp'),
         'The ship sets off. Wish me luck!',
-        'build',
-        'Build the sentence',
-        'The ship sets off.',
+        storyActivity(
+          'build',
+          'Build the sentence.',
+          'The ship sets off.',
+          undefined,
+          'Start with the word that has a big letter.',
+        ),
       ),
     ],
   },
@@ -515,40 +626,57 @@ export const storyData: Story[] = [
       storyPage(
         require('../../../assets/stories/story_9/page_1.webp'),
         'Chip is a chick.',
-        'find',
-        'Find the ch word',
-        'chick',
-        ['kick', 'chick', 'shed'],
+        storyActivity(
+          'find_sound',
+          'Find the ch word.',
+          'chick',
+          ['kick', 'chick', 'shed'],
+          'Listen for /ch/, like a train: ch-ch!',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_9/page_2.webp'),
         'Chip can peck and chomp.',
-        'build',
-        'Build the sentence',
-        'Chip can peck.',
+        storyActivity(
+          'build',
+          'Build the sentence.',
+          'Chip can peck.',
+          undefined,
+          'Start with the word that has a big letter.',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_9/page_3.webp'),
         'Chip sits on a bench.',
-        'question',
-        'Where does Chip sit?',
-        'bench',
-        ['bed', 'bench', 'box'],
+        storyActivity(
+          'picture_q',
+          'Where does Chip sit?',
+          'bench',
+          ['bed', 'bench', 'box'],
+          'Look at the picture again!',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_9/page_4.webp'),
         'Munch, munch! Chip has lunch.',
-        'question',
-        'Which word sounds like munch?',
-        'bunch',
-        ['bench', 'bunch', 'bun'],
+        storyActivity(
+          'rhyme',
+          'Which word sounds like munch?',
+          'bunch',
+          ['bench', 'bunch', 'bun'],
+          'Say munch, then say each word.',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_9/page_5.webp'),
         'Chip is full. Such a big lunch!',
-        'build',
-        'Build the sentence',
-        'Chip is full.',
+        storyActivity(
+          'build',
+          'Build the sentence.',
+          'Chip is full.',
+          undefined,
+          'Start with the word that has a big letter.',
+        ),
       ),
     ],
   },
@@ -564,39 +692,55 @@ export const storyData: Story[] = [
       storyPage(
         require('../../../assets/stories/story_10/page_1.webp'),
         'Mike has a bike.',
-        'spell',
-        'rid + e',
-        'ride',
+        storyActivity(
+          'magic_e',
+          'This says rid. Tap +e to make it ride!',
+          'ride',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_10/page_2.webp'),
         'Mike rides to the lake.',
-        'build',
-        'Build the sentence',
-        'Mike rides to the lake.',
+        storyActivity(
+          'build',
+          'Build the sentence.',
+          'Mike rides to the lake.',
+          undefined,
+          'Start with the word that has a big letter.',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_10/page_3.webp'),
         'Oh no! The bike hits a stone.',
-        'question',
-        'What did the bike hit?',
-        'stone',
-        ['tree', 'stone', 'cake'],
+        storyActivity(
+          'picture_q',
+          'What did the bike hit?',
+          'stone',
+          ['tree', 'stone', 'cake'],
+          'Look at the front wheel!',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_10/page_4.webp'),
         'Mike is fine. He rides home.',
-        'question',
-        'Which word sounds like bike?',
-        'like',
-        ['bake', 'like', 'bit'],
+        storyActivity(
+          'rhyme',
+          'Which word sounds like bike?',
+          'like',
+          ['bake', 'like', 'bit'],
+          'Say bike, then say each word.',
+        ),
       ),
       storyPage(
         require('../../../assets/stories/story_10/page_5.webp'),
         'Mike and his bike. What a fine ride!',
-        'build',
-        'Build the sentence',
-        'What a fine ride!',
+        storyActivity(
+          'build',
+          'Build the sentence.',
+          'What a fine ride!',
+          undefined,
+          'Start with the word that has a big letter.',
+        ),
       ),
     ],
   },
