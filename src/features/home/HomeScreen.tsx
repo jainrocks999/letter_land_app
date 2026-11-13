@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
 import CloudsContainer from '../../components/cloudsContainer/CloudsContainer';
 import CastleCarousel from '../../components/castleCarousel/CastleCarousel';
-import { activityData } from './data/home.data';
+import { activityData, isActivityLocked, LOCKED_SKY_COLORS } from './data/home.data';
 import AnimatedGradient from '../../components/animatedGradient/AnimatedGradient';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import { useNavigation } from '@react-navigation/native';
@@ -13,14 +13,17 @@ import { ROUTES } from '../../app/navigation/routeNames';
 import SettingsModal from '../../components/settingsModal/SettingsModal';
 import ProfileSwitcherModal from '../../components/profileSwitcher/ProfileSwitcherModal';
 import useProfilesContext from '../../app/contexts/profiles/useProfiles';
+import useRewardsContext from '../../app/contexts/rewards/useRewards';
 
 const HomeScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showSettings, setShowSettings] = useState(false);
   const [showProfiles, setShowProfiles] = useState(false);
   const { activeProfile } = useProfilesContext();
+  const { rewards } = useRewardsContext();
   const scrollX = useSharedValue(0);
   const navigation = useNavigation<StackNavigationProps<typeof ROUTES.HOME>>();
+  const collectedStickers = rewards.unlockedStickers.length;
 
   return (
     <View style={{ flex: 1 }}>
@@ -29,7 +32,11 @@ const HomeScreen = () => {
           key={castle.id ?? index}
           index={index}
           scrollX={scrollX}
-          colors={[castle.topSkyCol, castle.bottomSkyCol]}
+          colors={
+            isActivityLocked(castle.innerCard, collectedStickers)
+              ? LOCKED_SKY_COLORS
+              : [castle.topSkyCol, castle.bottomSkyCol]
+          }
         />
       ))}
       <View style={styles.topBar}>

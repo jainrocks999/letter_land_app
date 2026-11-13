@@ -4,17 +4,20 @@ import {
   ProfilesProvider,
   RewardsProvider,
   SettingsProvider,
+  ToastProvider,
 } from '../contexts';
 
 const AppProviders = ({ children }: PropsWithChildren) => {
   return (
-    <SettingsProvider>
-      <ProfilesProvider>
-        <ActivityProProvider>
-          <RewardsProvider>{children}</RewardsProvider>
-        </ActivityProProvider>
-      </ProfilesProvider>
-    </SettingsProvider>
+    <ToastProvider>
+      <SettingsProvider>
+        <ProfilesProvider>
+          <ActivityProProvider>
+            <RewardsProvider>{children}</RewardsProvider>
+          </ActivityProProvider>
+        </ProfilesProvider>
+      </SettingsProvider>
+    </ToastProvider>
   );
 };
 

@@ -1,6 +1,12 @@
 import { Text, TouchableOpacity, View } from 'react-native';
 import { hp, wp } from '../../utils/responsive';
-import { ActivityCard, Castle } from '../../features/home/data/home.data';
+import {
+  ActivityCard,
+  Castle,
+  getRequiredStickers,
+  getStickersToUnlock,
+  isActivityLocked,
+} from '../../features/home/data/home.data';
 import { styles } from './CastleCarousel.styles';
 import Animated, {
   Extrapolation,
@@ -16,6 +22,9 @@ import { StackNavigationProps } from '../../types/navigation.types';
 import { ROUTES } from '../../app/navigation/routeNames';
 import { UserActivitiesType } from '../../services/mmkv.service';
 import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
+import useRewardsContext from '../../app/contexts/rewards/useRewards';
+import useToast from '../../app/contexts/toast/useToast';
+import TTSService from '../../services/tts.service';
 
 interface props {
   data: Castle[];
@@ -39,6 +48,8 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
   progress,
 }) => {
   const navigation = useNavigation<StackNavigationProps<typeof ROUTES.HOME>>();
+  const { rewards } = useRewardsContext();
+  const { showToast } = useToast();
 
   const inputRange = [
     (index - 1) * ITEM_WIDTH,
@@ -59,9 +70,10 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
   });
 
   const activityCardData: ActivityCard = item.innerCard;
-  const isLocked = Boolean(
-    activityCardData.isLocked || !activityCardData.navigate,
-  );
+  const collectedStickers = rewards.unlockedStickers.length;
+  const requiredStickers = getRequiredStickers(activityCardData);
+  // locked until the kid has collected enough stickers in the sticker book
+  const isLocked = isActivityLocked(activityCardData, collectedStickers);
 
   return (
     <View style={styles.pageContainer}>
@@ -109,13 +121,17 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
               },
             ]}
           >
-            {activityCardData.tag}
+            {isLocked
+              ? `Need ${requiredStickers} ${
+                  requiredStickers === 1 ? 'sticker' : 'stickers'
+                }`
+              : activityCardData.tag}
           </Text>
         </View>
 
         <TouchableOpacity
-          disabled={isLocked}
           activeOpacity={0.7}
+          // accessibilityState={{ disabled: isLocked }}
           style={[
             styles.cardBtnContainer,
             {
@@ -126,11 +142,21 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
             },
           ]}
           onPress={() => {
-            if (!isLocked && item.innerCard.navigate) {
-              navigation.navigate(item.innerCard.navigate, {
-                data: activityCardData,
-              });
+            const navigate = item.innerCard.navigate;
+            if (!navigate) return;
+            if (isLocked) {
+              const remaining = getStickersToUnlock(
+                activityCardData,
+                collectedStickers,
+              );
+              const stickerWord = remaining === 1 ? 'sticker' : 'stickers';
+              showToast(
+                `Collect ${remaining} more ${stickerWord} to unlock ${activityCardData.cardTitle}`,
+                '🔒',
+              );
+              return;
             }
+            navigation.navigate(navigate, { data: activityCardData });
           }}
         >
           <FontAwesome6
@@ -144,10 +170,12 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
 
       <View style={styles.singlePage}>
         <View style={styles.singlePageContent}>
-          <Animated.Image
-            source={item.image}
-            style={[styles.imgContainer, animatedStyle]}
-          />
+          <View style={isLocked ? styles.lockedImage : undefined}>
+            <Animated.Image
+              source={item.image}
+              style={[styles.imgContainer, animatedStyle]}
+            />
+          </View>
           <View style={styles.bottomPlatform} />
           <View style={styles.headingContainer}>
             <Text style={styles.headingText}>{item.title}</Text>

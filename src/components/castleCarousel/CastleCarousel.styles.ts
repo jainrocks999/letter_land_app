@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { hp, wp } from '../../utils/responsive';
+import { wp } from '../../utils/responsive';
 
 export const styles = StyleSheet.create({
   pageContainer: {
@@ -77,6 +77,11 @@ export const styles = StyleSheet.create({
     width: wp(70),
     height: wp(70),
     resizeMode: 'contain',
+  },
+  // greys out the castle art while the level is still locked
+  lockedImage: {
+    filter: [{ grayscale: 1 }],
+    opacity: 0.85,
   },
   bottomPlatform: {
     width: '80%',

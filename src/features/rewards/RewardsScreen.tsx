@@ -3,6 +3,7 @@ import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import useRewardsContext from '../../app/contexts/rewards/useRewards';
+import useToast from '../../app/contexts/toast/useToast';
 import ProgressBar from '../../components/progressBar/ProgressBar';
 import TTSService from '../../services/tts.service';
 import { REWARD_POINTS } from '../../config/constants';
@@ -10,11 +11,18 @@ import { StickerType, stickersData, trophiesData } from './data/rewards.data';
 import { styles } from './Rewards.styles';
 import ScreenHeadingSection from '../../components/screenHeadingSection/ScreenHeadingSection';
 import CustomButton from '../../components/customButton/CustomButton';
-import { activityData } from '../home/data/home.data';
+import {
+  activityData,
+  Castle,
+  getRequiredStickers,
+  getStickersToUnlock,
+  isActivityLocked,
+} from '../home/data/home.data';
 import { StackNavigationProps } from '../../types/navigation.types';
 import { ROUTES } from '../../app/navigation/routeNames';
 import StickerSlot, { SlotRect, StickerStatus } from './components/StickerSlot';
 import CollectStickerOverlay from './components/CollectStickerOverlay';
+import LevelUnlockedModal from '../../components/levelUnlockedModal/LevelUnlockedModal';
 import MusicService from '../../services/music.service';
 
 interface CollectingState {
@@ -27,9 +35,13 @@ const RewardsScreen = () => {
   const navigation =
     useNavigation<StackNavigationProps<typeof ROUTES.REWARDS>>();
   const { rewards, collectSticker } = useRewardsContext();
+  const { showToast } = useToast();
   const containerRef = useRef<View>(null);
   const [collecting, setCollecting] = useState<CollectingState | null>(null);
   const [landedId, setLandedId] = useState<string | null>(null);
+  // level waiting to be celebrated once the sticker animation finishes
+  const [pendingUnlock, setPendingUnlock] = useState<Castle | null>(null);
+  const [unlockedLevel, setUnlockedLevel] = useState<Castle | null>(null);
 
   // cheapest sticker that is still missing from the book
   const nextSticker = stickersData.find(
@@ -58,8 +70,16 @@ const RewardsScreen = () => {
       // );
       return;
     }
+    const collectedBefore = rewards.unlockedStickers.length;
     containerRef.current?.measureInWindow((x, y, width, height) => {
       if (!collectSticker(sticker.id)) return;
+      // a sticker can open the level that needs exactly this many stickers
+      const newlyUnlocked = activityData.find(
+        castle =>
+          !!castle.innerCard.navigate &&
+          getRequiredStickers(castle.innerCard) === collectedBefore + 1,
+      );
+      if (newlyUnlocked) setPendingUnlock(newlyUnlocked);
       setLandedId(null);
       MusicService.playEffect('getReward');
       setCollecting({
@@ -74,9 +94,13 @@ const RewardsScreen = () => {
   const handleStickerLanded = () => {
     setLandedId(collecting?.sticker.id ?? null);
     setCollecting(null);
+    if (pendingUnlock) {
+      setUnlockedLevel(pendingUnlock);
+      setPendingUnlock(null);
+    }
   };
 
-  const handleTrophyPress = (trophyId: string, title: string) => {
+  const handleTrophyPress = (trophyId: string) => {
     // if (rewards.trophies.includes(trophyId)) {
     //   TTSService.speak(`Hooray! You won the ${title} trophy!`);
     //   return;
@@ -84,9 +108,22 @@ const RewardsScreen = () => {
     const card = activityData.find(
       castle => castle.innerCard.navigate?.toLowerCase() === trophyId,
     )?.innerCard;
-    if (card?.navigate) {
-      navigation.navigate(card.navigate, { data: card });
+    if (!card?.navigate) return;
+    // the trophy room must not be a shortcut around the level lock
+    const collectedStickers = rewards.unlockedStickers.length;
+    if (isActivityLocked(card, collectedStickers)) {
+      const remaining = getStickersToUnlock(card, collectedStickers);
+      const stickerWord = remaining === 1 ? 'sticker' : 'stickers';
+      showToast(
+        `Collect ${remaining} more ${stickerWord} to unlock ${card.cardTitle}`,
+        '🔒',
+      );
+      TTSService.speak(
+        `This level is locked. Collect ${remaining} more ${stickerWord} to unlock ${card.cardTitle}.`,
+      );
+      return;
     }
+    navigation.navigate(card.navigate, { data: card });
   };
 
   const earnTips = [
@@ -235,7 +272,7 @@ const RewardsScreen = () => {
               <TouchableOpacity
                 key={activity.id}
                 activeOpacity={0.8}
-                onPress={() => handleTrophyPress(activity.id, activity.title)}
+                onPress={() => handleTrophyPress(activity.id)}
                 style={[
                   styles.trophyCard,
                   {
@@ -324,6 +361,12 @@ const RewardsScreen = () => {
           onLanded={handleStickerLanded}
         />
       )}
+
+      <LevelUnlockedModal
+        visible={!!unlockedLevel}
+        level={unlockedLevel}
+        onClose={() => setUnlockedLevel(null)}
+      />
     </View>
   );
 };

@@ -132,3 +132,14 @@ export const trophiesData: TrophyType[] = activityData
 
 export const getNextSticker = (totalEarned: number) =>
   stickersData.find(sticker => sticker.cost > totalEarned);
+
+// true when the kid has enough stars to unlock at least one sticker they are
+// still missing, used to nudge them towards the treasure room
+export const hasReadySticker = (
+  stars: number,
+  unlockedStickerIds: string[],
+): boolean =>
+  stickersData.some(
+    sticker =>
+      !unlockedStickerIds.includes(sticker.id) && stars >= sticker.cost,
+  );

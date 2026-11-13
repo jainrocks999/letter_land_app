@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -10,6 +10,7 @@ import Animated, {
 import useRewardsContext from '../../app/contexts/rewards/useRewards';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import { Castle } from '../../features/home/data/home.data';
+import { hasReadySticker } from '../../features/rewards/data/rewards.data';
 
 interface StarCounterProps {
   onPress?: () => void;
@@ -63,6 +64,11 @@ const StarCounter: React.FC<StarCounterProps> = ({
   }, [rewards.stars, scale, rotate]);
 
   const isLarge = size === 'large';
+  // red dot that hints there is a sticker waiting to be unlocked
+  const showBadge = hasReadySticker(
+    rewards.stars,
+    rewards.unlockedStickers,
+  );
 
   return (
     <TouchableOpacity disabled={!onPress} onPress={onPress}>
@@ -74,6 +80,7 @@ const StarCounter: React.FC<StarCounterProps> = ({
           {rewards.stars}
         </Text>
       </Animated.View>
+      {showBadge && <View style={[styles.badge,{borderColor:targetBorder}]} />}
     </TouchableOpacity>
   );
 };
@@ -102,4 +109,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   countLarge: { fontSize: 20 },
+  badge: {
+    position: 'absolute',
+    top: -3,
+    right: 65,
+    width: 15,
+    height: 15,
+    borderRadius: 999,
+    backgroundColor: '#eee600',
+    borderWidth: 2,
+    // borderColor: '#ffffff',
+  },
 });

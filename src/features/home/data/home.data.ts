@@ -31,6 +31,8 @@ export interface ActivityCard {
   lightColor: string;
   navigate?: ActivityRoutes;
   isLocked?: boolean;
+  // stickers the kid must have collected to unlock this activity/level
+  requiredStickers?: number;
 }
 export const activityData: Castle[] = [
   {
@@ -45,6 +47,7 @@ export const activityData: Castle[] = [
       shortDes:
         'Swipe through giant letters from A to Z and learn the alphabet!',
       tag: 'Start Learning',
+      requiredStickers: 0,
       darkColor: '#a94a7e',
       midColor: '#926ea9',
       lightColor: '#d0b9d7',
@@ -62,6 +65,7 @@ export const activityData: Castle[] = [
       cardTitle: 'Letter Tracing',
       shortDes: 'Draw each letter with your finger and master the alphabet!',
       tag: "Let's Trace",
+      requiredStickers: 1,
       darkColor: '#b63b35',
       midColor: '#8e1a11',
       lightColor: '#ca4841',
@@ -71,24 +75,19 @@ export const activityData: Castle[] = [
   {
     id: '3',
     image: require('../../../assets/images/castles/level_3.webp'),
-    // title: 'Searching',
     title: 'Feeding',
     topSkyCol: '#00b894',
     bottomSkyCol: '#c8f7e5',
     innerCard: {
-      // icon: '🔍',
       icon: '🍪',
-      // cardTitle: 'Find the Letter',
       cardTitle: 'Feed the Letter',
-      // shortDes: 'Find the correct letter and improve your letter recognition!',
       shortDes:
         'Find the correct letter and feed it to the hungry character coco!',
-      // tag: "Let's find",
       tag: 'Feed It',
+      requiredStickers: 3,
       darkColor: '#c09e74',
       midColor: '#3d3a45',
       lightColor: '#dbc68d',
-      // navigate: ROUTES.SEARCHING,
       navigate: ROUTES.FEEDING,
     },
   },
@@ -104,6 +103,7 @@ export const activityData: Castle[] = [
       shortDes:
         'Match uppercase letters with their lowercase friends and master the alphabet.',
       tag: 'Start Matching',
+      requiredStickers: 4,
       darkColor: '#e0a2b6',
       midColor: '#8c662e',
       lightColor: '#eec2d8',
@@ -113,20 +113,15 @@ export const activityData: Castle[] = [
   {
     id: '5',
     image: require('../../../assets/images/castles/level_5.webp'),
-    // title: 'Choosing',
     title: 'Searching',
     topSkyCol: '#2c3e90',
     bottomSkyCol: '#6dd5fa',
     innerCard: {
-      // icon: '🧩',
       icon: '🔍',
-      // cardTitle: 'Complete Letter',
       cardTitle: 'Find the Letter',
-      // shortDes:
-      //   'Choose the missing piece to complete each letter and improve letter recognition.',
       shortDes: 'Find the correct letter and improve your letter recognition!',
-      // tag: 'Complete It',
       tag: "Let's find",
+      requiredStickers: 5,
       darkColor: '#9e6b38',
       midColor: '#d8493a',
       lightColor: '#eba75e',
@@ -145,6 +140,7 @@ export const activityData: Castle[] = [
       shortDes:
         'Fill the letter shape with the correct letter and improve your letter recognition!',
       tag: 'Fill It',
+      requiredStickers: 6,
       darkColor: '#a59aaa',
       midColor: '#d87b76',
       lightColor: '#eedeec',
@@ -163,6 +159,7 @@ export const activityData: Castle[] = [
       shortDes:
         'Put letters in the correct order to spell words and improve your spelling skills.',
       tag: 'Spell Words',
+      requiredStickers: 7,
       darkColor: '#6a7da0',
       midColor: '#5a4940',
       lightColor: '#e6d7b7',
@@ -172,45 +169,63 @@ export const activityData: Castle[] = [
   {
     id: '8',
     image: require('../../../assets/images/castles/level_8.webp'),
-    // image: require('../../../assets/images/castles/level_8_lock.webp'),
     title: 'Bingo',
     topSkyCol: '#8e44ad',
     bottomSkyCol: '#eedcff',
-    // topSkyCol: '#9CA3AF',
-    // bottomSkyCol: '#E5E7EB',
     innerCard: {
       icon: '🔤',
       cardTitle: 'Letter Bingo',
       shortDes:
         'Play an exciting bingo game by finding and matching the correct letters.',
       tag: 'Bingo',
+      requiredStickers: 8,
       darkColor: '#75a5a7',
       midColor: '#5386b1',
       lightColor: '#9ad7d7',
-      // isLocked: true,
       navigate: ROUTES.BINGO,
     },
   },
   {
     id: '9',
     image: require('../../../assets/images/castles/level_9.webp'),
-    // image: require('../../../assets/images/castles/level_9_lock.webp'),
     title: 'Storytellinglist',
     topSkyCol: '#3f87f5',
     bottomSkyCol: '#b6e3ff',
-    // topSkyCol: '#9CA3AF',
-    // bottomSkyCol: '#E5E7EB',
     innerCard: {
       icon: '📖',
       cardTitle: 'Read Stories',
       shortDes:
         'Read fun stories aloud and improve your reading and pronunciation skills.',
         tag: 'Start Reading',
+      requiredStickers: 10,
       darkColor: '#cd4a35',
       midColor: '#ceb200',
       lightColor: '#efdfc6',
-      // isLocked: true,
       navigate:ROUTES.STORYTELLINGLIST
     },
   },
 ];
+
+// stickers needed to open an activity/level
+export const getRequiredStickers = (card: ActivityCard): number =>
+  card.requiredStickers ?? 0;
+
+// a level opens once the kid has collected enough stickers. Sticker counts only
+// ever grow, so a level never re-locks after it has been opened.
+export const isActivityLocked = (
+  card: ActivityCard,
+  collectedStickers: number,
+): boolean =>
+  Boolean(
+    card.isLocked ||
+      !card.navigate ||
+      collectedStickers < getRequiredStickers(card),
+  );
+
+export const getStickersToUnlock = (
+  card: ActivityCard,
+  collectedStickers: number,
+): number => Math.max(getRequiredStickers(card) - collectedStickers, 0);
+
+// the sky fades to these greys while the active level is still locked
+export const LOCKED_SKY_COLORS: [string, string] = ['#9ca3af', '#e5e7eb'];
