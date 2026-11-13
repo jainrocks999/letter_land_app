@@ -28,6 +28,8 @@ export interface UserRewardsType {
   trophies: string[];
   // how many times each activity was finished, used to halve replay stars
   activityRuns: Record<string, number>;
+  // furthest page reached in each story, so cards can show real progress
+  storyProgress: Record<string, number>;
 }
 
 export type VoiceSpeedType = keyof typeof VOICE_SPEED_MULTIPLIER;
@@ -54,6 +56,7 @@ export const DEFAULT_REWARDS: UserRewardsType = {
   unlockedStickers: [],
   trophies: [],
   activityRuns: {},
+  storyProgress: {},
 };
 
 const StorageService = {

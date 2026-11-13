@@ -16,11 +16,18 @@ export type StoryActivityType =
   | 'rhyme'
   | 'picture_q';
 
+// an option can be a plain word or a picture card. The value is always the
+// word we compare against the answer, the image is only what the child taps.
+export interface StoryOption {
+  value: string;
+  image?: ImageSourcePropType;
+}
+
 export interface StoryActivity {
   type: StoryActivityType;
   prompt: string;
   answer: string;
-  options?: string[];
+  options?: Array<string | StoryOption>;
   hint?: string;
 }
 
@@ -89,7 +96,7 @@ const storyActivity = (
   type: StoryActivityType,
   prompt: string,
   answer: string,
-  options?: string[],
+  options?: Array<string | StoryOption>,
   hint?: string,
 ): StoryActivity => ({
   type,
@@ -110,9 +117,12 @@ const storyPage = (
 });
 
 // every choice-based exercise exposes its options through one helper, so the
-// reader does not need to know how a page stores them
-export const getActivityOptions = (activity: StoryActivity): string[] =>
-  activity.options ?? [];
+// reader always gets the same { value, image } shape and never handles the raw
+// data format directly
+export const getActivityOptions = (activity: StoryActivity): StoryOption[] =>
+  (activity.options ?? []).map(option =>
+    typeof option === 'string' ? { value: option } : option,
+  );
 
 export const storyData: Story[] = [
   // ---------------------------------------------------------------- Level 1
@@ -143,7 +153,20 @@ export const storyData: Story[] = [
           'tap',
           'Tap the hat in the picture!',
           'hat',
-          ['cat', 'hat', 'mat'],
+          [
+            {
+              value: 'cat',
+              image: require('../../../assets/stories/questions/cat.webp'),
+            },
+            {
+              value: 'mat',
+              image: require('../../../assets/stories/questions/mat.webp'),
+            },
+            {
+              value: 'hat',
+              image: require('../../../assets/stories/questions/hat.webp'),
+            },
+          ],
           'Look for something blue!',
         ),
       ),
@@ -202,7 +225,21 @@ export const storyData: Story[] = [
           'tap',
           "Tap the pig's curly tail!",
           'tail',
-          ['tail', 'ear', 'nose'],
+          // ['tail', 'ear', 'nose'],
+          [
+            {
+              value: 'tail',
+              image: require('../../../assets/stories/questions/tail.webp'),
+            },
+            {
+              value: 'ear',
+              image: require('../../../assets/stories/questions/ear.webp'),
+            },
+            {
+              value: 'nose',
+              image: require('../../../assets/stories/questions/nose.webp'),
+            },
+          ],
           'Look at the back of the pig!',
         ),
       ),
@@ -261,7 +298,21 @@ export const storyData: Story[] = [
           'tap',
           'Tap the rain cloud!',
           'cloud',
-          ['cloud', 'sun', 'tree'],
+          // ['cloud', 'sun', 'tree'],
+          [
+            {
+              value: 'cloud',
+              image: require('../../../assets/stories/questions/cloud.webp'),
+            },
+            {
+              value: 'sun',
+              image: require('../../../assets/stories/questions/sun.webp'),
+            },
+            {
+              value: 'tree',
+              image: require('../../../assets/stories/questions/tree.webp'),
+            },
+          ],
           'Look up in the sky!',
         ),
       ),
@@ -320,7 +371,19 @@ export const storyData: Story[] = [
           'tap',
           'Tap the log!',
           'log',
-          ['log', 'dog', 'rock'],
+          // ['log', 'dog', 'rock'],
+          [ {
+              value: 'log',
+              image: require('../../../assets/stories/questions/log.webp'),
+            },
+            {
+              value: 'cat',
+              image: require('../../../assets/stories/questions/cat.webp'),
+            },
+            {
+              value: 'stone',
+              image: require('../../../assets/stories/questions/stone.webp'),
+            },],
           'It is big, round and brown.',
         ),
       ),
@@ -381,7 +444,19 @@ export const storyData: Story[] = [
           'tap',
           'Tap a lily pad!',
           'lily pad',
-          ['lily pad', 'rock', 'log'],
+          // ['lily pad', 'rock', 'log'],
+           [ {
+              value: 'lily pad',
+              image: require('../../../assets/stories/questions/lilypad.webp'),
+            },
+            {
+              value: 'rock',
+              image: require('../../../assets/stories/questions/stone.webp'),
+            },
+            {
+              value: 'log',
+              image: require('../../../assets/stories/questions/log.webp'),
+            },],
           'It is round and green on the water.',
         ),
       ),
@@ -457,7 +532,19 @@ export const storyData: Story[] = [
           'tap',
           'Tap the stick!',
           'stick',
-          ['stick', 'rock', 'duck'],
+          // ['stick', 'rock', 'duck'],
+            [ {
+              value: 'stick',
+              image: require('../../../assets/stories/questions/stick.webp'),
+            },
+            {
+              value: 'rock',
+              image: require('../../../assets/stories/questions/stone.webp'),
+            },
+            {
+              value: 'cat',
+              image: require('../../../assets/stories/questions/cat.webp'),
+            },],
           'It is thin and brown, near Duck.',
         ),
       ),
@@ -468,7 +555,7 @@ export const storyData: Story[] = [
       storyPage(
         require('../../../assets/stories/story_6/page_4.webp'),
         'Duck jumps in. Plop!',
-         storyActivity(
+        storyActivity(
           'predict',
           'What will Duck do?',
           'jump in the pond',

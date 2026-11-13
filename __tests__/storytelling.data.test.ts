@@ -110,7 +110,9 @@ describe('Story Time - story data', () => {
 
         const options = getActivityOptions(page.activity);
         expect(options.length).toBeGreaterThanOrEqual(2);
-        expect(options).toContain(page.activity.answer);
+        expect(options.map(option => option.value)).toContain(
+          page.activity.answer,
+        );
       });
     });
   });

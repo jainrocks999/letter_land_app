@@ -124,6 +124,24 @@ export const RewardsProvider = ({ children }: Props) => {
     });
   }, []);
 
+  // keep the furthest point reached so story cards never lose progress
+  const updateStoryProgress = useCallback(
+    (storyId: string, progress: number) => {
+      const current = rewardsRef.current;
+      const clamped = Math.max(0, Math.min(100, Math.round(progress)));
+      const previous = current.storyProgress?.[storyId] ?? 0;
+      if (clamped <= previous) return;
+      saveRewards({
+        ...current,
+        storyProgress: {
+          ...current.storyProgress,
+          [storyId]: clamped,
+        },
+      });
+    },
+    [],
+  );
+
   const resetRewards = useCallback(() => {
     saveRewards(DEFAULT_REWARDS);
     setUnlockedQueue([]);
@@ -143,6 +161,7 @@ export const RewardsProvider = ({ children }: Props) => {
       addTrophy,
       getRewardMultiplier,
       completeActivityRun,
+      updateStoryProgress,
       collectSticker,
       resetRewards,
       dismissUnlocked,
@@ -155,6 +174,7 @@ export const RewardsProvider = ({ children }: Props) => {
       addTrophy,
       getRewardMultiplier,
       completeActivityRun,
+      updateStoryProgress,
       collectSticker,
       resetRewards,
       dismissUnlocked,

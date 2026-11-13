@@ -26,32 +26,32 @@ const CloudsContainer: React.FC<CloudsContainerProps> = ({ scrollX }) => {
   return (
     <View style={{ flex: 1 }}>
       <Animated.Image
-        source={require('../../assets/images/clouds/cloud_mid.png')}
+        source={require('../../assets/images/clouds/cloud_mid.webp')}
         style={[styles.clouds, styles.cloud1, animatedStyle]}
       />
       <Animated.Image
-        source={require('../../assets/images/clouds/cloud_sm.png')}
+        source={require('../../assets/images/clouds/cloud_sm.webp')}
         style={[styles.clouds, styles.cloud2, animatedStyle]}
       />
 
       <Animated.Image
-        source={require('../../assets/images/clouds/cloud_mid.png')}
+        source={require('../../assets/images/clouds/cloud_mid.webp')}
         style={[styles.clouds, styles.cloud7, animatedStyle]}
       />
       <Animated.Image
-        source={require('../../assets/images/clouds/cloud_lg.png')}
+        source={require('../../assets/images/clouds/cloud_lg.webp')}
         style={[styles.clouds, styles.cloud3, animatedStyle]}
       />
       <Animated.Image
-        source={require('../../assets/images/clouds/cloud_sm.png')}
+        source={require('../../assets/images/clouds/cloud_sm.webp')}
         style={[styles.clouds, styles.cloud4, animatedStyle]}
       />
       <Animated.Image
-        source={require('../../assets/images/clouds/cloud_mid.png')}
+        source={require('../../assets/images/clouds/cloud_mid.webp')}
         style={[styles.clouds, styles.cloud5, animatedStyle]}
       />
       <Animated.Image
-        source={require('../../assets/images/clouds/cloud_lg.png')}
+        source={require('../../assets/images/clouds/cloud_lg.webp')}
         style={[styles.clouds, styles.cloud6, animatedStyle]}
       />
     </View>

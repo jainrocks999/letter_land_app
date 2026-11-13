@@ -35,7 +35,7 @@ export interface ActivityCard {
 export const activityData: Castle[] = [
   {
     id: '1',
-    image: require('../../../assets/images/castles/level_1.png'),
+    image: require('../../../assets/images/castles/level_1.webp'),
     title: 'Learning',
     topSkyCol: '#4a90e2',
     bottomSkyCol: '#d8ecff',
@@ -53,7 +53,7 @@ export const activityData: Castle[] = [
   },
   {
     id: '2',
-    image: require('../../../assets/images/castles/level_2.png'),
+    image: require('../../../assets/images/castles/level_2.webp'),
     title: 'Tracing',
     topSkyCol: '#7b61ff',
     bottomSkyCol: '#e6d9ff',
@@ -70,7 +70,7 @@ export const activityData: Castle[] = [
   },
   {
     id: '3',
-    image: require('../../../assets/images/castles/level_3.png'),
+    image: require('../../../assets/images/castles/level_3.webp'),
     // title: 'Searching',
     title: 'Feeding',
     topSkyCol: '#00b894',
@@ -94,7 +94,7 @@ export const activityData: Castle[] = [
   },
   {
     id: '4',
-    image: require('../../../assets/images/castles/level_4.png'),
+    image: require('../../../assets/images/castles/level_4.webp'),
     title: 'Matching',
     topSkyCol: '#ff8a00',
     bottomSkyCol: '#ffe0b2',
@@ -112,7 +112,7 @@ export const activityData: Castle[] = [
   },
   {
     id: '5',
-    image: require('../../../assets/images/castles/level_5.png'),
+    image: require('../../../assets/images/castles/level_5.webp'),
     // title: 'Choosing',
     title: 'Searching',
     topSkyCol: '#2c3e90',
@@ -135,7 +135,7 @@ export const activityData: Castle[] = [
   },
   {
     id: '6',
-    image: require('../../../assets/images/castles/level_6.png'),
+    image: require('../../../assets/images/castles/level_6.webp'),
     title: 'Filling',
     topSkyCol: '#43c6ac',
     bottomSkyCol: '#f8ffae',
@@ -153,7 +153,7 @@ export const activityData: Castle[] = [
   },
   {
     id: '7',
-    image: require('../../../assets/images/castles/level_7.png'),
+    image: require('../../../assets/images/castles/level_7.webp'),
     title: 'Spelling',
     topSkyCol: '#ff6b6b',
     bottomSkyCol: '#ffe66d',
@@ -171,8 +171,8 @@ export const activityData: Castle[] = [
   },
   {
     id: '8',
-    image: require('../../../assets/images/castles/level_8.png'),
-    // image: require('../../../assets/images/castles/level_8_lock.png'),
+    image: require('../../../assets/images/castles/level_8.webp'),
+    // image: require('../../../assets/images/castles/level_8_lock.webp'),
     title: 'Bingo',
     topSkyCol: '#8e44ad',
     bottomSkyCol: '#eedcff',
@@ -193,8 +193,8 @@ export const activityData: Castle[] = [
   },
   {
     id: '9',
-    image: require('../../../assets/images/castles/level_9.png'),
-    // image: require('../../../assets/images/castles/level_9_lock.png'),
+    image: require('../../../assets/images/castles/level_9.webp'),
+    // image: require('../../../assets/images/castles/level_9_lock.webp'),
     title: 'Storytellinglist',
     topSkyCol: '#3f87f5',
     bottomSkyCol: '#b6e3ff',

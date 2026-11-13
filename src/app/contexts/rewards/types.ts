@@ -15,6 +15,7 @@ export interface rewardsType {
   addTrophy: (trophyId: string) => void;
   getRewardMultiplier: (activityId: string) => number;
   completeActivityRun: (activityId: string) => void;
+  updateStoryProgress: (storyId: string, progress: number) => void;
   collectSticker: (stickerId: string) => boolean;
   resetRewards: () => void;
   dismissUnlocked: () => void;

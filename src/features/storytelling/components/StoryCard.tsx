@@ -1,16 +1,17 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
-import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import { ActivityCard } from '../../home/data/home.data';
 import { Story } from '../data/storytelling.data';
+import ProgressBar from '../../../components/progressBar/ProgressBar';
 
 interface StoryCardProps {
   data: ActivityCard;
   story: Story;
+  progress?: number;
   onPress?: () => void;
 }
 
-const StoryCard = ({ data, story, onPress }: StoryCardProps) => {
+const StoryCard = ({ data, story, progress = 0, onPress }: StoryCardProps) => {
   return (
     <TouchableOpacity
       activeOpacity={0.85}
@@ -32,16 +33,8 @@ const StoryCard = ({ data, story, onPress }: StoryCardProps) => {
         >
           {story.words.slice(0, 3).join(' · ')}
         </Text>
-        <View style={styles.starRow}>
-          {[0, 1, 2].map(star => (
-            <FontAwesome6
-              key={star}
-              name="star"
-              iconStyle="regular"
-              color={`${data.midColor}99`}
-              style={styles.starSize}
-            />
-          ))}
+        <View style={styles.cardProgress}>
+          <ProgressBar progress={progress} bgColor={`${data.lightColor}99`} />
         </View>
       </View>
       <Text
@@ -97,12 +90,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     margin: 8,
   },
-  starRow: {
-    flexDirection: 'row',
-    gap: 5,
+  cardProgress: {
     paddingVertical: 5,
-  },
-  starSize: {
-    fontSize: 15,
   },
 });

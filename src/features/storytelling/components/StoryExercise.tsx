@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import React, {
   useCallback,
   useEffect,
@@ -21,6 +21,7 @@ import {
   getActivityOptions,
   STORY_ACTIVITY_LABELS,
   StoryActivity,
+  StoryOption,
 } from '../data/storytelling.data';
 import { styles } from '../StoryTelling.styles';
 import TTSService from '../../../services/tts.service';
@@ -46,7 +47,7 @@ interface StoryExerciseProps {
 }
 
 interface ExerciseOptionProps {
-  option: string;
+  option: StoryOption;
   state: OptionState;
   colors: ActivityCard;
   emoji?: string;
@@ -132,28 +133,39 @@ const ExerciseOption = ({
         animatedStyle,
       ]}
     >
-      <View style={[styles.exerciseOptionContent,{justifyContent:"space-between"}]}>
+      <View style={styles.exerciseOptionContent}>
         <TouchableOpacity
-          accessibilityLabel={option}
+          accessibilityLabel={option.value}
           activeOpacity={0.75}
           disabled={state === 'disabled' || isCorrect}
           onPress={onPress}
-          style={styles.exerciseOptionMain}
+          style={[
+            styles.exerciseOptionMain,
+            option.image ? styles.exerciseOptionImageMain : undefined,
+          ]}
         >
-          <Text
-            style={[
-              styles.exerciseOptionText,
-              { color: colors.darkColor },
-              isCorrect && styles.exerciseOptionTextCorrect,
-              isWrong && styles.exerciseOptionTextWrong,
-            ]}
-          >
-            {emoji ? `${emoji}  ${option}` : option}
-          </Text>
+          {option.image ? (
+            <Image
+              source={option.image}
+              resizeMode="contain"
+              style={styles.exerciseOptionImage}
+            />
+          ) : (
+            <Text
+              style={[
+                styles.exerciseOptionText,
+                { color: colors.darkColor },
+                isCorrect && styles.exerciseOptionTextCorrect,
+                isWrong && styles.exerciseOptionTextWrong,
+              ]}
+            >
+              {emoji ? `${emoji}  ${option.value}` : option.value}
+            </Text>
+          )}
         </TouchableOpacity>
 
         <TouchableOpacity
-          accessibilityLabel={`Hear ${option}`}
+          accessibilityLabel={`Hear ${option.value}`}
           hitSlop={8}
           disabled={state === 'disabled' || isCorrect}
           onPress={event => {
@@ -619,19 +631,19 @@ const StoryExercise = ({
         </View>
       ) : (
         <View style={styles.exerciseOptionsRow}>
-          {options.map(option => (
+          {options.map((option, index) => (
             <ExerciseOption
-              key={option}
+              key={`${option.value}-${index}`}
               option={option}
-              state={optionState(option)}
+              state={optionState(option.value)}
               colors={colors}
               emoji={
                 activity.type === 'feel'
-                  ? FEEL_EMOJI[option.toLowerCase()]
+                  ? FEEL_EMOJI[option.value.toLowerCase()]
                   : undefined
               }
-              onPress={() => handleOptionPress(option)}
-              onSpeak={() => TTSService.speak(option)}
+              onPress={() => handleOptionPress(option.value)}
+              onSpeak={() => TTSService.speak(option.value)}
             />
           ))}
         </View>

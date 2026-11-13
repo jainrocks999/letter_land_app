@@ -25,8 +25,9 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
   },
   bannerContent: {
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     width: '48%',
+    gap:6
   },
   levelHeaderRow: {
     flexDirection: 'row',
@@ -264,12 +265,24 @@ export const styles = StyleSheet.create({
   exerciseOptionContent: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     gap: 8,
     paddingHorizontal: 14,
     paddingVertical: 10,
   },
   exerciseOptionMain: {
     flexShrink: 1,
+  },
+  exerciseOptionImageMain: {
+    flexGrow: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 4,
+  },
+  exerciseOptionImage: {
+    width: 72,
+    height: 72,
+    borderRadius: 12,
   },
   exerciseOptionSpeaker: {
     padding: 2,

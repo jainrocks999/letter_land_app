@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
@@ -21,6 +21,7 @@ import {
   StackNavigationProps,
   StackRouteProps,
 } from '../../types/navigation.types';
+import useRewardsContext from '../../app/contexts/rewards/useRewards';
 import { getStoryById } from './data/storytelling.data';
 import { styles } from './StoryTelling.styles';
 import TopBarRead from './components/TopBarRead';
@@ -116,6 +117,12 @@ const StoryTellingReadScreen = () => {
   const route = useRoute<StackRouteProps<typeof ROUTES.STORYTELLINGREAD>>();
   const navigation =
     useNavigation<StackNavigationProps<typeof ROUTES.STORYTELLINGREAD>>();
+  const {
+    addStars,
+    getRewardMultiplier,
+    completeActivityRun,
+    updateStoryProgress,
+  } = useRewardsContext();
   const insets = useSafeAreaInsets();
   const { data, storyId } = route.params;
   const story = getStoryById(storyId);
@@ -127,6 +134,10 @@ const StoryTellingReadScreen = () => {
   const [activeWord, setActiveWord] = useState<WordToken | null>(null);
   const [showExercise, setShowExercise] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [earnedPoints, setEarnedPoints] = useState(0);
+  // each story keeps its own replay count, so finishing a new story pays full
+  const storyRewardKey = `story-${storyId}`;
+  const storyAwardedRef = useRef(false);
 
   const currentPage = story?.pages[pageIndex];
   const currentActivity = currentPage?.activity;
@@ -172,6 +183,17 @@ const StoryTellingReadScreen = () => {
     return () => clearTimeout(timer);
   }, [currentPage]);
 
+  // remember the furthest page reached so the story cards show real progress.
+  // 100 stays reserved for a story that is actually finished.
+  useEffect(() => {
+    if (!story || !totalPages) return;
+    const pagesReached = Math.min(pageIndex + 1, totalPages);
+    updateStoryProgress(
+      story.id,
+      Math.min(99, Math.round((pagesReached / totalPages) * 100)),
+    );
+  }, [story, pageIndex, totalPages, updateStoryProgress]);
+
   const highlightStyle = useMemo(
     () => [
       styles.readSpokenHighlight,
@@ -193,15 +215,33 @@ const StoryTellingReadScreen = () => {
     setShowExercise(true);
   };
 
+  // first finish pays the story's full stars, every replay pays half of the
+  // previous run, and even the smallest replay still pays 1 star
+  const completeStory = () => {
+    // finishing fills the card, including when the story is read again
+    updateStoryProgress(storyId, 100);
+    if (!storyAwardedRef.current) {
+      storyAwardedRef.current = true;
+      const multiplier = getRewardMultiplier(storyRewardKey);
+      const basePoints = story?.rewardStars ?? 1;
+      const points = Math.max(1, Math.floor(basePoints * multiplier));
+      addStars(points, 'Story Complete!');
+      completeActivityRun(storyRewardKey);
+      setEarnedPoints(points);
+    }
+    TTSService.stop();
+    setShowCelebration(true);
+  };
+
   const goToNextPage = () => {
     // a final page with no question is finished with the Next button
     if (!currentActivity) {
-      TTSService.stop();
       setActiveWord(null);
       if (isLastPage) {
-        setShowCelebration(true);
+        completeStory();
         return;
       }
+      TTSService.stop();
       setPageIndex(index => Math.min(index + 1, totalPages - 1));
       return;
     }
@@ -220,7 +260,7 @@ const StoryTellingReadScreen = () => {
     setActiveWord(null);
     // passing the final page's exercise completes this story
     if (isLastPage) {
-      setShowCelebration(true);
+      completeStory();
       return;
     }
     setPageIndex(index => Math.min(index + 1, totalPages - 1));
@@ -263,6 +303,8 @@ const StoryTellingReadScreen = () => {
     setShowExercise(false);
     setActiveWord(null);
     setSpokenRange(null);
+    setEarnedPoints(0);
+    storyAwardedRef.current = false;
     setPageIndex(0);
   };
 
@@ -331,7 +373,13 @@ const StoryTellingReadScreen = () => {
                     imgTop={8}
                     styles={styles.characterImage}
                   />
-                  <View style={[styles.flexRow, styles.buddyStatusText,{borderColor:data.midColor}]}>
+                  <View
+                    style={[
+                      styles.flexRow,
+                      styles.buddyStatusText,
+                      { borderColor: data.midColor },
+                    ]}
+                  >
                     <FontAwesome6
                       name="circle"
                       iconStyle="solid"
@@ -527,7 +575,11 @@ const StoryTellingReadScreen = () => {
         <SuccessModal
           visible={showCelebration}
           title="🎉 Story Complete!"
-          message={`Amazing reading! You finished "${story.title}".`}
+          message={`Amazing reading! You finished "${
+            story.title
+          }" and earned ${earnedPoints} ${
+            earnedPoints === 1 ? 'star' : 'stars'
+          }!`}
           closeBtnText="Stories List"
           restartBtnText="Read Again"
           onRestart={restartStory}

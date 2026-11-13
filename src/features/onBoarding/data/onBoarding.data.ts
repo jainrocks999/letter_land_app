@@ -14,7 +14,7 @@ export interface OnBoardingSlideType {
 export const onBoardingSlidesData: OnBoardingSlideType[] = [
   {
     id: '1',
-    image: require('../../../assets/images/onboarding/illustration1.png'),
+    image: require('../../../assets/images/onboarding/illustration1.webp'),
     title: 'Welcome to eLetter.',
     description:
       'Join your little learning buddy and explore magical castles filled with fun alphabet adventures.',
@@ -25,7 +25,7 @@ export const onBoardingSlidesData: OnBoardingSlideType[] = [
   },
   {
     id: '2',
-    image: require('../../../assets/images/onboarding/illustration2.png'),
+    image: require('../../../assets/images/onboarding/illustration2.webp'),
     title: 'One Castle, One Adventure',
     description: 'Unlock exciting castles as you learn letters',
     topColor: '#00b894',
@@ -35,7 +35,7 @@ export const onBoardingSlidesData: OnBoardingSlideType[] = [
   },
   {
     id: '3',
-    image: require('../../../assets/images/onboarding/illustration3.png'),
+    image: require('../../../assets/images/onboarding/illustration3.webp'),
     title: "Let's Start Learning!",
     description:
       'Play fun activities, collect new skills, and become an alphabet champion!',
