@@ -3,6 +3,8 @@ import { hp, wp } from '../../utils/responsive';
 import {
   ActivityCard,
   Castle,
+  getActivityProgressKey,
+  getCharacterLevel,
   getRequiredStickers,
   getStickersToUnlock,
   isActivityLocked,
@@ -20,7 +22,6 @@ import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProps } from '../../types/navigation.types';
 import { ROUTES } from '../../app/navigation/routeNames';
-import { UserActivitiesType } from '../../services/mmkv.service';
 import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
 import useRewardsContext from '../../app/contexts/rewards/useRewards';
 import useToast from '../../app/contexts/toast/useToast';
@@ -39,6 +40,10 @@ interface CarouselItemProps {
   index: number;
   scrollX: SharedValue<number>;
   progress: number;
+  // true when Buddy the character is standing on this level
+  showCharacter: boolean;
+  // true when Buddy is sad (the level ahead is still locked)
+  characterSad: boolean;
 }
 
 const CarouselItem: React.FC<CarouselItemProps> = ({
@@ -46,6 +51,8 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
   index,
   scrollX,
   progress,
+  showCharacter,
+  characterSad,
 }) => {
   const navigation = useNavigation<StackNavigationProps<typeof ROUTES.HOME>>();
   const { rewards } = useRewardsContext();
@@ -150,10 +157,9 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
                 collectedStickers,
               );
               const stickerWord = remaining === 1 ? 'sticker' : 'stickers';
-              showToast(
-                `Collect ${remaining} more ${stickerWord} to unlock ${activityCardData.cardTitle}`,
-                '🔒',
-              );
+              const message = `Collect ${remaining} more ${stickerWord} to unlock ${activityCardData.cardTitle}`;
+              showToast(message, '🔒');
+              TTSService.speak(message);
               return;
             }
             navigation.navigate(navigate, { data: activityCardData });
@@ -170,11 +176,28 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
 
       <View style={styles.singlePage}>
         <View style={styles.singlePageContent}>
-          <View style={isLocked ? styles.lockedImage : undefined}>
-            <Animated.Image
-              source={item.image}
-              style={[styles.imgContainer, animatedStyle]}
-            />
+          <View
+            style={[
+              styles.castleWrapper,
+              isLocked ? styles.lockedImage : undefined
+            ]}
+          >
+            <View>
+              <Animated.Image
+                source={item.image}
+                style={[styles.imgContainer, animatedStyle]}
+              />
+            </View>
+            {showCharacter && (
+              <Animated.Image
+                source={
+                  characterSad
+                    ? require('../../assets/images/character/sad.gif')
+                    : require('../../assets/images/character/standing.gif')
+                }
+                style={[styles.characterImage, animatedStyle]}
+              />
+            )}
           </View>
           <View style={styles.bottomPlatform} />
           <View style={styles.headingContainer}>
@@ -187,7 +210,20 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
 };
 
 const CastleCarousel: React.FC<props> = ({ data, onIndexChange, scrollX }) => {
-  const { progressData } = useActivityProContext();
+  const { progressData, characterIndex } = useActivityProContext();
+  const { rewards } = useRewardsContext();
+  const collectedStickers = rewards.unlockedStickers.length;
+  // level Buddy stands on: the last level the kid played, or the first
+  // unfinished level before they have played anything. He looks sad while the
+  // level he is waiting on is still locked.
+  const resolvedIndex =
+    characterIndex >= 0 && characterIndex < data.length
+      ? characterIndex
+      : getCharacterLevel(data, progressData, collectedStickers).index;
+  const characterSad = isActivityLocked(
+    data[resolvedIndex].innerCard,
+    collectedStickers,
+  );
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: event => {
       scrollX.value = event.contentOffset.x;
@@ -216,14 +252,15 @@ const CastleCarousel: React.FC<props> = ({ data, onIndexChange, scrollX }) => {
       }}
       scrollEventThrottle={16}
       renderItem={({ item, index }) => {
-        const itemProgressData =
-          progressData[item.title.toLowerCase() as keyof UserActivitiesType];
+        const itemProgressData = progressData[getActivityProgressKey(item)];
         return (
           <CarouselItem
             item={item}
             index={index}
             scrollX={scrollX}
             progress={itemProgressData ?? 0}
+            showCharacter={index === resolvedIndex}
+            characterSad={characterSad}
           />
         );
       }}

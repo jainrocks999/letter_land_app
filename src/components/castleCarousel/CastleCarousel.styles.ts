@@ -73,6 +73,18 @@ export const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
+  // wraps the castle art so Buddy can be positioned right on top of it
+  castleWrapper: {
+    position: 'relative',
+  },
+  characterImage: {
+    position: 'absolute',
+    bottom: -12,
+    width: wp(26),
+    height: wp(26),
+    left:-20,
+    resizeMode: 'contain',
+  },
   imgContainer: {
     width: wp(70),
     height: wp(70),

@@ -1,6 +1,8 @@
 export const STORAGE_KEYS = {
   IS_ONBORDING: 'isOnboarding',
   USER_PERFORMANCE: 'userPermance',
+  // level the home character (Buddy) is currently standing on
+  CHARACTER_LEVEL: 'characterLevel',
   REWARDS: 'rewards',
   SETTINGS: 'settings',
   PROFILES: 'profiles',

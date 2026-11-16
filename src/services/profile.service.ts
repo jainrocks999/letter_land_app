@@ -29,6 +29,7 @@ export const getProfileKey = (baseKey: string, profileId: string) =>
 const PROFILE_DATA_KEYS = [
   STORAGE_KEYS.REWARDS,
   STORAGE_KEYS.USER_PERFORMANCE,
+  STORAGE_KEYS.CHARACTER_LEVEL,
   STORAGE_KEYS.STATS,
 ];
 

@@ -1,5 +1,6 @@
 import { ImageSourcePropType } from 'react-native';
 import { ROUTES } from '../../../app/navigation/routeNames';
+import { UserActivitiesType } from '../../../services/mmkv.service';
 
 type ActivityRoutes =
   | typeof ROUTES.LEARNING
@@ -229,3 +230,41 @@ export const getStickersToUnlock = (
 
 // the sky fades to these greys while the active level is still locked
 export const LOCKED_SKY_COLORS: [string, string] = ['#9ca3af', '#e5e7eb'];
+
+// activities store their progress under the lower-cased level title
+export const getActivityProgressKey = (
+  castle: Castle,
+): keyof UserActivitiesType =>
+  castle.title.toLowerCase() as keyof UserActivitiesType;
+
+// the level Buddy the character stands on. It stays on the level the kid is
+// still working on (any progress below 100%) and only hops to the next one once
+// that level is finished. If the next level is still locked he waits on it with
+// a sad face, otherwise he stands there happily.
+export interface CharacterLevel {
+  index: number;
+  isSad: boolean;
+}
+
+export const getCharacterLevel = (
+  levels: Castle[],
+  progressData: UserActivitiesType,
+  collectedStickers: number,
+): CharacterLevel => {
+  let lastUnlocked = 0;
+  let firstLocked = -1;
+  for (let index = 0; index < levels.length; index++) {
+    if (isActivityLocked(levels[index].innerCard, collectedStickers)) {
+      if (firstLocked === -1) firstLocked = index;
+      continue;
+    }
+    lastUnlocked = index;
+    const progress = progressData[getActivityProgressKey(levels[index])] ?? 0;
+    // still working on this level, Buddy waits here and stands
+    if (progress < 100) return { index, isSad: false };
+  }
+  // every open level is finished: Buddy moves on to the next one. When that
+  // level is still locked he waits there sad until more stickers arrive.
+  if (firstLocked !== -1) return { index: firstLocked, isSad: true };
+  return { index: lastUnlocked, isSad: false };
+};

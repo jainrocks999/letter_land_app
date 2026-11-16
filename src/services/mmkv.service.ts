@@ -90,6 +90,14 @@ const StorageService = {
     }
   },
 
+  // level key (e.g. "learning") the home character is standing on, if any
+  getCharacterLevel: (key: string): string | null =>
+    storage.getString(key) ?? null,
+
+  setCharacterLevel: (key: string, levelKey: string) => {
+    storage.set(key, levelKey);
+  },
+
   setSettings: (key: string, value: UserSettingsType) => {
     storage.set(key, JSON.stringify(value));
   },
