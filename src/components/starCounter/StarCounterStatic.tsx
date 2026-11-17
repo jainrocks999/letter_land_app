@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import useRewardsContext from '../../app/contexts/rewards/useRewards';
 import { Castle } from '../../features/home/data/home.data';
+import { rf } from '../../utils/responsive';
 
 export interface StarCounterStaticProps {
   size?: 'small' | 'large';
@@ -36,8 +37,15 @@ const StarCounterStatic: React.FC<StarCounterStaticProps> = ({
         { backgroundColor: bg, borderColor: border },
       ]}
     >
-      <FontAwesome6 name="star" iconStyle="solid" size={18} color="#f5df00" />
-      <Text style={[styles.count, isLarge && styles.countLarge,{color:border}]}>
+      <FontAwesome6
+        name="star"
+        iconStyle="solid"
+        size={isLarge ? rf(22) : rf(18)}
+        color="#f5df00"
+      />
+      <Text
+        style={[styles.count, isLarge && styles.countLarge, { color: border }]}
+      >
         {rewards.stars}
       </Text>
     </View>
@@ -50,22 +58,26 @@ export const starCounterStyles = StyleSheet.create({
   pill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: rf(4),
     borderWidth: 2,
-    borderBottomWidth: 6,
+    borderBottomWidth: rf(6),
     borderRadius: 999,
-    paddingVertical: 4,
-    paddingHorizontal: 10,
+    paddingVertical: rf(4),
+    paddingHorizontal: rf(10),
   },
-  pillLarge: { paddingVertical: 8, paddingHorizontal: 16, gap: 6 },
+  pillLarge: {
+    paddingVertical: rf(8),
+    paddingHorizontal: rf(16),
+    gap: rf(6),
+  },
   count: {
     fontFamily: 'Fredoka-Bold',
-    fontSize: 16,
+    fontSize: rf(16),
     color: '#ffffff',
-    minWidth: 18,
+    minWidth: rf(18),
     textAlign: 'center',
   },
-  countLarge: { fontSize: 20 },
+  countLarge: { fontSize: rf(20) },
 });
 
 const styles = starCounterStyles;

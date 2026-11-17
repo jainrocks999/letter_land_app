@@ -1,10 +1,15 @@
 import { StyleSheet, Text, View } from 'react-native';
-import React, { useRef } from 'react';
-import { colorData, LetterOptionWithPosType, RectType } from '../../../types/search.types';
+import React, { useMemo, useRef } from 'react';
+import {
+  colorData,
+  LetterOptionWithPosType,
+  RectType,
+} from '../../../types/search.types';
 import Animated from 'react-native-reanimated';
 import { GestureDetector, usePanGesture } from 'react-native-gesture-handler';
 import { CookieSvg } from '../../../utils/searchingHelper';
 import useLetterDrag from '../../../hooks/useLetterDrag';
+import { rf } from '../../../utils/responsive';
 
 interface Props {
   data: LetterOptionWithPosType;
@@ -27,8 +32,15 @@ const DraggableCookie: React.FC<Props> = ({
 }) => {
   const tileRef = useRef<View>(null);
 
+  // Cookie positions are authored for a phone layout, so scale them alongside
+  // the cookie size to keep the grid balanced on tablets.
+  const scaledData = useMemo(
+    () => ({ ...data, x: rf(data.x), y: rf(data.y) }),
+    [data],
+  );
+
   const drag = useLetterDrag({
-    data,
+    data: scaledData,
     rectShap: mouthRect,
     targetLetter,
     onHoverChange,
@@ -73,18 +85,17 @@ const DraggableCookie: React.FC<Props> = ({
   );
 };
 
-
 export default DraggableCookie;
 
 const styles = StyleSheet.create({
   dragableContainer: {
-    width: 66,
-    height: 66,
+    width: rf(66),
+    height: rf(66),
     justifyContent: 'center',
     alignItems: 'center',
   },
   LetterText: {
-    fontSize: 36,
+    fontSize: rf(36),
     fontFamily: 'Fredoka-Bold',
     color: '#333',
     position: 'absolute',

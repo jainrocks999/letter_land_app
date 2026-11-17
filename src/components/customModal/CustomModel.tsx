@@ -1,9 +1,8 @@
+import { StyleSheet, Text, View, Image } from 'react-native';
 import React, { useEffect } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import LottieAnimation from '../LottieAnimation/LottieAnimation';
 import CustomButton from '../customButton/CustomButton';
-import { wp } from '../../utils/responsive';
+import { isTablet, rf } from '../../utils/responsive';
 import MusicService from '../../services/music.service';
 
 interface SuccessModalProps {
@@ -27,12 +26,11 @@ const SuccessModal = ({
   closeBtnText = 'Home',
   restartBtnText = 'Play Again',
 }: SuccessModalProps) => {
-
-  useEffect(()=>{
-    if(visible){
+  useEffect(() => {
+    if (visible) {
       MusicService.playEffect('levelComplete');
     }
-  },[visible]);
+  }, [visible]);
 
   if (!visible) {
     return null;
@@ -63,9 +61,9 @@ const SuccessModal = ({
               bottomBorderColor="#d84e16"
               colors={['#ff7b38', '#ff6425']}
               onPress={onRestart}
-              padding={12}
-              paddingBottom={9}
-              btnRadius={15}
+              padding={rf(12)}
+              paddingBottom={rf(9)}
+              btnRadius={rf(15)}
             >
               <Text style={[styles.buttonText]}>{restartBtnText}</Text>
             </CustomButton>
@@ -105,45 +103,45 @@ const styles = StyleSheet.create({
 
   card: {
     width: '82%',
-    maxWidth: 380,
+    maxWidth: isTablet() ? 480 : 380,
     backgroundColor: '#fff',
-    borderRadius: 30,
-    padding: 25,
+    borderRadius: rf(30),
+    padding: rf(25),
     alignItems: 'center',
     elevation: 20,
   },
 
   character: {
-    width: 180,
-    height: 180,
+    width: rf(180),
+    height: rf(180),
   },
 
   title: {
-    fontSize: 28,
-    marginBottom: 12,
+    fontSize: rf(28),
+    marginBottom: rf(12),
     fontFamily: 'Fredoka-Bold',
     color: '#1a105f',
     textAlign: 'center',
   },
 
   message: {
-    fontSize: 16,
+    fontSize: rf(16),
     textAlign: 'center',
     color: '#555',
     fontFamily: 'Fredoka-Medium',
-    marginBottom: 25,
+    marginBottom: rf(25),
   },
 
   buttonRow: {
     flexDirection: 'row',
-    gap: 12,
+    gap: rf(12),
     justifyContent: 'center',
     alignItems: 'center',
   },
 
   buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: rf(16),
     fontFamily: 'Fredoka-Bold',
     flex: 1,
     textAlign: 'center',

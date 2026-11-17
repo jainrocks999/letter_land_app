@@ -24,6 +24,7 @@ import StickerSlot, { SlotRect, StickerStatus } from './components/StickerSlot';
 import CollectStickerOverlay from './components/CollectStickerOverlay';
 import LevelUnlockedModal from '../../components/levelUnlockedModal/LevelUnlockedModal';
 import MusicService from '../../services/music.service';
+import { isTablet, rf } from '../../utils/responsive';
 
 interface CollectingState {
   sticker: StickerType;
@@ -42,6 +43,8 @@ const RewardsScreen = () => {
   // level waiting to be celebrated once the sticker animation finishes
   const [pendingUnlock, setPendingUnlock] = useState<Castle | null>(null);
   const [unlockedLevel, setUnlockedLevel] = useState<Castle | null>(null);
+
+  const table=isTablet()
 
   // cheapest sticker that is still missing from the book
   const nextSticker = stickersData.find(
@@ -131,7 +134,7 @@ const RewardsScreen = () => {
       icon: (
         <FontAwesome6
           name="circle-check"
-          size={24}
+          size={rf(table ? 30 : 24)}
           color="#22C55E"
           iconStyle="regular"
         />
@@ -141,7 +144,12 @@ const RewardsScreen = () => {
     },
     {
       icon: (
-        <FontAwesome6 name="fire" iconStyle="solid" size={24} color="#FF6A22" />
+        <FontAwesome6
+          name="fire"
+          iconStyle="solid"
+          size={rf(table ? 30 : 24)}
+          color="#FF6A22"
+        />
       ),
       text: `${REWARD_POINTS.COMBO_EVERY} in a row`,
       points: REWARD_POINTS.COMBO_BONUS,
@@ -150,7 +158,7 @@ const RewardsScreen = () => {
       icon: (
         <FontAwesome6
           name="flag"
-          size={24}
+          size={rf(table ? 30 : 24)}
           color="#A8487E"
           iconStyle="regular"
         />
@@ -164,25 +172,24 @@ const RewardsScreen = () => {
     <View ref={containerRef} collapsable={false} style={styles.container}>
       <View style={styles.topbar}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <FontAwesome6 name="xmark" iconStyle="solid" size={30} />
+          <FontAwesome6 name="xmark" iconStyle="solid" size={rf(30)} />
         </TouchableOpacity>
 
-        {/* <StarCounter /> */}
         <View
           style={{
             backgroundColor: '#F6E7C8',
-            padding: 10,
+            padding: rf(10),
             borderColor: '#c08a25',
             borderWidth: 2,
-            borderBottomWidth: 8,
-            borderRadius: 12,
-            marginVertical: 6,
+            borderBottomWidth: rf(8),
+            borderRadius: rf(12),
+            marginVertical: rf(6),
           }}
         >
           <FontAwesome6
             name="trophy"
             iconStyle="solid"
-            size={22}
+            size={rf(22)}
             color={'#c08a25'}
           />
         </View>
@@ -203,7 +210,7 @@ const RewardsScreen = () => {
               <FontAwesome6
                 name="star"
                 iconStyle="solid"
-                size={15}
+                size={rf(15)}
                 color={'#c08a25'}
               />
               <Text style={styles.tipText}>{rewards.stars} Stars</Text>
@@ -252,7 +259,11 @@ const RewardsScreen = () => {
             {earnTips.map(tip => (
               <View key={tip.text} style={styles.tipChip}>
                 {tip.icon}
-                <Text style={styles.tipText}>{tip.text}</Text>
+                <Text
+                  style={[styles.tipText, table && { fontSize: rf(16) }]}
+                >
+                  {tip.text}
+                </Text>
                 <Text style={styles.pointsText}>+{tip.points}</Text>
               </View>
             ))}
@@ -263,7 +274,7 @@ const RewardsScreen = () => {
         <View
           style={[
             styles.flexRowSpeaceBtwn,
-            { paddingHorizontal: 12, rowGap: 10 },
+            { rowGap: table ? rf(18) : rf(10) },
           ]}
         >
           {trophiesData.map(activity => {
@@ -286,16 +297,16 @@ const RewardsScreen = () => {
                     <FontAwesome6
                       name="lock"
                       iconStyle="solid"
-                      size={14}
+                      size={rf(14)}
                       color={activity.darkColor}
                     />
                   </View>
                 )}
-                <Text style={{ fontSize: 22 }}>{activity.icon}</Text>
+                <Text style={{ fontSize: rf(table ? 25 : 22) }}>{activity.icon}</Text>
                 <Text
                   style={[
                     styles.pointsText,
-                    { color: activity.darkColor, fontSize: 14 },
+                    { color: activity.darkColor, fontSize: rf(14) },
                   ]}
                 >
                   {activity.title}
@@ -335,8 +346,8 @@ const RewardsScreen = () => {
           bottomBorderColor={'#d84e16'}
           colors={['#ff7b38', '#ff6425']}
           onPress={() => navigation.goBack()}
-          padding={12}
-          paddingBottom={9}
+          padding={rf(table? 15 : 12)}
+          paddingBottom={rf(9)}
           btnRadius={15}
         >
           <View style={styles.buttonContent}>
@@ -344,7 +355,7 @@ const RewardsScreen = () => {
             <FontAwesome6
               name={'chevron-right'}
               iconStyle="solid"
-              size={18}
+              size={rf(18)}
               color="#fff"
               style={styles.buttonIcon}
             />

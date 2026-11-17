@@ -15,7 +15,7 @@ import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { alphabetData, LetterCardType } from './data/learning.data';
 import CustomButton from '../../components/customButton/CustomButton';
-import { wp } from '../../utils/responsive';
+import { wp, rf, isTablet } from '../../utils/responsive';
 import { styles } from './Learning.styles';
 import TTSService from '../../services/tts.service';
 import TTSEventService from '../../services/ttsEvents.service';
@@ -101,6 +101,7 @@ const LearningScreen: React.FC = () => {
       <CustomTopbar data={data} progress={progress} />
 
       <ScreenHeadingSection
+        style={styles.headingSection}
         heading={data.cardTitle}
         subText="Learn letters with Buddy! - tap, listen, and repeat!"
       />
@@ -117,13 +118,17 @@ const LearningScreen: React.FC = () => {
             styles.lettersCard,
           ]}
         >
-          <View style={[{ paddingHorizontal: 15 }, styles.rowSpacebetween]}>
+          <View style={[{ paddingHorizontal: rf(15) }, styles.rowSpacebetween]}>
             <View style={styles.rowCenter}>
               <Text style={styles.letterText}>{current.letter}</Text>
               <Text
                 style={[
                   styles.letterText,
-                  { fontSize: 110, bottom: -10, left: -10 },
+                  {
+                    fontSize: rf(110),
+                    bottom: -rf(10),
+                    left: -rf(10),
+                  },
                 ]}
               >
                 {current.letter.toLowerCase()}
@@ -132,7 +137,7 @@ const LearningScreen: React.FC = () => {
             <Text style={styles.emojiContainer}>{current.emoji}</Text>
           </View>
 
-          <View style={[{ paddingHorizontal: 15 }, styles.rowSpacebetween]}>
+          <View style={[{ paddingHorizontal: rf(15) }, styles.rowSpacebetween]}>
             <Text style={styles.wordText}>
               {`${current.letter} is for ${current.word}`}
             </Text>
@@ -151,7 +156,7 @@ const LearningScreen: React.FC = () => {
                 <FontAwesome6
                   name={isSpeaking ? 'volume-high' : 'play'}
                   iconStyle="solid"
-                  size={18}
+                  size={rf(18)}
                   color={data.midColor}
                 />
               </View>
@@ -167,15 +172,17 @@ const LearningScreen: React.FC = () => {
           { borderColor: data.darkColor },
         ]}
       >
-        <View style={{ gap: 10, flex: 1 }}>
+        <View style={{ gap: rf(10), flex: 1 }}>
           <View style={[styles.rowCenter, styles.actionStatusSection]}>
             <FontAwesome6
               name="circle"
               iconStyle="solid"
-              size={8}
+              size={rf(8)}
               color="#e85216"
             />
-            <Text style={[styles.subText, { color: '#e85216', fontSize: 10 }]}>
+            <Text
+              style={[styles.subText, { color: '#e85216', fontSize: rf(10) }]}
+            >
               Buddy is {isSpeaking ? 'Speaking' : 'Listing'}...
             </Text>
           </View>
@@ -183,7 +190,7 @@ const LearningScreen: React.FC = () => {
             <Text
               style={[
                 styles.letterText,
-                { fontSize: 30, color: data.darkColor },
+                { fontSize: rf(30), color: data.darkColor },
               ]}
             >
               {current.word}
@@ -215,21 +222,21 @@ const LearningScreen: React.FC = () => {
         />
       </View>
 
-      <View style={[styles.rowSpacebetween, { marginBottom: 10 }]}>
+      <View style={[styles.rowSpacebetween, styles.buttonsRow]}>
         <CustomButton
-          width={wp(45)}
+          width={isTablet() ? '48%' : wp(45)}
           bottomBorderColor="#d84d16ce"
           colors={['#e8b59e', '#e8b59e']}
           onPress={handlePrev}
-          padding={12}
-          paddingBottom={9}
-          btnRadius={15}
+          padding={rf(12)}
+          paddingBottom={rf(9)}
+          btnRadius={rf(15)}
         >
           <View style={styles.rowCenter}>
             <FontAwesome6
               name="chevron-left"
               iconStyle="solid"
-              size={20}
+              size={rf(20)}
               color="#d84d16ce"
               style={[{ backgroundColor: '#d84d1645' }, styles.btnIcon]}
             />
@@ -240,20 +247,20 @@ const LearningScreen: React.FC = () => {
         </CustomButton>
 
         <CustomButton
-          width={wp(45)}
+          width={isTablet() ? '48%' : wp(45)}
           bottomBorderColor="#d84e16"
           colors={['#ff7b38', '#ff6425']}
           onPress={handleNext}
-          padding={12}
-          paddingBottom={9}
-          btnRadius={15}
+          padding={rf(12)}
+          paddingBottom={rf(9)}
+          btnRadius={rf(15)}
         >
           <View style={styles.rowCenter}>
             <Text style={[{ color: '#fff' }, styles.btnText]}>Next</Text>
             <FontAwesome6
               name="chevron-right"
               iconStyle="solid"
-              size={20}
+              size={rf(20)}
               color="#fff"
               style={[{ backgroundColor: '#ffffff66' }, styles.btnIcon]}
             />
@@ -320,8 +327,8 @@ const AlphabetsLetterSlider: React.FC<AlphabetsLetterSlider> = ({
           {
             backgroundColor: `${data.midColor}${isActive ? '80' : '66'}`,
             borderColor: isActive ? data.midColor : 'transparent',
-            marginLeft: index === 0 ? 10 : 0,
-            marginRight: index === alphabetData.length - 1 ? 10 : 0,
+            marginLeft: index === 0 ? rf(10) : 0,
+            marginRight: index === alphabetData.length - 1 ? rf(10) : 0,
           },
           styles.lettersListItem,
           styles.rowCenter,
@@ -329,7 +336,10 @@ const AlphabetsLetterSlider: React.FC<AlphabetsLetterSlider> = ({
         onPress={() => handleOnPress(index)}
       >
         <Text
-          style={[styles.letterText, { color: data.midColor, fontSize: 25 }]}
+          style={[
+            styles.letterText,
+            { color: data.midColor, fontSize: rf(25) },
+          ]}
         >
           {item.letter}
         </Text>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { FadeIn } from 'react-native-reanimated';
 import { DayBarType } from '../data/dashboard.helpers';
+import { isTablet, rf } from '../../../utils/responsive';
 
 interface WeeklyChartProps {
   week: DayBarType[];
@@ -10,7 +11,7 @@ interface WeeklyChartProps {
 
 type ChartMode = 'minutes' | 'stars';
 
-const BAR_MAX_HEIGHT = 110;
+const BAR_MAX_HEIGHT = isTablet() ? 160 : 110;
 
 const WeeklyChart: React.FC<WeeklyChartProps> = ({ week, color }) => {
   const [mode, setMode] = useState<ChartMode>('minutes');
@@ -87,9 +88,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderColor: '#f3d27a',
     borderWidth: 1.5,
-    borderBottomWidth: 5,
+    borderBottomWidth: rf(5),
     borderRadius: 18,
-    padding: 15,
+    padding: rf(15),
   },
   header: {
     flexDirection: 'row',
@@ -98,29 +99,29 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'Fredoka-Bold',
-    fontSize: 17,
+    fontSize: rf(17),
     color: '#1a105f',
   },
   subText: {
     fontFamily: 'Fredoka-Medium',
-    fontSize: 12,
+    fontSize: rf(12),
     color: '#9e9e9e',
   },
   toggle: {
     flexDirection: 'row',
     backgroundColor: '#fbf4e4',
     borderRadius: 999,
-    padding: 3,
+    padding: rf(3),
   },
   toggleChip: {
-    paddingVertical: 5,
-    paddingHorizontal: 10,
+    paddingVertical: rf(5),
+    paddingHorizontal: rf(10),
     borderRadius: 999,
   },
   toggleActive: { backgroundColor: '#1a105f' },
   toggleText: {
     fontFamily: 'Fredoka-SemiBold',
-    fontSize: 12,
+    fontSize: rf(12),
     color: '#8c662e',
   },
   toggleTextActive: { color: '#fff' },
@@ -128,18 +129,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'space-between',
-    marginTop: 15,
+    marginTop: rf(15),
   },
-  column: { flex: 1, alignItems: 'center', gap: 4 },
+  column: { flex: 1, alignItems: 'center', gap: rf(4) },
   value: {
     fontFamily: 'Fredoka-SemiBold',
-    fontSize: 11,
+    fontSize: rf(11),
     color: '#8c662e',
   },
-  bar: { width: '55%', borderRadius: 8 },
+  bar: { width: '55%', borderRadius: rf(8) },
   day: {
     fontFamily: 'Fredoka-SemiBold',
-    fontSize: 11,
+    fontSize: rf(11),
     color: '#9e9e9e',
   },
   today: { color: '#1a105f' },

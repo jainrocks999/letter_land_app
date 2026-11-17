@@ -7,6 +7,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import { rf } from '../../utils/responsive';
 
 const ProgressBar = ({
   progress,
@@ -22,7 +23,7 @@ const ProgressBar = ({
       duration: 800,
       easing: Easing.out(Easing.cubic),
     });
-  }, [progress]);
+  }, [progress, width]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     width: `${width.value * 100}%`,
@@ -45,7 +46,7 @@ export default ProgressBar;
 
 const styles = StyleSheet.create({
   container: {
-    height: 15,
+    height: rf(15),
     borderRadius: 20,
     overflow: 'hidden',
   },

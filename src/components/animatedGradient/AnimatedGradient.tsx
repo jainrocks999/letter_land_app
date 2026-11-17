@@ -6,16 +6,15 @@ import Animated, {
   SharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated';
-import { wp } from '../../utils/responsive';
+import { HOME_ITEM_WIDTH } from '../../features/home/home.layout';
 import LinearGradient from 'react-native-linear-gradient';
-
 interface AnimatedGradientProps {
   index: number;
   scrollX: SharedValue<number>;
   colors: [string, string];
 }
 
-const ITEM_WIDTH = wp(85);
+const ITEM_WIDTH = HOME_ITEM_WIDTH;
 
 const AnimatedGradient: React.FC<AnimatedGradientProps> = ({
   index,

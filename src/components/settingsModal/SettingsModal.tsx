@@ -16,6 +16,7 @@ import CustomButton from '../customButton/CustomButton';
 import ToggleSwitch from './components/ToggleSwitch';
 import ParentGate from './components/ParentGate';
 import { styles } from './SettingsModal.styles';
+import { rf } from '../../utils/responsive';
 
 interface SettingsModalProps {
   visible: boolean;
@@ -84,7 +85,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
               <FontAwesome6
                 name="gear"
                 iconStyle="solid"
-                size={20}
+                size={rf(20)}
                 color="#fff"
               />
             </View>
@@ -93,7 +94,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
               <FontAwesome6
                 name="xmark"
                 iconStyle="solid"
-                size={26}
+                size={rf(26)}
                 color="#1a105f"
               />
             </TouchableOpacity>
@@ -106,7 +107,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
                   <FontAwesome6
                     name="music"
                     iconStyle="solid"
-                    size={18}
+                    size={rf(18)}
                     color="#fff"
                   />
                 </View>
@@ -127,7 +128,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
                   <FontAwesome6
                     name={settings.voiceOn ? 'volume-high' : 'volume-xmark'}
                     iconStyle="solid"
-                    size={18}
+                    size={rf(18)}
                     color="#fff"
                   />
                 </View>
@@ -149,7 +150,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
                     // name={settings.voiceOn ? 'volume-high' : 'volume-xmark'}
                     name={'bullhorn'}
                     iconStyle="solid"
-                    size={18}
+                    size={rf(18)}
                     color="#fff"
                   />
                 </View>
@@ -190,7 +191,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
                     <FontAwesome6
                       name="play"
                       iconStyle="solid"
-                      size={12}
+                      size={rf(12)}
                       color="#7b61ff"
                     />
                     <Text style={styles.testBtnText}>Hear Buddy</Text>
@@ -231,7 +232,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
                   <FontAwesome6
                     name="star"
                     iconStyle="solid"
-                    size={18}
+                    size={rf(18)}
                     color="#fff"
                   />
                 </View>
@@ -255,7 +256,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
                   <FontAwesome6
                     name="chart-line"
                     iconStyle="solid"
-                    size={18}
+                    size={rf(18)}
                     color="#fff"
                   />
                 </View>
@@ -268,7 +269,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
                 <FontAwesome6
                   name="lock"
                   iconStyle="solid"
-                  size={14}
+                  size={rf(14)}
                   color="#9e9e9e"
                 />
               </TouchableOpacity>
@@ -280,7 +281,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
                 <FontAwesome6
                   name="rotate-left"
                   iconStyle="solid"
-                  size={16}
+                  size={rf(16)}
                   color="#d8493a"
                 />
                 <Text style={styles.resetText}>
@@ -289,7 +290,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
                 <FontAwesome6
                   name="lock"
                   iconStyle="solid"
-                  size={12}
+                  size={rf(12)}
                   color="#d8493a"
                 />
               </TouchableOpacity>
@@ -299,9 +300,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
                 bottomBorderColor="#0d8f3e"
                 colors={['#35c46b', '#1ca952']}
                 onPress={handleClose}
-                padding={12}
-                paddingBottom={9}
-                btnRadius={15}
+                padding={rf(12)}
+                paddingBottom={rf(9)}
+                btnRadius={rf(15)}
               >
                 <Text style={styles.doneText}>Done</Text>
               </CustomButton>
@@ -336,9 +337,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
                 bottomBorderColor="#0d8f3e"
                 colors={['#35c46b', '#1ca952']}
                 onPress={handleClose}
-                padding={12}
-                paddingBottom={9}
-                btnRadius={15}
+                padding={rf(12)}
+                paddingBottom={rf(9)}
+                btnRadius={rf(15)}
               >
                 <Text style={styles.doneText}>Let's Play</Text>
               </CustomButton>

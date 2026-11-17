@@ -9,6 +9,7 @@ import { ROUTES } from '../../app/navigation/routeNames';
 import { ActivitiesKey } from '../../services/mmkv.service';
 import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
 import StarCounterStatic from '../starCounter/StarCounterStatic';
+import { rf } from '../../utils/responsive';
 
 interface CustomTopbarProps {
   data: ActivityCard;
@@ -30,14 +31,15 @@ const CustomTopbar: React.FC<CustomTopbarProps> = ({ data, progress }) => {
 
   return (
     <View style={styles.topbar}>
-      <TouchableOpacity onPress={handleGoback}>
-        <FontAwesome6 name="xmark" iconStyle="solid" size={30} />
+      <TouchableOpacity onPress={handleGoback} hitSlop={8}>
+        <FontAwesome6 name="xmark" iconStyle="solid" size={rf(30)} />
       </TouchableOpacity>
       <View style={{ flex: 1 }}>
-        {progress!=null &&
-        <ProgressBar progress={progress} bgColor="#ffffffcc" />}
+        {progress != null && (
+          <ProgressBar progress={progress} bgColor="#ffffffcc" />
+        )}
       </View>
-      <StarCounterStatic/>
+      <StarCounterStatic />
       <View
         style={[
           styles.badgeContainer,
@@ -57,15 +59,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 12,
-    paddingTop: 10,
+    gap: rf(12),
+    paddingTop: rf(10),
   },
   badgeContainer: {
-    paddingVertical: 10,
-    paddingHorizontal: 15,
+    paddingVertical: rf(10),
+    paddingHorizontal: rf(15),
     borderWidth: 1,
-    borderBottomWidth: 7,
-    borderRadius: 10,
+    borderBottomWidth: rf(7),
+    borderRadius: rf(10),
   },
-  badgeIcon: { fontSize: 18 },
+  badgeIcon: { fontSize: rf(18) },
 });

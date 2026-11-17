@@ -1,8 +1,13 @@
-import { LayoutChangeEvent, StyleSheet, Text, View } from 'react-native';
+import { LayoutChangeEvent, StyleSheet, View } from 'react-native';
 import React from 'react';
 import Svg, { Circle, G, Path, Rect } from 'react-native-svg';
 import GuidePaths from './GuidePaths';
-import { Point, TraceLetter, TraceStroke } from '../../../../types/tracing.types';
+import {
+  Point,
+  TraceLetter,
+  TraceStroke,
+} from '../../../../types/tracing.types';
+import { rf } from '../../../../utils/responsive';
 
 interface Props {
   current: TraceLetter;
@@ -167,9 +172,9 @@ const styles = StyleSheet.create({
   traceCard: {
     flex: 1,
     borderWidth: 1.5,
-    borderBottomWidth: 7,
-    borderRadius: 12,
+    borderBottomWidth: rf(7),
+    borderRadius: rf(12),
     overflow: 'hidden',
-    marginVertical: 10,
+    marginVertical: rf(10),
   },
 });

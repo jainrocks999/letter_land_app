@@ -1,5 +1,5 @@
 import { Text, TouchableOpacity, View } from 'react-native';
-import { hp, wp } from '../../utils/responsive';
+import { hp, rf } from '../../utils/responsive';
 import {
   ActivityCard,
   Castle,
@@ -26,6 +26,10 @@ import useActivityProContext from '../../app/contexts/activityProgress/useActivi
 import useRewardsContext from '../../app/contexts/rewards/useRewards';
 import useToast from '../../app/contexts/toast/useToast';
 import TTSService from '../../services/tts.service';
+import {
+  HOME_ITEM_SIDE_PADDING,
+  HOME_ITEM_WIDTH,
+} from '../../features/home/home.layout';
 
 interface props {
   data: Castle[];
@@ -33,7 +37,7 @@ interface props {
   scrollX: SharedValue<number>;
 }
 
-const ITEM_WIDTH = wp(85);
+const ITEM_WIDTH = HOME_ITEM_WIDTH;
 
 interface CarouselItemProps {
   item: Castle;
@@ -138,7 +142,6 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
 
         <TouchableOpacity
           activeOpacity={0.7}
-          // accessibilityState={{ disabled: isLocked }}
           style={[
             styles.cardBtnContainer,
             {
@@ -168,7 +171,7 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
           <FontAwesome6
             name={isLocked ? 'lock' : 'play'}
             iconStyle="solid"
-            size={18}
+            size={rf(18)}
             color="#fff"
           />
         </TouchableOpacity>
@@ -241,7 +244,7 @@ const CastleCarousel: React.FC<props> = ({ data, onIndexChange, scrollX }) => {
       snapToAlignment="start"
       disableIntervalMomentum
       contentContainerStyle={{
-        paddingHorizontal: wp(7.5),
+        paddingHorizontal: HOME_ITEM_SIDE_PADDING,
       }}
       onScroll={scrollHandler}
       onMomentumScrollEnd={event => {

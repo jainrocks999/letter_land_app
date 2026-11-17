@@ -1,4 +1,4 @@
-import { Image, Pressable, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Pressable, Text, View } from 'react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
@@ -13,7 +13,7 @@ import { ROUTES } from '../../app/navigation/routeNames';
 import CustomTopbar from '../../components/customTopbar/CustomTopbar';
 import ScreenHeadingSection from '../../components/screenHeadingSection/ScreenHeadingSection';
 import CustomButton from '../../components/customButton/CustomButton';
-import { wp } from '../../utils/responsive';
+import { wp, rf, isTablet } from '../../utils/responsive';
 import { traceLetters } from './data/letters.data';
 import { styles } from './Tracing.styles';
 import ActionButton from '../../components/customButton/ActionButton';
@@ -44,15 +44,31 @@ const TracingScreen = () => {
   const [isSpeaking, setSpeaking] = useState<boolean>(false);
   const [isNext, setIsNext] = useState<boolean>(true);
   const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
-
+ 
+  const tablet = isTablet()
   const bubbleOpacity = useSharedValue(0);
   const bubbleTranslateY = useSharedValue(-10);
 
   const current = traceLetters[currentIndex];
 
-  const handleStrokeComplete = useCallback((index: number) => {
-    showHitBubble();
-  }, []);
+  const showHitBubble = useCallback(() => {
+    setTimeout(() => {
+      bubbleOpacity.value = withTiming(1, { duration: 300 });
+      bubbleTranslateY.value = withTiming(0, { duration: 300 });
+
+      setTimeout(() => {
+        bubbleOpacity.value = withTiming(0, { duration: 300 });
+        bubbleTranslateY.value = withTiming(-10, { duration: 300 });
+      }, 3000);
+    }, 500);
+  }, [bubbleOpacity, bubbleTranslateY]);
+
+  const handleStrokeComplete = useCallback(
+    (_index: number) => {
+      showHitBubble();
+    },
+    [showHitBubble],
+  );
 
   const handleSpeak = useCallback((text: string) => {
     TTSService.stop();
@@ -78,7 +94,7 @@ const TracingScreen = () => {
       tracedRef.current.add(current.letter);
       rewardCorrect(REWARD_POINTS.TRACE_LETTER);
     }
-  }, [tracing.isComplete, current.letter]);
+  }, [tracing.isComplete, current.letter, rewardCorrect]);
 
   const bubbleStyle = useAnimatedStyle(() => {
     return {
@@ -104,7 +120,7 @@ const TracingScreen = () => {
     if (current.hint2?.[0]) {
       handleSpeak(current.hint2[0]);
     }
-  }, [currentIndex]);
+  }, [currentIndex, current.hint2, handleSpeak, showHitBubble]);
 
   const handleNext = () => {
     if (currentIndex < traceLetters.length - 1) {
@@ -133,18 +149,6 @@ const TracingScreen = () => {
     tracing.resetTrace();
   };
 
-  const showHitBubble = useCallback(() => {
-    setTimeout(() => {
-      bubbleOpacity.value = withTiming(1, { duration: 300 });
-      bubbleTranslateY.value = withTiming(0, { duration: 300 });
-
-      setTimeout(() => {
-        bubbleOpacity.value = withTiming(0, { duration: 300 });
-        bubbleTranslateY.value = withTiming(-10, { duration: 300 });
-      }, 3000);
-    }, 500);
-  }, []);
-
   return (
     <View
       style={[
@@ -157,8 +161,9 @@ const TracingScreen = () => {
       <CustomTopbar data={data} progress={screenProgress} />
 
       <ScreenHeadingSection
+        style={styles.headingSection}
         heading={data.cardTitle}
-        subText="Trace each letter with Coco! Tap, follow, and practice your writing!"
+        subText="Trace each letter with Buddy! Tap, follow, and practice your writing!"
       />
 
       <View
@@ -234,13 +239,13 @@ const TracingScreen = () => {
         ]}
       >
         <View style={styles.letterPill}>
-          <Text style={[styles.letterPillText, { color: data.darkColor }]}>
+          <Text style={[styles.letterPillText, {color: data.darkColor }]}>
             {current.letter}
           </Text>
         </View>
         <View style={[styles.feedbackCopy, { alignItems: 'center' }]}>
-          <Text style={styles.statusText}>{tracing.statusText}</Text>
-          <Text style={[styles.hintText, { textAlign: 'center' }]}>
+          <Text style={[styles.statusText,tablet && {fontSize:rf(24)}]}>{tracing.statusText}</Text>
+          <Text style={[styles.hintText, { textAlign: 'center' },tablet && {fontSize:rf(13)}]}>
             {current.hint}
           </Text>
         </View>
@@ -278,8 +283,8 @@ const TracingScreen = () => {
 
       <View style={styles.actionRow}>
         <ActionButton
-          bottomBorderWidth={8}
-          radius={18}
+          bottomBorderWidth={rf(8)}
+          radius={rf(18)}
           backgroundColor="#e8b59e"
           bottomBorderColor="#d84d16ce"
           onPress={handlePrev}
@@ -287,7 +292,7 @@ const TracingScreen = () => {
           <FontAwesome6
             name="chevron-left"
             iconStyle="solid"
-            size={20}
+            size={rf(20)}
             color="#d84d16ce"
           />
         </ActionButton>
@@ -298,9 +303,9 @@ const TracingScreen = () => {
             tracing.isComplete ? ['#35c46b', '#1ca952'] : ['#ff7b38', '#ff6425']
           }
           onPress={tracing.isComplete ? handleNext : tracing.resetTrace}
-          padding={12}
-          paddingBottom={9}
-          btnRadius={15}
+          padding={rf(12)}
+          paddingBottom={rf(9)}
+          btnRadius={rf(15)}
         >
           <View style={styles.buttonContent}>
             <Text style={styles.buttonText}>
@@ -309,7 +314,7 @@ const TracingScreen = () => {
             <FontAwesome6
               name={tracing.isComplete ? 'chevron-right' : 'rotate-right'}
               iconStyle="solid"
-              size={18}
+              size={rf(18)}
               color="#fff"
               style={styles.buttonIcon}
             />

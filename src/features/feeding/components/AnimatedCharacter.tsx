@@ -1,21 +1,18 @@
-import { Pressable, StyleSheet } from 'react-native';
-import React, { useState } from 'react';
+import { Pressable } from 'react-native';
+import React from 'react';
 import Animated, {
-  FadeIn,
-  FadeOut,
   useAnimatedStyle,
   useSharedValue,
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
+import { rf } from '../../../utils/responsive';
 
 interface Props {
   state: 'standing' | 'feed' | 'enjoy' | 'oops' | 'speaking';
 }
 
 const AnimatedCharacter = ({ state }: Props) => {
-  const [isHungry, setIsHungry] = useState<boolean>(false);
-  const [isPressed, setIsPressed] = useState<boolean>(false);
   const translateY = useSharedValue(0);
 
   const image =
@@ -41,20 +38,9 @@ const AnimatedCharacter = ({ state }: Props) => {
 
   const jump = () => {
     translateY.value = withSequence(
-      withTiming(-25, { duration: 150 }),
+      withTiming(-rf(25), { duration: 150 }),
       withTiming(0, { duration: 180 }),
     );
-  };
-
-  const onPress = () => {
-    jump();
-    if (!isHungry) {
-      setIsHungry(true);
-    }
-    setTimeout(() => {
-      setIsPressed(false);
-      setIsHungry(false);
-    }, 4000);
   };
 
   return (
@@ -62,12 +48,10 @@ const AnimatedCharacter = ({ state }: Props) => {
       <Animated.Image
         key={state}
         source={image}
-        style={[{ width: 200, height: 200 }, animatedStyle]}
+        style={[{ width: rf(200), height: rf(200) }, animatedStyle]}
       />
     </Pressable>
   );
 };
 
 export default AnimatedCharacter;
-
-const styles = StyleSheet.create({});

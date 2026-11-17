@@ -26,6 +26,7 @@ import SuccessModal from '../../components/customModal/CustomModel';
 import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
 import { ActivitiesKey } from '../../services/mmkv.service';
 import useActivityRewards from '../../hooks/useActivityRewards';
+import { rf } from '../../utils/responsive';
 
 const FeedingScreen = () => {
   const route = useRoute<StackRouteProps<typeof ROUTES.FEEDING>>();
@@ -188,6 +189,7 @@ const FeedingScreen = () => {
     >
       <CustomTopbar data={data} progress={screenProgress} />
       <ScreenHeadingSection
+        style={styles.headingSection}
         heading={data.cardTitle}
         subText="Pick the correct letter and feed it to Coco! Learn your letters while helping Coco enjoy a tasty treat!"
       />
@@ -217,8 +219,8 @@ const FeedingScreen = () => {
       </View>
       <View style={[styles.playArea, { borderColor: data.midColor }]}>
         <ActionButton
-          bottomBorderWidth={5}
-          radius={50}
+          bottomBorderWidth={rf(5)}
+          radius={rf(50)}
           backgroundColor={data.lightColor || data.midColor}
           bottomBorderColor={data.darkColor}
           onPress={handlePlay}
@@ -227,7 +229,7 @@ const FeedingScreen = () => {
           <FontAwesome6
             name={isSpeaking ? 'volume-high' : 'play'}
             iconStyle="solid"
-            size={18}
+            size={rf(18)}
             color={data.midColor}
           />
         </ActionButton>
@@ -237,7 +239,8 @@ const FeedingScreen = () => {
         <View ref={mouthRef} onLayout={updateMouthRect}>
           <AnimatedCharacter state={characterState} />
         </View>
-        <View style={styles.optionsContainer}>
+        <View
+          style={styles.optionsContainer}>
           <BackerySVG width={'100%'} height={'100%'} />
           {currentQues.options.map((option, index) => (
             <DraggableLetter

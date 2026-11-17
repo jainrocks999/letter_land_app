@@ -14,6 +14,7 @@ import SettingsModal from '../../components/settingsModal/SettingsModal';
 import ProfileSwitcherModal from '../../components/profileSwitcher/ProfileSwitcherModal';
 import useProfilesContext from '../../app/contexts/profiles/useProfiles';
 import useRewardsContext from '../../app/contexts/rewards/useRewards';
+import { isTablet, rf } from '../../utils/responsive';
 
 const HomeScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -40,11 +41,11 @@ const HomeScreen = () => {
         />
       ))}
       <View style={styles.topBar}>
-        <View style={{ flexDirection: 'row', gap: 10 }}>
+        <View style={styles.leftSection}>
           <TouchableOpacity
             style={[
               styles.profileBtn,
-              { backgroundColor: `${activeProfile.color}CC`},
+              { backgroundColor: `${activeProfile.color}CC` },
             ]}
             onPress={() => setShowProfiles(true)}
           >
@@ -60,7 +61,12 @@ const HomeScreen = () => {
           style={styles.settingsBtn}
           onPress={() => setShowSettings(true)}
         >
-          <FontAwesome6 name="gear" iconStyle="solid" size={23} color="#fff" />
+          <FontAwesome6
+            name="gear"
+            iconStyle="solid"
+            size={rf(23)}
+            color="#fff"
+          />
         </TouchableOpacity>
       </View>
       <CloudsContainer scrollX={scrollX} />
@@ -90,35 +96,40 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
+    paddingHorizontal: isTablet() ? rf(24) : rf(10),
+    paddingVertical: isTablet() ? rf(16) : rf(10),
   },
-  
+  leftSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: rf(10),
+  },
   treasureBtn: {
     backgroundColor: '#ff7b38',
-    padding: 8,
+    padding: rf(8),
     borderRadius: 999,
     borderWidth: 2,
-    borderBottomWidth: 7,
+    borderBottomWidth: rf(7),
     borderColor: '#d84e16',
   },
-  treasureIcon: { fontSize: 22 },
+  treasureIcon: { fontSize: rf(22) },
   profileBtn: {
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 999,
     borderWidth: 2,
-    borderBottomWidth: 7,
+    borderBottomWidth: rf(7),
     borderColor: '#00000033',
-    paddingVertical:5,
-    paddingHorizontal:8,
+    paddingVertical: isTablet() ? rf(8) : rf(5),
+    paddingHorizontal: isTablet() ? rf(12) : rf(8),
   },
-  profileEmoji: { fontSize: 26 },
+  profileEmoji: { fontSize: rf(26) },
   settingsBtn: {
     backgroundColor: '#54c507',
-    padding: 13,
+    padding: rf(13),
     borderRadius: 999,
     borderWidth: 2,
-    borderBottomWidth: 7,
+    borderBottomWidth: rf(7),
     borderColor: '#429509',
   },
 });

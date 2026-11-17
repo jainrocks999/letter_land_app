@@ -6,15 +6,16 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { rf } from '../../../utils/responsive';
 
 interface ToggleSwitchProps {
   value: boolean;
   onChange: (value: boolean) => void;
 }
 
-const TRACK_WIDTH = 62;
-const KNOB_SIZE = 26;
-const KNOB_TRAVEL = TRACK_WIDTH - KNOB_SIZE - 8;
+const TRACK_WIDTH = rf(62);
+const KNOB_SIZE = rf(26);
+const KNOB_TRAVEL = TRACK_WIDTH - KNOB_SIZE - rf(8);
 
 const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ value, onChange }) => {
   const progress = useSharedValue(value ? 1 : 0);
@@ -54,11 +55,11 @@ export default ToggleSwitch;
 const styles = StyleSheet.create({
   track: {
     width: TRACK_WIDTH,
-    height: KNOB_SIZE + 12,
+    height: KNOB_SIZE + rf(12),
     borderRadius: 999,
     borderWidth: 2,
-    borderBottomWidth: 5,
-    padding: 3,
+    borderBottomWidth: rf(5),
+    padding: rf(3),
     justifyContent: 'center',
   },
   knob: {

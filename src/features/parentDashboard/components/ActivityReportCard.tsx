@@ -6,10 +6,13 @@ import {
   formatDuration,
   formatLastPlayed,
 } from '../data/dashboard.helpers';
+import { isTablet, rf } from '../../../utils/responsive';
 
 interface ActivityReportCardProps {
   activity: ActivityReportType;
 }
+
+const tablet = isTablet();
 
 const ActivityReportCard: React.FC<ActivityReportCardProps> = ({
   activity,
@@ -67,53 +70,54 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#fff',
     borderWidth: 1.5,
-    borderBottomWidth: 5,
-    borderRadius: 18,
-    padding: 14,
-    gap: 10,
+    borderBottomWidth: rf(5),
+    borderRadius: rf(18),
+    padding: rf(14),
+    gap: rf(10),
+    marginBottom:tablet ? 10 :0
   },
   header: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   iconBox: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderBottomWidth: 4,
+    width: rf(tablet ? 50 : 44),
+    height: rf(tablet ? 50 : 44),
+    borderRadius: rf(12),
+    borderWidth: rf(1),
+    borderBottomWidth: rf(4),
     justifyContent: 'center',
     alignItems: 'center',
   },
-  icon: { fontSize: 22 },
+  icon: { fontSize: rf(22) },
   info: { flex: 1 },
   title: {
     fontFamily: 'Fredoka-Bold',
-    fontSize: 16,
+    fontSize: rf(16),
     color: '#1a105f',
   },
   subText: {
     fontFamily: 'Fredoka-Medium',
-    fontSize: 12,
+    fontSize: rf(12),
     color: '#9e9e9e',
   },
   percent: {
     fontFamily: 'Fredoka-Bold',
-    fontSize: 18,
+    fontSize: rf(18),
     color: '#1ca952',
   },
   details: {
     flexDirection: 'row',
     backgroundColor: '#fbf4e4',
-    borderRadius: 12,
-    paddingVertical: 8,
+    borderRadius: rf(12),
+    paddingVertical: rf(8),
   },
   detail: { flex: 1, alignItems: 'center' },
   detailValue: {
     fontFamily: 'Fredoka-Bold',
-    fontSize: 15,
+    fontSize: rf(tablet ? 18 : 15),
     color: '#1a105f',
   },
   detailLabel: {
     fontFamily: 'Fredoka-Medium',
-    fontSize: 11,
+    fontSize: rf(11),
     color: '#8c662e',
   },
 });

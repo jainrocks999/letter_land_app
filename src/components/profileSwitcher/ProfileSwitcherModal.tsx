@@ -8,6 +8,7 @@ import TTSService from '../../services/tts.service';
 import ParentGate from '../settingsModal/components/ParentGate';
 import { StackNavigationProps } from '../../types/navigation.types';
 import { ROUTES } from '../../app/navigation/routeNames';
+import { isTablet, rf } from '../../utils/responsive';
 
 interface ProfileSwitcherModalProps {
   visible: boolean;
@@ -59,7 +60,7 @@ const ProfileSwitcherModal: React.FC<ProfileSwitcherModalProps> = ({
               <FontAwesome6
                 name="xmark"
                 iconStyle="solid"
-                size={26}
+                size={rf(26)}
                 color="#1a105f"
               />
             </TouchableOpacity>
@@ -117,7 +118,7 @@ const ProfileSwitcherModal: React.FC<ProfileSwitcherModalProps> = ({
                             <FontAwesome6
                               name="check"
                               iconStyle="solid"
-                              size={11}
+                              size={rf(11)}
                               color="#fff"
                             />
                           </View>
@@ -135,14 +136,14 @@ const ProfileSwitcherModal: React.FC<ProfileSwitcherModalProps> = ({
                 <FontAwesome6
                   name="user-shield"
                   iconStyle="solid"
-                  size={14}
+                  size={rf(isTablet()? 16 : 14)}
                   color="#1a7cab"
                 />
                 <Text style={styles.parentText}>Add or manage kids</Text>
                 <FontAwesome6
                   name="lock"
                   iconStyle="solid"
-                  size={11}
+                  size={rf(isTablet()? 13: 11)}
                   color="#1a7cab"
                 />
               </TouchableOpacity>
@@ -169,9 +170,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#f4eee2',
     borderColor: '#d9a441',
     borderWidth: 2,
-    borderBottomWidth: 10,
-    borderRadius: 30,
-    padding: 20,
+    borderBottomWidth: rf(10),
+    borderRadius: rf(30),
+    padding: rf(20),
   },
   header: {
     flexDirection: 'row',
@@ -181,7 +182,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'Fredoka-Bold',
-    fontSize: 28,
+    fontSize: rf(28),
     color: '#1a105f',
   },
   grid: {
@@ -197,30 +198,30 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderColor: '#f3d27a',
     borderWidth: 2,
-    borderBottomWidth: 6,
-    borderRadius: 20,
+    borderBottomWidth: rf(6),
+    borderRadius: rf(20),
     paddingVertical: 12,
     paddingHorizontal: 4,
   },
   avatar: {
-    width: 58,
-    height: 58,
+    width: rf(58),
+    height: rf(58),
     borderRadius: 999,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  avatarEmoji: { fontSize: 34 },
+  avatarEmoji: { fontSize: rf(34) },
   name: {
     fontFamily: 'Fredoka-Bold',
-    fontSize: 14,
+    fontSize: rf(isTablet()? 16: 14),
     color: '#1a105f',
   },
   check: {
     position: 'absolute',
-    top: 6,
-    right: 6,
-    width: 20,
-    height: 20,
+    top: rf(6),
+    right: rf(6),
+    width: rf(20),
+    height: rf(20),
     borderRadius: 999,
     justifyContent: 'center',
     alignItems: 'center',
@@ -235,7 +236,7 @@ const styles = StyleSheet.create({
   },
   parentText: {
     fontFamily: 'Fredoka-SemiBold',
-    fontSize: 14,
+    fontSize: rf(isTablet()? 16: 14),
     color: '#1a7cab',
     textDecorationLine: 'underline',
   },

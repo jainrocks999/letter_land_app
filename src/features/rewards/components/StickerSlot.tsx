@@ -12,6 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { StickerType } from '../data/rewards.data';
 import { styles as rewardStyles } from '../Rewards.styles';
+import { isTablet, rf } from '../../../utils/responsive';
 
 export type StickerStatus = 'collected' | 'ready' | 'locked';
 
@@ -127,7 +128,7 @@ const StickerSlot: React.FC<StickerSlotProps> = ({
             <FontAwesome6
               name={status === 'ready' ? 'gift' : 'lock'}
               iconStyle="solid"
-              size={20}
+              size={rf(isTablet() ? 25 : 20)}
               color={status === 'ready' ? '#f07a45' : 'gray'}
             />
           </Animated.View>
@@ -178,15 +179,15 @@ const styles = StyleSheet.create({
     borderColor: '#f3d27a',
     borderStyle: 'dashed',
   },
-  statusIcon: { position: 'absolute', zIndex: 99, top: 28 },
+  statusIcon: { position: 'absolute', zIndex: 99, top: rf(28) },
   emoji: {
-    padding: 5,
+    padding: rf(isTablet()? 10: 5),
     borderRadius: 10,
-    fontSize: 30,
+    fontSize: rf(isTablet() ? 35: 30),
     overflow: 'hidden',
   },
   emojiHidden: { opacity: 0.2 },
   invisible: { opacity: 0 },
-  name: { fontFamily: 'Fredoka-Bold', fontSize: 12 },
+  name: { fontFamily: 'Fredoka-Bold', fontSize: rf(isTablet() ? 15:12),marginTop:6},
   lockedText: { color: 'gray' },
 });

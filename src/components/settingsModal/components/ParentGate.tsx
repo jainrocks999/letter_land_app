@@ -8,6 +8,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import CustomButton from '../../customButton/CustomButton';
+import { rf } from '../../../utils/responsive';
 
 interface ParentGateProps {
   onConfirm: () => void;
@@ -86,9 +87,9 @@ const ParentGate: React.FC<ParentGateProps> = ({
         bottomBorderColor="#b5b5b5"
         colors={['#eeeeee', '#e2e2e2']}
         onPress={onCancel}
-        padding={12}
-        paddingBottom={7}
-        btnRadius={15}
+        padding={rf(12)}
+        paddingBottom={rf(7)}
+        btnRadius={rf(15)}
       >
         <Text style={styles.cancelText}>Cancel</Text>
       </CustomButton>
@@ -99,15 +100,15 @@ const ParentGate: React.FC<ParentGateProps> = ({
 export default ParentGate;
 
 const styles = StyleSheet.create({
-  container: { alignItems: 'center', gap: 12 },
+  container: { alignItems: 'center', gap: rf(12) },
   title: {
     fontFamily: 'Fredoka-Bold',
-    fontSize: 24,
+    fontSize: rf(24),
     color: '#1a105f',
   },
   message: {
     fontFamily: 'Fredoka-Medium',
-    fontSize: 14,
+    fontSize: rf(14),
     color: '#555',
     textAlign: 'center',
   },
@@ -115,25 +116,25 @@ const styles = StyleSheet.create({
     backgroundColor: '#f6e7c8',
     borderColor: '#d9a441',
     borderWidth: 2,
-    borderBottomWidth: 6,
-    borderRadius: 15,
-    paddingVertical: 10,
-    paddingHorizontal: 30,
+    borderBottomWidth: rf(6),
+    borderRadius: rf(15),
+    paddingVertical: rf(10),
+    paddingHorizontal: rf(30),
   },
   question: {
     fontFamily: 'Fredoka-Bold',
-    fontSize: 32,
+    fontSize: rf(32),
     color: '#7a4a00',
   },
   wrongText: {
     fontFamily: 'Fredoka-SemiBold',
-    fontSize: 14,
+    fontSize: rf(14),
     color: '#EF4444',
   },
   optionsRow: {
     flexDirection: 'row',
-    gap: 10,
-    marginBottom: 6,
+    gap: rf(10),
+    marginBottom: rf(6),
   },
   option: {
     flex: 1,
@@ -141,20 +142,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderColor: '#7b61ff',
     borderWidth: 2,
-    borderBottomWidth: 6,
-    borderRadius: 15,
-    paddingVertical: 12,
+    borderBottomWidth: rf(6),
+    borderRadius: rf(15),
+    paddingVertical: rf(12),
   },
   optionText: {
     fontFamily: 'Fredoka-Bold',
-    fontSize: 22,
+    fontSize: rf(22),
     color: '#7b61ff',
   },
   cancelText: {
     flex: 1,
     textAlign: 'center',
     fontFamily: 'Fredoka-Bold',
-    fontSize: 16,
+    fontSize: rf(16),
     color: '#777',
   },
 });

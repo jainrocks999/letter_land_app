@@ -17,6 +17,7 @@ import WeeklyChart from './components/WeeklyChart';
 import ActivityReportCard from './components/ActivityReportCard';
 import ProfileEditorModal from './components/ProfileEditorModal';
 import { styles } from './ParentDashboard.styles';
+import { isTablet, rf } from '../../utils/responsive';
 
 type EditorState = { profile: ProfileType | null } | null;
 
@@ -36,10 +37,12 @@ const ParentDashboardScreen = () => {
   const [selectedId, setSelectedId] = useState(activeProfileId);
   const [editor, setEditor] = useState<EditorState>(null);
 
+  const tablet=isTablet()
+
   const selected =
     profiles.find(profile => profile.id === selectedId) ?? profiles[0];
   const isActive = selected.id === activeProfileId;
-
+  
   const report = useMemo(
     () => getKidReport(selected.id),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -137,13 +140,13 @@ const ParentDashboardScreen = () => {
     <View style={styles.container}>
       <View style={styles.topbar}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <FontAwesome6 name="xmark" iconStyle="solid" size={30} />
+          <FontAwesome6 name="xmark" iconStyle="solid" size={rf(30)} />
         </TouchableOpacity>
         <View style={styles.lockBadge}>
           <FontAwesome6
             name="user-shield"
             iconStyle="solid"
-            size={14}
+            size={rf(14)}
             color="#1a7cab"
           />
           <Text style={styles.lockBadgeText}>Grown-ups</Text>
@@ -242,7 +245,7 @@ const ParentDashboardScreen = () => {
                 <FontAwesome6
                   name="pen"
                   iconStyle="solid"
-                  size={15}
+                  size={rf(tablet? 20 : 15)}
                   color="#1a105f"
                 />
               </TouchableOpacity>
@@ -254,7 +257,7 @@ const ParentDashboardScreen = () => {
                   <FontAwesome6
                     name="trash"
                     iconStyle="solid"
-                    size={15}
+                    size={rf(tablet? 20 : 15)}
                     color="#d8493a"
                   />
                 </TouchableOpacity>
@@ -266,9 +269,9 @@ const ParentDashboardScreen = () => {
                 bottomBorderColor="#0d8f3e"
                 colors={['#35c46b', '#1ca952']}
                 onPress={handleSwitch}
-                padding={10}
-                paddingBottom={7}
-                btnRadius={14}
+                padding={rf(10)}
+                paddingBottom={rf(7)}
+                btnRadius={rf(14)}
               >
                 <Text style={styles.switchText}>Play as {selected.name}</Text>
               </CustomButton>

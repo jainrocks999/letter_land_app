@@ -1,67 +1,83 @@
 import { StyleSheet } from 'react-native';
+import { isTablet, rf } from '../../utils/responsive';
+
+const tablet = isTablet();
+
+// The feeding card is a compact, interactive play area. On tablets it keeps a
+// phone-like width (scaled up) so the cookie grid stays balanced and centred.
+const contentWidth = tablet
+  ? {
+      width: '100%' as const,
+      // maxWidth: rf(380),
+      alignSelf: 'center' as const,
+    }
+  : {};
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 15,
-    gap: 18,
+    paddingHorizontal: tablet ? rf(24) : rf(15),
+    gap: rf(18),
   },
+  headingSection: contentWidth,
   challengeInfoContainer: {
-    paddingVertical: 15,
-    paddingHorizontal: 10,
-    marginBottom: 10,
-    borderRadius: 20,
+    ...contentWidth,
+    paddingVertical: rf(15),
+    paddingHorizontal: rf(10),
+    marginBottom: rf(10),
+    borderRadius: rf(20),
     borderWidth: 1,
-    borderBottomWidth: 7,
-    gap: 10,
+    borderBottomWidth: rf(7),
+    gap: rf(10),
   },
   badgeText: {
-    borderRadius: 20,
+    borderRadius: rf(20),
     width: '40%',
     textAlign: 'center',
-    padding: 8,
+    padding: rf(8),
     fontFamily: 'Fredoka-Bold',
-    fontSize: 13,
+    fontSize: rf(13),
   },
   normalHeadingText: {
     fontFamily: 'Fredoka-Bold',
-    fontSize: 16,
+    fontSize: rf(16),
   },
   playArea: {
+    ...contentWidth,
     backgroundColor: '#fff',
-    paddingVertical: 12,
+    paddingVertical: rf(12),
     alignItems: 'center',
     borderWidth: 1,
-    borderBottomWidth: 7,
-    borderRadius: 10,
+    borderBottomWidth: rf(7),
+    borderRadius: rf(10),
     height: '62%',
   },
   speakBtn: {
     height: '10%',
     width: '13%',
     position: 'absolute',
-    right: 10,
-    top: 10,
+    right: rf(10),
+    top: rf(10),
   },
   questionText: {
-    paddingLeft: 20,
+    paddingLeft: rf(20),
     fontFamily: 'Fredoka-Bold',
-    fontSize: 23,
+    fontSize: rf(23),
     width: '85%',
     textAlign: 'left',
     alignSelf: 'flex-start',
     letterSpacing: 0.8,
-    marginBottom: 10,
+    marginBottom: rf(10),
   },
   targetLetterContainer: {
     width: '100%',
     height: '30%',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 10,
+    padding: rf(10),
     borderWidth: 1,
-    borderRadius: 15,
-    borderBottomWidth: 7,
+    borderRadius: rf(15),
+    borderBottomWidth: rf(7),
   },
   optionsContainer: {
     width: '100%',
