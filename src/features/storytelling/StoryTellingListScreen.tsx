@@ -43,6 +43,17 @@ const StoryTellingListScreen = () => {
     isStoryComplete(storyId)
       ? 100
       : Math.min(99, rewards.storyProgress?.[storyId] ?? 0);
+  const isLevelComplete = (level: StoryLevel) => {
+    const stories = getStoriesByLevel(level);
+    return (
+      stories.length > 0 && stories.every(story => isStoryComplete(story.id))
+    );
+  };
+  const isLevelUnlocked = (level: StoryLevel) =>
+    level === 1 || isLevelComplete((level - 1) as StoryLevel);
+  const unlockedLevels = STORY_LEVELS.map(level => level.level).filter(
+    isLevelUnlocked,
+  );
   // topbar tracks the whole Story Time journey, not just the open level
   const overallProgress = storyData.length
     ? Math.round(
@@ -52,9 +63,6 @@ const StoryTellingListScreen = () => {
         ) / storyData.length,
       )
     : 0;
-  const completedStories = levelStories.filter(story =>
-    isStoryComplete(story.id),
-  );
   const firstIncompleteStory = levelStories.find(
     story => !isStoryComplete(story.id),
   );
@@ -80,9 +88,6 @@ const StoryTellingListScreen = () => {
   const allStoriesComplete =
     levelStories.length > 0 &&
     levelStories.every(story => isStoryComplete(story.id));
-  const levelProgress = levelStories.length
-    ? Math.round((completedStories.length / levelStories.length) * 100)
-    : 0;
   const featuredTag = allStoriesComplete
     ? 'Read again'
     : currentStory && isStoryComplete(currentStory.id)
@@ -110,6 +115,7 @@ const StoryTellingListScreen = () => {
           levels={STORY_LEVELS}
           activeLevel={activeLevel}
           onSelectLevel={setActiveLevel}
+          unlockedLevels={unlockedLevels}
         />
       </View>
       {featuredStory && (
@@ -146,7 +152,10 @@ const StoryTellingListScreen = () => {
             >
               Sound: {featuredStory.sound}
             </Text>
-            <ProgressBar progress={levelProgress} bgColor="#ffffffcc" />
+            <ProgressBar
+              progress={getStoryProgress(featuredStory.id)}
+              bgColor="#ffffffcc"
+            />
           </View>
 
           <ActionButton
