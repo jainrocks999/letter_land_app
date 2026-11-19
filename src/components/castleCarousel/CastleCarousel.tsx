@@ -13,9 +13,11 @@ import { styles } from './CastleCarousel.styles';
 import Animated, {
   Extrapolation,
   interpolate,
+  runOnJS,
   SharedValue,
   useAnimatedScrollHandler,
   useAnimatedStyle,
+  useSharedValue,
 } from 'react-native-reanimated';
 import ProgressBar from '../progressBar/ProgressBar';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
@@ -38,6 +40,10 @@ interface props {
 }
 
 const ITEM_WIDTH = HOME_ITEM_WIDTH;
+
+// page i is centred at a scroll offset of i * ITEM_WIDTH (the carousel's
+// side padding centers page 0 at offset 0), so the nearest page flips at 50%
+const getPageIndex = (offsetX: number) => Math.round(offsetX / ITEM_WIDTH);
 
 interface CarouselItemProps {
   item: Castle;
@@ -216,6 +222,7 @@ const CastleCarousel: React.FC<props> = ({ data, onIndexChange, scrollX }) => {
   const { progressData, characterIndex } = useActivityProContext();
   const { rewards } = useRewardsContext();
   const collectedStickers = rewards.unlockedStickers.length;
+  const lastReportedIndex = useSharedValue(0);
   // level Buddy stands on: the last level the kid played, or the first
   // unfinished level before they have played anything. He looks sad while the
   // level he is waiting on is still locked.
@@ -230,6 +237,13 @@ const CastleCarousel: React.FC<props> = ({ data, onIndexChange, scrollX }) => {
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: event => {
       scrollX.value = event.contentOffset.x;
+      // report the nearest page as soon as it changes (at the 50% point),
+      // instead of waiting for momentum to end — keeps the star counter live
+      const index = Math.round(event.contentOffset.x / ITEM_WIDTH);
+      if (index !== lastReportedIndex.value) {
+        lastReportedIndex.value = index;
+        runOnJS(onIndexChange)(index);
+      }
     },
   });
   return (
@@ -248,10 +262,8 @@ const CastleCarousel: React.FC<props> = ({ data, onIndexChange, scrollX }) => {
       }}
       onScroll={scrollHandler}
       onMomentumScrollEnd={event => {
-        const index = Math.round(
-          event.nativeEvent.contentOffset.x / ITEM_WIDTH,
-        );
-        onIndexChange(index);
+        // final sync in case a snap lands slightly differently
+        onIndexChange(getPageIndex(event.nativeEvent.contentOffset.x));
       }}
       scrollEventThrottle={16}
       renderItem={({ item, index }) => {

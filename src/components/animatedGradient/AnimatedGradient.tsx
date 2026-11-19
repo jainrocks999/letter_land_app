@@ -49,7 +49,9 @@ const AnimatedGradient: React.FC<AnimatedGradientProps> = ({
   );
 };
 
-export default AnimatedGradient;
+// props (index, scrollX, colors) stay stable while the carousel scrolls, so
+// memo skips re-rendering the other gradients on every index change
+export default React.memo(AnimatedGradient);
 
 const styles = StyleSheet.create({
   container: {

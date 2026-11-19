@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
 import CloudsContainer from '../../components/cloudsContainer/CloudsContainer';
@@ -26,6 +26,18 @@ const HomeScreen = () => {
   const navigation = useNavigation<StackNavigationProps<typeof ROUTES.HOME>>();
   const collectedStickers = rewards.unlockedStickers.length;
 
+  // stable array identities keep memoized gradients from re-rendering when
+  // only currentIndex changes; recomputed solely when sticker count changes
+  const gradientColors = useMemo<[string, string][]>(
+    () =>
+      activityData.map(castle =>
+        isActivityLocked(castle.innerCard, collectedStickers)
+          ? LOCKED_SKY_COLORS
+          : [castle.topSkyCol, castle.bottomSkyCol],
+      ),
+    [collectedStickers],
+  );
+
   return (
     <View style={{ flex: 1 }}>
       {activityData.map((castle, index) => (
@@ -33,11 +45,7 @@ const HomeScreen = () => {
           key={castle.id ?? index}
           index={index}
           scrollX={scrollX}
-          colors={
-            isActivityLocked(castle.innerCard, collectedStickers)
-              ? LOCKED_SKY_COLORS
-              : [castle.topSkyCol, castle.bottomSkyCol]
-          }
+          colors={gradientColors[index]}
         />
       ))}
       <View style={styles.topBar}>
