@@ -18,7 +18,13 @@
         android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
         android:launchMode="singleTask"
         android:windowSoftInputMode="adjustResize"
+        android:screenOrientation="portrait"
         android:exported="true">
+<!-- android:resizeableActivity="false" -->
+        <!-- Android 16+ ignores screenOrientation on tablets; this keeps the app portrait and letterboxed in landscape -->
+        <property
+          android:name="android.window.PROPERTY_COMPAT_ALLOW_RESTRICTED_RESIZABILITY"
+          android:value="true" />
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />

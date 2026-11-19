@@ -83,7 +83,7 @@ export const activityData: Castle[] = [
       icon: '🍪',
       cardTitle: 'Feed the Letter',
       shortDes:
-        'Find the correct letter and feed it to the hungry character coco!',
+        'Find the correct letter and feed it to the hungry character buddy!',
       tag: 'Feed It',
       requiredStickers: 3,
       darkColor: '#c09e74',
