@@ -1,8 +1,9 @@
-import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import React from 'react';
 import Animated from 'react-native-reanimated';
 import LottieAnimation from '../LottieAnimation/LottieAnimation';
 import { colorData } from '../../types/search.types';
+import { isTablet, rf } from '../../utils/responsive';
 
 interface Props {
   colors: colorData;
@@ -12,6 +13,7 @@ interface Props {
   styles?: StyleProp<ViewStyle>;
   imgTop?: number;
 }
+const tablet = isTablet();
 
 const CharacterFeedback = ({
   colors,
@@ -39,14 +41,13 @@ const CharacterFeedback = ({
             ? require('../../assets/images/character/yay.gif')
             : require('../../assets/images/character/opps.gif')
         }
-        style={{ width: '90%', height: '100%', top: imgTop || 35 }}
+        style={{ width: '90%', height: '100%', top: imgTop ?? rf(tablet? 28: 35) }}
       />
-
       {isCorrect && (
         <View style={styles.successSelection}>
           <LottieAnimation
             animation={require('../../assets/animations/success.json')}
-            size={200}
+            size={rf(200)}
             loop={true}
           />
         </View>
@@ -59,16 +60,16 @@ export default CharacterFeedback;
 
 const styles = StyleSheet.create({
   imgContainer: {
-    height: 180,
-    width: 180,
+    height: rf(tablet? 220 : 180),
+    width: rf(tablet? 220 : 180),
     borderWidth: 3,
-    borderRadius: '50%',
+    borderRadius: rf(999),
     overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 5,
     backgroundColor: '#fff',
-    marginTop: 20,
+    marginTop: rf(20),
   },
   successSelection: {
     position: 'absolute',

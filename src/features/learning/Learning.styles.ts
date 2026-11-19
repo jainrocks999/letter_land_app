@@ -2,18 +2,13 @@ import { StyleSheet } from 'react-native';
 import { isTablet, rf } from '../../utils/responsive';
 
 const tablet = isTablet();
-const CONTENT_MAX_WIDTH = 760;
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: tablet ? rf(24) : rf(15),
   },
-  headingSection: {
-    width: '100%',
-    maxWidth: tablet ? CONTENT_MAX_WIDTH : undefined,
-    alignSelf: 'center',
-  },
+  headingSection: {},
   rowCenter: {
     flex: 1,
     flexDirection: 'row',
@@ -33,9 +28,6 @@ export const styles = StyleSheet.create({
     color: '#e85216',
   },
   lettersCard: {
-    width: '100%',
-    maxWidth: tablet ? CONTENT_MAX_WIDTH : undefined,
-    alignSelf: 'center',
     borderWidth: 1.5,
     borderRadius: rf(10),
     paddingBottom: rf(15),
@@ -66,9 +58,6 @@ export const styles = StyleSheet.create({
     color: '#9e9e9e',
   },
   letterSliderSection: {
-    width: '100%',
-    maxWidth: tablet ? CONTENT_MAX_WIDTH : undefined,
-    alignSelf: 'center',
     backgroundColor: '#fff',
     marginVertical: rf(10),
     borderRadius: rf(10),
@@ -99,9 +88,6 @@ export const styles = StyleSheet.create({
     marginBottom: rf(6),
   },
   charecterSection: {
-    width: '100%',
-    maxWidth: tablet ? CONTENT_MAX_WIDTH : undefined,
-    alignSelf: 'center',
     borderWidth: 1,
     borderBottomWidth: rf(6),
     padding: rf(15),
@@ -148,9 +134,6 @@ export const styles = StyleSheet.create({
     fontSize: rf(12),
   },
   buttonsRow: {
-    width: '100%',
-    maxWidth: tablet ? CONTENT_MAX_WIDTH : undefined,
-    alignSelf: 'center',
     marginBottom: rf(10),
   },
 });

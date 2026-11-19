@@ -18,6 +18,7 @@ import SuccessModal from '../../components/customModal/CustomModel';
 import useActivityRewards from '../../hooks/useActivityRewards';
 import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
 import { ActivitiesKey } from '../../services/mmkv.service';
+import { isTablet, rf } from '../../utils/responsive';
 
 const SearchingScreen = () => {
   const route = useRoute<StackRouteProps<typeof ROUTES.SEARCHING>>();
@@ -41,6 +42,7 @@ const SearchingScreen = () => {
   const screenProgress = Math.round(
     ((currentIndex + 1) / questions.length) * 100,
   );
+  const tablet = isTablet();
   useEffect(() => {
     TTSEventService.addListeners({
       onStart: () => setIsSpeaking(true),
@@ -127,8 +129,9 @@ const SearchingScreen = () => {
     >
       <CustomTopbar data={data} progress={screenProgress} />
       <ScreenHeadingSection
+        style={styles.headingSection}
         heading={data.cardTitle}
-        subText="Search for the correct letter with Coco! Tap and improve your letter recognition!"
+        subText="Search for the correct letter with Buddy! Tap and improve your letter recognition!"
       />
 
       <View
@@ -149,7 +152,7 @@ const SearchingScreen = () => {
           {currentQues?.activity} Challenge
         </Text>
         <Text style={[styles.normalHeadingText, { color: data.midColor }]}>
-          {`Find "${currentQues?.target.letter}" and make Coco smile!`}
+          {`Find "${currentQues?.target.letter}" and make Buddy smile!`}
         </Text>
       </View>
       <View style={styles.playArea}>
@@ -173,7 +176,7 @@ const SearchingScreen = () => {
           <FontAwesome6
             name={isSpeaking ? 'volume-high' : 'play'}
             iconStyle="solid"
-            size={18}
+            size={rf(tablet? 22:18)}
             color={data.darkColor}
           />
         </Pressable>

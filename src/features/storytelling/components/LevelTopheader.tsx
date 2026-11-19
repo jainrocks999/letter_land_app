@@ -3,6 +3,7 @@ import React from 'react';
 import ActionButton from '../../../components/customButton/ActionButton';
 import { ActivityCard } from '../../home/data/home.data';
 import { StoryLevel, StoryLevelInfo } from '../data/storytelling.data';
+import { rf } from '../../../utils/responsive';
 
 interface LevelTopheaderProps {
   data: ActivityCard;
@@ -57,17 +58,17 @@ export default LevelTopheader;
 
 const styles = StyleSheet.create({
   listContainer: {
-    gap: 10,
-    height: 45,
+    gap: rf(10),
+    height: rf(45),
   },
   itemButton: {
-    borderWidth: 2.5,
+    borderWidth: rf(2.5),
     height: '100%',
-    width: 108,
-    borderRadius: 50,
+    width: rf(108),
+    borderRadius: rf(50),
   },
   listText: {
     fontFamily: 'Fredoka-Bold',
-    fontSize: 15,
+    fontSize: rf(15),
   },
 });

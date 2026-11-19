@@ -33,6 +33,7 @@ import ActionButton from '../../components/customButton/ActionButton';
 import SuccessModal from '../../components/customModal/CustomModel';
 import TTSService from '../../services/tts.service';
 import TTSEventService from '../../services/ttsEvents.service';
+import { isTablet, rf } from '../../utils/responsive';
 
 interface SpokenRange {
   start: number;
@@ -139,6 +140,7 @@ const StoryTellingReadScreen = () => {
   const storyRewardKey = `story-${storyId}`;
   const storyAwardedRef = useRef(false);
 
+  const tablet = isTablet();
   const currentPage = story?.pages[pageIndex];
   const currentActivity = currentPage?.activity;
   const isFirstPage = pageIndex === 0;
@@ -370,7 +372,7 @@ const StoryTellingReadScreen = () => {
                     selectedOption={null}
                     isCorrect={null}
                     isSpeaking={isSpeaking}
-                    imgTop={8}
+                    imgTop={rf(8)}
                     styles={styles.characterImage}
                   />
                   <View
@@ -383,7 +385,7 @@ const StoryTellingReadScreen = () => {
                     <FontAwesome6
                       name="circle"
                       iconStyle="solid"
-                      size={12}
+                      size={rf(12)}
                       color={data.midColor}
                     />
                     <Text
@@ -423,11 +425,6 @@ const StoryTellingReadScreen = () => {
               ]}
             >
               <View style={styles.wordCardRow}>
-                {/* <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.wordCardRow}
-              > */}
                 {pageWords.map(token => {
                   const isActive = activeWord?.start === token.start;
                   return (
@@ -461,7 +458,7 @@ const StoryTellingReadScreen = () => {
                         <FontAwesome6
                           name="volume-high"
                           iconStyle="solid"
-                          size={14}
+                          size={rf(14)}
                           color={isActive ? data.darkColor : data.midColor}
                           style={styles.wordCardSpeaker}
                         />
@@ -474,7 +471,6 @@ const StoryTellingReadScreen = () => {
                     </TouchableOpacity>
                   );
                 })}
-                {/* </ScrollView> */}
               </View>
               <Text
                 style={[
@@ -505,7 +501,7 @@ const StoryTellingReadScreen = () => {
           <View
             style={[
               styles.exerciseFooter,
-              { paddingBottom: insets.bottom + 14 },
+              { paddingBottom: insets.bottom + rf(14) },
             ]}
           >
             <StoryExercise
@@ -521,27 +517,33 @@ const StoryTellingReadScreen = () => {
           </View>
         ) : (
           <View
-            style={[styles.readFooter, { paddingBottom: insets.bottom + 14 }]}
+            style={[
+              styles.readFooter,
+              { paddingBottom: insets.bottom + rf(14) },
+            ]}
           >
             <ActionButton
-              bottomBorderWidth={8}
-              radius={50}
+              bottomBorderWidth={rf( tablet ? 12:8)}
+              radius={rf(50)}
               backgroundColor={data.darkColor}
               bottomBorderColor={'#a43726'}
               onPress={goToPreviousPage}
-              styles={isFirstPage ? styles.navButtonDisabled : undefined}
+              styles={[
+                isFirstPage ? styles.navButtonDisabled : undefined,
+                tablet && styles.tabletArrowBtn,
+              ]}
             >
               <FontAwesome6
                 name="chevron-left"
                 iconStyle="solid"
-                size={20}
+                size={rf(tablet ? 40 : 20)}
                 color={'#ffff'}
               />
             </ActionButton>
 
             <ActionButton
-              bottomBorderWidth={8}
-              radius={50}
+              bottomBorderWidth={rf( tablet ? 12:8)}
+              radius={rf(tablet ? 90 : 50)}
               backgroundColor={'#ff6a26'}
               bottomBorderColor={'#c9460d'}
               onPress={readPageAloud}
@@ -550,21 +552,22 @@ const StoryTellingReadScreen = () => {
               <FontAwesome6
                 name="play"
                 iconStyle="solid"
-                size={20}
+                size={rf(tablet ? 40 : 20)}
                 color={'#ffff'}
               />
             </ActionButton>
             <ActionButton
-              bottomBorderWidth={8}
-              radius={50}
+              bottomBorderWidth={rf( tablet ? 12:8)}
+              radius={rf(50)}
               backgroundColor={data.darkColor}
               bottomBorderColor={'#a43726'}
               onPress={goToNextPage}
+              styles={tablet && styles.tabletArrowBtn}
             >
               <FontAwesome6
                 name="chevron-right"
                 iconStyle="solid"
-                size={20}
+                size={rf(tablet ? 40 : 20)}
                 color={'#ffff'}
               />
             </ActionButton>

@@ -20,6 +20,7 @@ import SuccessModal from '../../components/customModal/CustomModel';
 import { ActivitiesKey } from '../../services/mmkv.service';
 import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
 import useActivityRewards from '../../hooks/useActivityRewards';
+import { isTablet, rf } from '../../utils/responsive';
 
 const MatchingScreen: React.FC = () => {
   const route = useRoute<StackRouteProps<typeof ROUTES.MATCHING>>();
@@ -35,6 +36,8 @@ const MatchingScreen: React.FC = () => {
   const { rewardCorrect, rewardWrong, rewardComplete, startNewRound } =
     useActivityRewards(data);
   const matchedCountRef = useRef(0);
+
+  const tablet=isTablet()
 
   useEffect(() => {
     const matchedCount = matching.matchedLetters.length;
@@ -67,7 +70,7 @@ const MatchingScreen: React.FC = () => {
       matching.currentPairs[matching?.matchedLetters.length]?.letter,
     );
     handleSpeak(
-      `Hi, little friend! I’m Coco! Let’s play a fun letter game! Look at the letter, then find the picture of that. Ready? Let’s go! ${message}`,
+      `Hi, little friend! I’m Buddy! Let’s play a fun letter game! Look at the letter, then find the picture of that. Ready? Let’s go! ${message}`,
     );
     setInstruction(message);
   }, []);
@@ -127,8 +130,9 @@ const MatchingScreen: React.FC = () => {
         )}
       />
       <ScreenHeadingSection
+        style={styles.headingSection}
         heading={data.cardTitle}
-        subText="Match letters to pictures with Coco! Find the picture that starts with each letter."
+        subText="Match letters to pictures with Buddy! Find the picture that starts with each letter."
       />
 
       <View
@@ -227,7 +231,7 @@ const MatchingScreen: React.FC = () => {
             start={connection.start}
             end={connection.end}
             color="#22c55e"
-            thickness={12}
+            thickness={rf(tablet? 20: 12)}
           />
         ))}
 
@@ -236,7 +240,7 @@ const MatchingScreen: React.FC = () => {
             start={matching.activeLine.start}
             end={matching.activeLine.end}
             color={matching.activeLine.color}
-            thickness={12}
+            thickness={rf(tablet? 20: 12)}
           />
         )}
 
@@ -261,7 +265,7 @@ const MatchingScreen: React.FC = () => {
                     height,
                   });
                 }}
-                style={{ marginVertical: 8 }}
+                style={{ marginVertical: rf(tablet? 12: 8) }}
               >
                 <DraggableLetterMatched
                   item={item}

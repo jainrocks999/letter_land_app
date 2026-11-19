@@ -1,4 +1,4 @@
-import Animated, {useSharedValue} from 'react-native-reanimated';
+import Animated, { useSharedValue } from 'react-native-reanimated';
 import { LetterCardType } from '../../learning/data/learning.data';
 import { GestureDetector, usePanGesture } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-worklets';
@@ -6,6 +6,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Point } from '../../../types/tracing.types';
 import { useEffect } from 'react';
 import { ActivityCard } from '../../home/data/home.data';
+import { isTablet, rf } from '../../../utils/responsive';
 
 interface Props {
   item: LetterCardType;
@@ -29,7 +30,6 @@ const DraggableLetterMatched = ({
   onDragMove,
   onDragEnd,
 }: Props) => {
-  // const shakeX = useSharedValue(0);
 
   const startX = useSharedValue(0);
   const startY = useSharedValue(0);
@@ -45,28 +45,6 @@ const DraggableLetterMatched = ({
     startX.value = startPoint.x;
     startY.value = startPoint.y;
   }, [startPoint?.x, startPoint?.y]);
-
-  // useEffect(() => {
-  //   if (isMatched) {
-  //     shakeX.value = 0;
-  //   }
-  // }, [isMatched]);
-
-  // const animatedStyle = useAnimatedStyle(() => {
-  //   return {
-  //     transform: [{ translateX: shakeX.value }],
-  //   };
-  // });
-
-  // const shake = () => {
-  //   shakeX.value = withSequence(
-  //     withTiming(-8, { duration: 60 }),
-  //     withTiming(8, { duration: 60 }),
-  //     withTiming(-6, { duration: 60 }),
-  //     withTiming(6, { duration: 60 }),
-  //     withTiming(0, { duration: 60 }),
-  //   );
-  // };
 
   const panGesture = usePanGesture({
     enabled: !disabled && !!startPoint,
@@ -95,7 +73,7 @@ const DraggableLetterMatched = ({
       runOnJS(onDragEnd)(item.letter, { x: finalX, y: finalY });
     },
   });
-  
+
   return (
     <GestureDetector gesture={panGesture}>
       <Animated.View
@@ -134,10 +112,10 @@ export default DraggableLetterMatched;
 
 const styles = StyleSheet.create({
   itemSection: {
-    width: 70,
-    height: 70,
+    width: rf(isTablet()? 80: 70),
+    height: rf(isTablet()? 80: 70),
     borderWidth: 3,
-    borderRadius: 18,
+    borderRadius: rf(18),
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 3,
@@ -146,6 +124,6 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontFamily: 'Fredoka-Bold',
-    fontSize: 34,
+    fontSize: rf(isTablet()? 40 : 34),
   },
 });

@@ -23,6 +23,7 @@ import {
   getStoriesByLevel,
   getStoryLevelInfo,
 } from './data/storytelling.data';
+import { rf } from '../../utils/responsive';
 
 const StoryTellingListScreen = () => {
   const route = useRoute<StackRouteProps<typeof ROUTES.STORYTELLINGLIST>>();
@@ -149,8 +150,8 @@ const StoryTellingListScreen = () => {
           </View>
 
           <ActionButton
-            bottomBorderWidth={5}
-            radius={50}
+            bottomBorderWidth={rf(5)}
+            radius={rf(50)}
             backgroundColor={data.darkColor}
             bottomBorderColor={'#a43726'}
             onPress={() => {
@@ -160,7 +161,7 @@ const StoryTellingListScreen = () => {
             <FontAwesome6
               name="play"
               iconStyle="solid"
-              size={16}
+              size={rf(16)}
               color={'#a43726'}
             />
           </ActionButton>

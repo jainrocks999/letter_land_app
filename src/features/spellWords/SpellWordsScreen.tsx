@@ -25,11 +25,14 @@ import {
 import LetterSlot from './components/LetterSlot';
 import DraggableTile, { SlotRectType } from './components/DraggableTile';
 import CustomButton from '../../components/customButton/CustomButton';
+import { isTablet, rf } from '../../utils/responsive';
 
 type Feedback = 'none' | 'oops' | 'yay';
 
-const SLOT_GAP = 8;
-const MAX_TILE_SIZE = 62;
+const CONTAINER_PADDING = isTablet() ? rf(24) : rf(15);
+const PLAY_AREA_PADDING = rf(15);
+const SLOT_GAP = rf(8);
+const MAX_TILE_SIZE = rf(62);
 const OOPS_DURATION = 1300;
 
 const characterImages = {
@@ -65,6 +68,8 @@ const SpellWordsScreen = () => {
   const [feedback, setFeedback] = useState<Feedback>('none');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
+  const tablet = isTablet();
+
   // drop targets are read on the UI thread while a tile is being dragged
   const slotRects = useSharedValue<(SlotRectType | null)[]>([]);
 
@@ -85,14 +90,19 @@ const SpellWordsScreen = () => {
   const screenProgress = Math.round((solvedCount / words.length) * 100);
   const tileSize = Math.min(
     MAX_TILE_SIZE,
-    (width - 30 - 30 - SLOT_GAP * (letters.length - 1)) / letters.length,
+    (width -
+      (CONTAINER_PADDING + PLAY_AREA_PADDING) * 2 -
+      SLOT_GAP * (letters.length - 1)) /
+      letters.length,
   );
 
   const speakSpelling = useCallback(
     (prefix = '') => {
       TTSService.stop();
       TTSService.speak(
-        `${prefix}, ${pickRandom(praiseMessages)},${current.word}. ${letters.join(', ')}. ${current.word}!`,
+        `${prefix}, ${pickRandom(praiseMessages)},${
+          current.word
+        }. ${letters.join(', ')}. ${current.word}!`,
       );
     },
     [current.word],
@@ -278,8 +288,8 @@ const SpellWordsScreen = () => {
               {current.word}
             </Text>
             <ActionButton
-              bottomBorderWidth={5}
-              radius={50}
+              bottomBorderWidth={rf(5)}
+              radius={rf(50)}
               backgroundColor={data.lightColor || data.midColor}
               bottomBorderColor={data.midColor}
               onPress={() => !isSpeaking && speakSpelling()}
@@ -288,7 +298,7 @@ const SpellWordsScreen = () => {
               <FontAwesome6
                 name={isSpeaking ? 'volume-high' : 'play'}
                 iconStyle="solid"
-                size={16}
+                size={rf(tablet? 25: 16)}
                 color={data.midColor}
               />
             </ActionButton>
@@ -298,7 +308,7 @@ const SpellWordsScreen = () => {
               <FontAwesome6
                 name={'circle'}
                 iconStyle="solid"
-                size={10}
+                size={rf(10)}
                 color={'#e8541a'}
               />
               <Text style={styles.hintText}>{hintText}</Text>
@@ -313,7 +323,7 @@ const SpellWordsScreen = () => {
       </View>
 
       <View style={[styles.playArea, { borderColor: data.midColor }]}>
-        <View style={{ width: '100%', gap: 15 }}>
+        <View style={{ width: '100%', gap: rf(15) }}>
           <Text style={[styles.roundBadge, { backgroundColor: data.midColor }]}>
             Word {currentIndex + 1} of {words.length}
           </Text>
@@ -359,10 +369,10 @@ const SpellWordsScreen = () => {
           ))}
         </View>
       </View>
-      <View style={[styles.rowSpacebetween, { marginBottom: 15 }]}>
+      <View style={[styles.rowSpacebetween, { marginBottom: rf(15) }]}>
         <ActionButton
-          bottomBorderWidth={8}
-          radius={18}
+          bottomBorderWidth={rf(8)}
+          radius={rf(18)}
           backgroundColor={canGoPrev ? '#e8b59e' : '#d9d9d9'}
           bottomBorderColor={canGoPrev ? '#d84d16ce' : '#b3b3b3'}
           onPress={() => {
@@ -373,15 +383,15 @@ const SpellWordsScreen = () => {
           <FontAwesome6
             name="chevron-left"
             iconStyle="solid"
-            size={20}
+            size={rf(20)}
             color={canGoPrev ? '#d84d16ce' : '#8e8e8e'}
           />
         </ActionButton>
         <CustomButton
           width={'40%'}
-          padding={12}
-          paddingBottom={9}
-          btnRadius={15}
+          padding={rf(12)}
+          paddingBottom={rf(9)}
+          btnRadius={rf(15)}
           bottomBorderColor={canReplay ? '#d84e16' : '#b3b3b3'}
           colors={canReplay ? ['#ff7b38', '#ff6425'] : ['#d9d9d9', '#c4c4c4']}
           onPress={handleReplay}
@@ -392,7 +402,7 @@ const SpellWordsScreen = () => {
             <FontAwesome6
               name={'rotate-right'}
               iconStyle="solid"
-              size={18}
+              size={rf(18)}
               color="#fff"
               style={styles.buttonIcon}
             />
@@ -400,9 +410,9 @@ const SpellWordsScreen = () => {
         </CustomButton>
         <CustomButton
           width={'40%'}
-          paddingBottom={9}
-          btnRadius={15}
-          padding={12}
+          paddingBottom={rf(9)}
+          btnRadius={rf(15)}
+          padding={rf(12)}
           bottomBorderColor={isWordDone ? '#0d8f3e' : '#b3b3b3'}
           colors={isWordDone ? ['#35c46b', '#1ca952'] : ['#d9d9d9', '#c4c4c4']}
           onPress={handleNext}
@@ -413,7 +423,7 @@ const SpellWordsScreen = () => {
             <FontAwesome6
               name={'chevron-right'}
               iconStyle="solid"
-              size={18}
+              size={rf(18)}
               color="#fff"
               style={styles.buttonIcon}
             />

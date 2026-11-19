@@ -6,6 +6,7 @@ import { ActivityCard } from '../../home/data/home.data';
 import { ROUTES } from '../../../app/navigation/routeNames';
 import { StackNavigationProps } from '../../../types/navigation.types';
 import StarCounterStatic from '../../../components/starCounter/StarCounterStatic';
+import { rf } from '../../../utils/responsive';
 
 interface TopBarReadProps {
   data: ActivityCard;
@@ -22,7 +23,7 @@ const TopBarRead: React.FC<TopBarReadProps> = ({ data, storyTitle }) => {
   return (
     <View style={styles.topbar}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
-        <FontAwesome6 name="xmark" iconStyle="solid" size={30} />
+        <FontAwesome6 name="xmark" iconStyle="solid" size={rf(30)} />
       </TouchableOpacity>
       <View style={styles.titleContainer}>
         <Text numberOfLines={1} style={styles.titleText}>
@@ -46,8 +47,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 12,
-    paddingTop: 10,
+    gap: rf(12),
+    paddingTop: rf(10),
   },
   titleContainer: {
     flex: 1,
@@ -55,11 +56,11 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontFamily: 'Fredoka-Bold',
-    fontSize: 22,
+    fontSize: rf(22),
     color: '#1a105f',
   },
   secondryText: {
     fontFamily: 'Fredoka-SemiBold',
-    fontSize: 14,
+    fontSize: rf(14),
   },
 });

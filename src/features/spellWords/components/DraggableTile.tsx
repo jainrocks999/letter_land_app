@@ -12,6 +12,7 @@ import { GestureDetector, usePanGesture } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-worklets';
 import { colorData } from '../../../types/search.types';
 import { SpellTileType } from '../data/spellWords.data';
+import { rf } from '../../../utils/responsive';
 
 export interface SlotRectType {
   x: number;
@@ -34,7 +35,7 @@ interface DraggableTileProps {
 }
 
 // extra room around each slot so small fingers don't have to be pixel perfect
-const DROP_PADDING = 14;
+const DROP_PADDING = rf(14);
 
 const DraggableTile: React.FC<DraggableTileProps> = ({
   tile,
@@ -190,8 +191,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
-    borderBottomWidth: 6,
-    borderRadius: 14,
+    borderBottomWidth: rf(6),
+    borderRadius: rf(14),
   },
   letter: { fontFamily: 'Fredoka-Bold' },
 });

@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import Animated, { ZoomIn } from 'react-native-reanimated';
 import { colorData } from '../../../types/search.types';
 import { SlotRectType } from './DraggableTile';
+import { rf } from '../../../utils/responsive';
 
 interface LetterSlotProps {
   index: number;
@@ -73,8 +74,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
-    borderBottomWidth: 6,
-    borderRadius: 14,
+    borderBottomWidth: rf(6),
+    borderRadius: rf(14),
   },
   emptySlot: {
     backgroundColor: '#f7f3ec',

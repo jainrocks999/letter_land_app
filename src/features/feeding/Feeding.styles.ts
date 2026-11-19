@@ -3,15 +3,7 @@ import { isTablet, rf } from '../../utils/responsive';
 
 const tablet = isTablet();
 
-// The feeding card is a compact, interactive play area. On tablets it keeps a
-// phone-like width (scaled up) so the cookie grid stays balanced and centred.
-const contentWidth = tablet
-  ? {
-      width: '100%' as const,
-      // maxWidth: rf(380),
-      alignSelf: 'center' as const,
-    }
-  : {};
+const contentWidth = {};
 
 export const styles = StyleSheet.create({
   container: {

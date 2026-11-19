@@ -23,6 +23,7 @@ import SuccessModal from '../../components/customModal/CustomModel';
 import useActivityRewards from '../../hooks/useActivityRewards';
 import { ActivitiesKey } from '../../services/mmkv.service';
 import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
+import { rf } from '../../utils/responsive';
 
 const FillingLetterScreen = () => {
   const route = useRoute<StackRouteProps<typeof ROUTES.FILLING>>();
@@ -46,6 +47,10 @@ const FillingLetterScreen = () => {
   const [shapRect, setShapRect] = useState<RectType>({
     x: 0,
     y: 0,
+    width: 0,
+    height: 0,
+  });
+  const [optionsContainerSize, setOptionsContainerSize] = useState({
     width: 0,
     height: 0,
   });
@@ -173,8 +178,9 @@ const FillingLetterScreen = () => {
     >
       <CustomTopbar data={data} progress={screenProgress} />
       <ScreenHeadingSection
+        style={styles.headingSection}
         heading={data.cardTitle}
-        subText="Search for the correct letter with Coco! Tap and improve your letter recognition!"
+        subText="Search for the correct letter with Buddy! Tap and improve your letter recognition!"
       />
 
       <View
@@ -197,7 +203,7 @@ const FillingLetterScreen = () => {
         <Text style={[styles.normalHeadingText, { color: data.midColor }]}>
           {isCompleted
             ? 'Congratulations! You completed all the letter fill rounds!'
-            : `Find the Letter "${currentQues?.target.letter}" and Make Coco Happy!`}
+            : `Find the Letter "${currentQues?.target.letter}" and Make Buddy Happy!`}
         </Text>
       </View>
 
@@ -205,8 +211,8 @@ const FillingLetterScreen = () => {
         {!isCompleted ? (
           <>
             <ActionButton
-              bottomBorderWidth={5}
-              radius={50}
+              bottomBorderWidth={rf(5)}
+              radius={rf(50)}
               backgroundColor={data.lightColor || data.midColor}
               bottomBorderColor={data.darkColor}
               onPress={handlePlay}
@@ -215,7 +221,7 @@ const FillingLetterScreen = () => {
               <FontAwesome6
                 name={isSpeaking ? 'volume-high' : 'play'}
                 iconStyle="solid"
-                size={18}
+                size={rf(18)}
                 color={data.midColor}
               />
             </ActionButton>
@@ -233,7 +239,7 @@ const FillingLetterScreen = () => {
                 isCorrect={isCorrect}
                 styles={styles.characterFeeback}
                 isSpeaking={isSpeaking}
-                imgTop={25}
+                imgTop={rf(25)}
               />
               <View style={styles.letterEmojiSection}>
                 <View
@@ -252,7 +258,7 @@ const FillingLetterScreen = () => {
                       textAnchor="middle"
                       alignmentBaseline="central"
                       fontFamily="Fredoka-Bold"
-                      fontSize={105}
+                      fontSize={rf(105)}
                       fill={
                         isCorrect == null
                           ? '#e7e7e7'
@@ -268,7 +274,7 @@ const FillingLetterScreen = () => {
                           ? '#4CAF50'
                           : '#f14d47'
                       }
-                      strokeWidth={isPlaced ? 8 : 6}
+                      strokeWidth={isPlaced ? rf(8) : rf(6)}
                       strokeLinejoin="round"
                     >
                       {currentQues?.target.letter}
@@ -283,25 +289,36 @@ const FillingLetterScreen = () => {
                 styles.optionsContainer,
                 { backgroundColor: `${data.darkColor}33` },
               ]}
-            >
-              {currentQues?.options.map((option, index) => {
-                const isThisTheAnsweredOne =
-                  isPlaced && option.data.letter === currentQues.target.letter;
-
-                return (
-                  <DraggableLetter
-                    colors={data}
-                    index={index}
-                    key={`${currentIndex}-${option.data.letter}-${index}`}
-                    data={option}
-                    mouthRect={shapRect}
-                    targetLetter={currentQues.target.letter}
-                    onDrop={handleLetterDrop}
-                    onHoverChange={() => {}}
-                    disabled={isPlaced && !isThisTheAnsweredOne}
-                  />
+              onLayout={event => {
+                const { width, height } = event.nativeEvent.layout;
+                setOptionsContainerSize(prev =>
+                  prev.width === width && prev.height === height
+                    ? prev
+                    : { width, height },
                 );
-              })}
+              }}
+            >
+              {optionsContainerSize.width > 0 &&
+                currentQues?.options.map((option, index) => {
+                  const isThisTheAnsweredOne =
+                    isPlaced &&
+                    option.data.letter === currentQues.target.letter;
+
+                  return (
+                    <DraggableLetter
+                      colors={data}
+                      index={index}
+                      key={`${currentIndex}-${option.data.letter}-${index}`}
+                      data={option}
+                      mouthRect={shapRect}
+                      targetLetter={currentQues.target.letter}
+                      onDrop={handleLetterDrop}
+                      onHoverChange={() => {}}
+                      disabled={isPlaced && !isThisTheAnsweredOne}
+                      containerSize={optionsContainerSize}
+                    />
+                  );
+                })}
             </View>
           </>
         ) : (
@@ -310,12 +327,12 @@ const FillingLetterScreen = () => {
               alignItems: 'center',
               justifyContent: 'center',
               flex: 1,
-              gap: 20,
+              gap: rf(20),
             }}
           >
             <Text
               style={{
-                fontSize: 24,
+                fontSize: rf(24),
                 fontFamily: 'Fredoka-Bold',
                 color: data.darkColor,
                 textAlign: 'center',
@@ -323,38 +340,44 @@ const FillingLetterScreen = () => {
             >
               🎉 You Filled All Letters! 🎉
             </Text>
-            <View style={{ flexDirection: 'row', gap: 15 }}>
+            <View style={{ flexDirection: 'row', gap: rf(15) }}>
               <ActionButton
-                bottomBorderWidth={5}
-                radius={20}
+                bottomBorderWidth={rf(5)}
+                radius={rf(20)}
                 backgroundColor={data.midColor}
                 bottomBorderColor={data.darkColor}
                 onPress={handleRestart}
-                styles={{ paddingHorizontal: 20, paddingVertical: 10 }}
+                styles={{
+                  paddingHorizontal: rf(20),
+                  paddingVertical: rf(10),
+                }}
               >
                 <Text
                   style={{
                     color: '#fff',
                     fontFamily: 'Fredoka-Bold',
-                    fontSize: 16,
+                    fontSize: rf(16),
                   }}
                 >
                   Play Again
                 </Text>
               </ActionButton>
               <ActionButton
-                bottomBorderWidth={5}
-                radius={20}
+                bottomBorderWidth={rf(5)}
+                radius={rf(20)}
                 backgroundColor={data.darkColor}
                 bottomBorderColor="#000"
                 onPress={() => navigation.goBack()}
-                styles={{ paddingHorizontal: 20, paddingVertical: 10 }}
+                styles={{
+                  paddingHorizontal: rf(20),
+                  paddingVertical: rf(10),
+                }}
               >
                 <Text
                   style={{
                     color: '#fff',
                     fontFamily: 'Fredoka-Bold',
-                    fontSize: 16,
+                    fontSize: rf(16),
                   }}
                 >
                   Home

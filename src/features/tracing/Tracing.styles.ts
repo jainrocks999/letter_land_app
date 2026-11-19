@@ -2,15 +2,8 @@ import { StyleSheet } from 'react-native';
 import { isTablet, rf, wp } from '../../utils/responsive';
 
 const tablet = isTablet();
-const CONTENT_MAX_WIDTH = 760;
 
-const contentWidth = tablet
-  ? {
-      width: '100%' as const,
-      maxWidth: CONTENT_MAX_WIDTH,
-      alignSelf: 'center' as const,
-    }
-  : {};
+const contentWidth = {};
 
 export const styles = StyleSheet.create({
   container: {
@@ -61,8 +54,8 @@ export const styles = StyleSheet.create({
     gap: rf(6),
   },
   letterPill: {
-    width: rf( tablet? 65 : 54),
-    height: rf(tablet? 65 : 54),
+    width: rf(tablet ? 65 : 54),
+    height: rf(tablet ? 65 : 54),
     borderRadius: rf(10),
     backgroundColor: '#ffffffd9',
     justifyContent: 'center',
@@ -70,7 +63,7 @@ export const styles = StyleSheet.create({
   },
   letterPillText: {
     fontFamily: 'Fredoka-Bold',
-    fontSize: rf(tablet ? 50 :32),
+    fontSize: rf(tablet ? 50 : 32),
   },
   statusText: {
     fontFamily: 'Fredoka-Bold',

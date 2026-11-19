@@ -25,6 +25,7 @@ import useActivityRewards from '../../hooks/useActivityRewards';
 import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
 import { ActivitiesKey } from '../../services/mmkv.service';
 import { praiseMessages, tryAgainMessages } from '../../utils/helperData';
+import { isTablet, rf } from '../../utils/responsive';
 import BingoCell from './components/BingoCell';
 import {
   BINGO_ROUNDS,
@@ -65,6 +66,7 @@ const BingoScreen = () => {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pendingBingoRef = useRef<number[] | null>(null);
 
+  const tablet = isTablet();
   const { board, calls } = roundData;
   const currentTarget = calls[currentIndex];
   const roundConfig = getBingoRoundConfig(round);
@@ -111,8 +113,7 @@ const BingoScreen = () => {
     if (isBingo || showSuccessModal) return;
     const target = calls[currentIndex];
     if (!target) return;
-    const intro =
-      currentIndex === 0 ? `Round ${round + 1}. ` : '';
+    const intro = currentIndex === 0 ? `Round ${round + 1}. ` : '';
     TTSService.speak(`${intro} find the letter ${target}!`);
   }, [calls, currentIndex, round, roundConfig, isBingo, showSuccessModal]);
 
@@ -281,7 +282,7 @@ const BingoScreen = () => {
           isCorrect={isCorrect}
           styles={styles.characterFeeback}
           isSpeaking={isSpeaking}
-          imgTop={25}
+          imgTop={rf( tablet ? 20 : 25)}
         />
         <View style={styles.askingCopy}>
           <View
@@ -346,7 +347,7 @@ const BingoScreen = () => {
         <Animated.View
           key={`board-${round}`}
           entering={FadeInDown.duration(320)}
-          style={{padding:10}}
+          style={{ padding: rf(10) }}
         >
           <FlatList
             data={board}
@@ -379,9 +380,9 @@ const BingoScreen = () => {
       <View style={styles.footerRow}>
         <CustomButton
           width={'48%'}
-          paddingBottom={9}
-          btnRadius={15}
-          padding={12}
+          paddingBottom={rf(9)}
+          btnRadius={rf(15)}
+          padding={rf(12)}
           bottomBorderColor={'#d84e16'}
           colors={['#ff7b38', '#ff6425']}
           onPress={handleHearAgain}
@@ -391,7 +392,7 @@ const BingoScreen = () => {
             <FontAwesome6
               name={'volume-high'}
               iconStyle="solid"
-              size={18}
+              size={rf(18)}
               color="#fff"
               style={styles.hearAgainIcon}
             />
@@ -399,9 +400,9 @@ const BingoScreen = () => {
         </CustomButton>
         <CustomButton
           width={'48%'}
-          paddingBottom={9}
-          btnRadius={15}
-          padding={12}
+          paddingBottom={rf(9)}
+          btnRadius={rf(15)}
+          padding={rf(12)}
           bottomBorderColor={canAdvance ? '#0d8f3e' : '#b3b3b3'}
           colors={canAdvance ? ['#35c46b', '#1ca952'] : ['#d9d9d9', '#c4c4c4']}
           onPress={handleNext}
@@ -414,7 +415,7 @@ const BingoScreen = () => {
             <FontAwesome6
               name={isBingo ? 'star' : 'chevron-right'}
               iconStyle="solid"
-              size={18}
+              size={rf(18)}
               color="#fff"
               style={styles.buttonIcon}
             />

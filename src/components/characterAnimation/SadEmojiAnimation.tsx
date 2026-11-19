@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import React, { useEffect } from 'react';
 import Animated, {
   Easing,
@@ -9,6 +9,9 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import LottieAnimation from '../LottieAnimation/LottieAnimation';
+import { rf } from '../../utils/responsive';
+
+const SLIDE_DISTANCE = rf(30);
 
 const SadEmojiAnimation = () => {
   const progress = useSharedValue(0);
@@ -26,13 +29,13 @@ const SadEmojiAnimation = () => {
       }),
       withDelay(150, withTiming(0, { duration: 0 })),
     );
-  }, []);
+  }, [progress]);
 
   const animationStyle = useAnimatedStyle(() => ({
     opacity: progress.value,
     transform: [
       {
-        translateX: 30 * (1 - progress.value),
+        translateX: SLIDE_DISTANCE * (1 - progress.value),
       },
     ],
   }));
@@ -59,11 +62,11 @@ const styles = StyleSheet.create({
     zIndex: 1,
     left: '18%',
     top: '10%',
-    height: 50,
-    width: 65,
-    borderTopLeftRadius: 20,
-    borderBottomLeftRadius: 20,
-    borderTopRightRadius: 20,
+    height: rf(50),
+    width: rf(65),
+    borderTopLeftRadius: rf(20),
+    borderBottomLeftRadius: rf(20),
+    borderTopRightRadius: rf(20),
     borderWidth: 2,
     backgroundColor: '#fff',
     elevation: 5,

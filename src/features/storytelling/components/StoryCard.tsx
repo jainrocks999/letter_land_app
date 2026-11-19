@@ -3,6 +3,7 @@ import React from 'react';
 import { ActivityCard } from '../../home/data/home.data';
 import { Story } from '../data/storytelling.data';
 import ProgressBar from '../../../components/progressBar/ProgressBar';
+import { isTablet, rf } from '../../../utils/responsive';
 
 interface StoryCardProps {
   data: ActivityCard;
@@ -10,6 +11,7 @@ interface StoryCardProps {
   progress?: number;
   onPress?: () => void;
 }
+const tablet = isTablet();
 
 const StoryCard = ({ data, story, progress = 0, onPress }: StoryCardProps) => {
   return (
@@ -55,42 +57,42 @@ export default StoryCard;
 const styles = StyleSheet.create({
   bannerTitle: {
     fontFamily: 'Fredoka-Bold',
-    fontSize: 20,
+    fontSize: rf(20),
     color: '#1a105f',
   },
   cardTitle: {
-    fontSize: 18,
+    fontSize: rf(18),
   },
   secondryText: {
     fontFamily: 'Fredoka-SemiBold',
-    fontSize: 14,
+    fontSize: rf(14),
   },
   storyCard: {
     width: '48%',
     borderWidth: 1,
     backgroundColor: '#ffffff',
-    borderRadius: 20,
-    borderBottomWidth: 6,
+    borderRadius: rf(20),
+    borderBottomWidth: rf(6),
     overflow: 'hidden',
   },
   cardImage: {
     width: '100%',
-    height: 120,
+    height: rf(tablet ? 220 : 120),
   },
   cardBody: {
-    padding: 10,
+    padding: rf(10),
   },
   cardTagText: {
     position: 'absolute',
     maxWidth: '82%',
     fontFamily: 'Fredoka-SemiBold',
-    fontSize: 13,
-    paddingVertical: 2,
-    paddingHorizontal: 8,
-    borderRadius: 50,
-    margin: 8,
+    fontSize: rf(13),
+    paddingVertical: rf(2),
+    paddingHorizontal: rf(8),
+    borderRadius: rf(50),
+    margin: rf(8),
   },
   cardProgress: {
-    paddingVertical: 5,
+    paddingVertical: rf(5),
   },
 });

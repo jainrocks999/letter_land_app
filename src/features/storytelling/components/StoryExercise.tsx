@@ -27,6 +27,7 @@ import { styles } from '../StoryTelling.styles';
 import TTSService from '../../../services/tts.service';
 import ActionButton from '../../../components/customButton/ActionButton';
 import LottieAnimation from '../../../components/LottieAnimation/LottieAnimation';
+import { isTablet, rf } from '../../../utils/responsive';
 
 type ExerciseStatus = 'idle' | 'correct' | 'wrong';
 type OptionState = ExerciseStatus | 'disabled';
@@ -55,6 +56,8 @@ interface ExerciseOptionProps {
   onSpeak: () => void;
 }
 
+const tablet = isTablet();
+
 const FEEL_EMOJI: Record<string, string> = {
   happy: '😊',
   surprised: '😲',
@@ -72,6 +75,7 @@ const shuffle = <T,>(items: T[]): T[] => {
   }
   return result;
 };
+
 
 const normalize = (value: string) =>
   value
@@ -122,6 +126,7 @@ const ExerciseOption = ({
   const isCorrect = state === 'correct';
   const isWrong = state === 'wrong';
 
+
   return (
     <Animated.View
       style={[
@@ -138,6 +143,7 @@ const ExerciseOption = ({
           accessibilityLabel={option.value}
           activeOpacity={0.75}
           disabled={state === 'disabled' || isCorrect}
+          hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
           onPress={onPress}
           style={[
             styles.exerciseOptionMain,
@@ -177,7 +183,7 @@ const ExerciseOption = ({
           <FontAwesome6
             name="volume-high"
             iconStyle="solid"
-            size={13}
+            size={rf(13)}
             color={isCorrect ? '#16794a' : colors.midColor}
           />
         </TouchableOpacity>
@@ -423,7 +429,7 @@ const StoryExercise = ({
         >
           <LottieAnimation
             animation={require('../../../assets/animations/Success celebration.json')}
-            size={130}
+            size={rf(130)}
             loop={false}
           />
         </Animated.View>
@@ -446,7 +452,7 @@ const StoryExercise = ({
             <FontAwesome6
               name="volume-high"
               iconStyle="solid"
-              size={14}
+              size={rf(tablet ? 18:14)}
               color={colors.midColor}
             />
           </TouchableOpacity>
@@ -454,12 +460,12 @@ const StoryExercise = ({
           <TouchableOpacity
             accessibilityLabel="Close exercise"
             onPress={onClose}
-            style={styles.exerciseCloseButton}
+            style={styles.exerciseSpeakerButton}
           >
             <FontAwesome6
               name="xmark"
               iconStyle="solid"
-              size={18}
+              size={rf(tablet ? 22:14)}
               color={colors.darkColor}
             />
           </TouchableOpacity>
@@ -475,7 +481,7 @@ const StoryExercise = ({
           <FontAwesome6
             name="image"
             iconStyle="solid"
-            size={13}
+            size={rf(13)}
             color={colors.midColor}
           />
           <Text
@@ -494,14 +500,14 @@ const StoryExercise = ({
           <FontAwesome6
             name="star"
             iconStyle="solid"
-            size={16}
+            size={rf(16)}
             color="#f5a623"
           />
           <Text style={styles.exerciseSuccessText}>Superstar! Great job!</Text>
           <FontAwesome6
             name="star"
             iconStyle="solid"
-            size={16}
+            size={rf(16)}
             color="#f5a623"
           />
         </Animated.View>
@@ -623,7 +629,7 @@ const StoryExercise = ({
               <FontAwesome6
                 name="check"
                 iconStyle="solid"
-                size={14}
+                size={rf(14)}
                 color="#ffffff"
               />
             </TouchableOpacity>
@@ -657,7 +663,7 @@ const StoryExercise = ({
           <FontAwesome6
             name="lightbulb"
             iconStyle="solid"
-            size={14}
+            size={rf(tablet ? 18 : 14)}
             color="#f5a623"
           />
           <Text style={styles.exerciseHintText}>{activity.hint}</Text>
@@ -666,8 +672,8 @@ const StoryExercise = ({
 
       <View style={styles.exerciseFooterRow}>
         <ActionButton
-          bottomBorderWidth={6}
-          radius={50}
+          bottomBorderWidth={rf(6)}
+          radius={rf(50)}
           backgroundColor={previousEnabled ? colors.darkColor : '#cfcfcf'}
           bottomBorderColor={previousEnabled ? '#a43726' : '#b3b3b3'}
           onPress={() => {
@@ -681,7 +687,7 @@ const StoryExercise = ({
           <FontAwesome6
             name="chevron-left"
             iconStyle="solid"
-            size={18}
+            size={rf(18)}
             color={'#ffffff'}
           />
         </ActionButton>
@@ -696,7 +702,7 @@ const StoryExercise = ({
                 : 'lightbulb'
             }
             iconStyle="solid"
-            size={14}
+            size={rf(14)}
             color={
               status === 'correct'
                 ? '#1ca952'
@@ -717,8 +723,8 @@ const StoryExercise = ({
         </View>
 
         <ActionButton
-          bottomBorderWidth={6}
-          radius={50}
+          bottomBorderWidth={rf(6)}
+          radius={rf(50)}
           backgroundColor={canGoNext ? colors.darkColor : '#cfcfcf'}
           bottomBorderColor={canGoNext ? '#a43726' : '#b3b3b3'}
           onPress={() => {
@@ -732,7 +738,7 @@ const StoryExercise = ({
           <FontAwesome6
             name="chevron-right"
             iconStyle="solid"
-            size={18}
+            size={rf(18)}
             color={'#ffffff'}
           />
         </ActionButton>

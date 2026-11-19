@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { LetterCardType } from '../../learning/data/learning.data';
+import { isTablet, rf } from '../../../utils/responsive';
 
 interface Props {
   item: LetterCardType;
@@ -55,15 +56,15 @@ export default EmojiTarget;
 
 const styles = StyleSheet.create({
   itemSection: {
-    width: 70,
-    height: 70,
+    width: rf(isTablet()? 80:70),
+    height: rf(isTablet()? 80:70),
     borderWidth: 2,
-    borderRadius: 18,
+    borderRadius: rf(18),
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 3,
     shadowOpacity: 0.1,
     shadowRadius: 4,
   },
-  itemEmoji: { fontSize: 40 },
+  itemEmoji: { fontSize: rf(isTablet()? 50:40) },
 });

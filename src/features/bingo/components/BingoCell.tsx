@@ -10,6 +10,7 @@ import Animated, {
 import ActionButton from '../../../components/customButton/ActionButton';
 import { styles } from '../Bingo.styles';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
+import { rf } from '../../../utils/responsive';
 
 interface BingoCellProps {
   letter: string;
@@ -102,8 +103,8 @@ const BingoCell: React.FC<BingoCellProps> = ({
       style={[styles.bingoCell, cellStyle]}
     >
       <ActionButton
-        bottomBorderWidth={5}
-        radius={10}
+        bottomBorderWidth={rf(5)}
+        radius={rf(10)}
         backgroundColor={backgroundColor}
         bottomBorderColor={bottomBorderColor}
         onPress={() => onPress(letter)}
@@ -117,9 +118,8 @@ const BingoCell: React.FC<BingoCellProps> = ({
             <FontAwesome6
               name="star"
               iconStyle="solid"
-              size={18}
-              color="#fff"
-              style={{ color: '#F7B51B' }}
+              size={rf(18)}
+              color="#F7B51B"
             />
           </Animated.Text>
         )}

@@ -44,6 +44,7 @@ const FeedingScreen = () => {
   const [questionAsk, setQuestionAsk] = useState<string>('');
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
   const [showSuccessModal, setShowSuccessModal] = useState<boolean>(false);
+  const [traySize, setTraySize] = useState({ width: 0, height: 0 });
 
   const [characterState, setCharacterState] = useState<
     'standing' | 'feed' | 'enjoy' | 'oops' | 'speaking'
@@ -166,7 +167,7 @@ const FeedingScreen = () => {
       rewardComplete();
       setShowSuccessModal(true);
       TTSService.stop();
-      TTSService.speak('Great job! You fed Coco all the correct letters!');
+      TTSService.speak('Great job! You fed Buddy all the correct letters!');
     }
   };
 
@@ -191,7 +192,7 @@ const FeedingScreen = () => {
       <ScreenHeadingSection
         style={styles.headingSection}
         heading={data.cardTitle}
-        subText="Pick the correct letter and feed it to Coco! Learn your letters while helping Coco enjoy a tasty treat!"
+        subText="Pick the correct letter and feed it to Buddy! Learn your letters while helping Buddy enjoy a tasty treat!"
       />
 
       <View
@@ -213,8 +214,8 @@ const FeedingScreen = () => {
         </Text>
         <Text style={[styles.normalHeadingText, { color: data.midColor }]}>
           {isCompleted
-            ? 'Congratulations! Coco is full and happy!'
-            : `Coco is looking for the letter ${currentQues?.target.letter}! Can you help?`}
+            ? 'Congratulations! Buddy is full and happy!'
+            : `Buddy is looking for the letter ${currentQues?.target.letter}! Can you help?`}
         </Text>
       </View>
       <View style={[styles.playArea, { borderColor: data.midColor }]}>
@@ -240,27 +241,38 @@ const FeedingScreen = () => {
           <AnimatedCharacter state={characterState} />
         </View>
         <View
-          style={styles.optionsContainer}>
+          style={styles.optionsContainer}
+          onLayout={event => {
+            const { width, height } = event.nativeEvent.layout;
+            setTraySize(prev =>
+              prev.width === width && prev.height === height
+                ? prev
+                : { width, height },
+            );
+          }}
+        >
           <BackerySVG width={'100%'} height={'100%'} />
-          {currentQues.options.map((option, index) => (
-            <DraggableLetter
-              index={index}
-              key={`${currentIndex}-${option.data.letter}-${index}`}
-              data={option}
-              mouthRect={mouthRect}
-              onDrop={handleDrop}
-              targetLetter={currentQues.target.letter}
-              onHoverChange={handleHoverChange}
-              colors={data}
-            />
-          ))}
+          {traySize.width > 0 &&
+            currentQues.options.map((option, index) => (
+              <DraggableLetter
+                index={index}
+                key={`${currentIndex}-${option.data.letter}-${index}`}
+                data={option}
+                mouthRect={mouthRect}
+                onDrop={handleDrop}
+                targetLetter={currentQues.target.letter}
+                onHoverChange={handleHoverChange}
+                colors={data}
+                traySize={traySize}
+              />
+            ))}
         </View>
       </View>
 
       <SuccessModal
         visible={showSuccessModal}
         title="🎉 Yummy! All Fed!"
-        message="Great job! You fed Coco all the correct letter cookies!"
+        message="Great job! You fed Buddy all the correct letter cookies!"
         onRestart={handleRestart}
         onClose={() => {
           updateProgress({

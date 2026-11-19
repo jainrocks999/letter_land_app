@@ -1,34 +1,40 @@
 import { StyleSheet } from 'react-native';
+import { isTablet, rf } from '../../utils/responsive';
+
+const tablet = isTablet();
+
+const contentWidth = {};
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 15,
-    gap: 10,
+    paddingHorizontal: tablet ? rf(24) : rf(15),
+    gap: rf(10),
   },
+  headingSection: contentWidth,
   rowSection: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    // paddingVertical: 10,
     alignItems: 'center',
-    gap: 15,
+    gap: rf(15),
   },
   indicatorText: {
     fontFamily: 'Fredoka-Bold',
-    fontSize: 10,
+    fontSize: rf(tablet ? 13 : 10),
     letterSpacing: 0.5,
-    paddingVertical: 8,
-    paddingHorizontal: 18,
-    borderRadius: 50,
+    paddingVertical: rf(8),
+    paddingHorizontal: rf(18),
+    borderRadius: rf(50),
     borderWidth: 2,
   },
   matchingPairContainer: {
+    ...contentWidth,
     borderWidth: 1.5,
-    borderRadius: 10,
-    marginVertical: 15,
+    borderRadius: rf(10),
+    marginVertical: rf(15),
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 20,
+    padding: rf(20),
     position: 'relative',
     overflow: 'visible',
   },
@@ -38,38 +44,39 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   actInfoSection: {
+    ...contentWidth,
     borderWidth: 1,
-    borderBottomWidth: 7,
-    borderRadius: 10,
-    padding: 12,
-    paddingBottom: 18,
+    borderBottomWidth: rf(7),
+    borderRadius: rf(10),
+    padding: rf(12),
+    paddingBottom: rf(18),
   },
   questionTextContainer: {
-    width: 54,
-    height: 54,
-    borderRadius: 10,
+    width: rf(tablet ? 68 : 54),
+    height: rf(tablet ? 68 : 54),
+    borderRadius: rf(10),
     backgroundColor: '#ffffffd9',
     justifyContent: 'center',
     alignItems: 'center',
   },
   questionText: {
     fontFamily: 'Fredoka-Bold',
-    fontSize: 32,
+    fontSize: rf(tablet ? 46 : 32),
   },
   instructionTextContainer: {
     flex: 1,
-    gap: 6,
+    gap: rf(6),
     alignItems: 'center',
   },
   instructionText: {
     fontFamily: 'Fredoka-Bold',
-    fontSize: 17,
+    fontSize: rf(tablet ? 22 : 17),
     color: '#1a105f',
     textAlign: 'center',
   },
   cocoImage: {
-    width: 130,
-    height: 130,
+    width: rf(130),
+    height: rf(130),
     resizeMode: 'contain',
   },
   rowWithSpace: {
@@ -77,7 +84,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   infoSection: {
-    gap: 12,
+    gap: rf(tablet ? 22 : 12),
     width: '70%',
   },
 });
