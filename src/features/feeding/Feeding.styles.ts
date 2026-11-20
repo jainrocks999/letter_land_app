@@ -34,6 +34,11 @@ export const styles = StyleSheet.create({
     fontFamily: 'Fredoka-Bold',
     fontSize: rf(16),
   },
+  trayImg:{
+    height:"100%",
+    width: tablet ? "60%":"100%",
+    alignSelf:"center",
+  },
   playArea: {
     ...contentWidth,
     backgroundColor: '#fff',
@@ -42,7 +47,7 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderBottomWidth: rf(7),
     borderRadius: rf(10),
-    height: '62%',
+    height: tablet ? '60%':"62%",
   },
   speakBtn: {
     height: '10%',

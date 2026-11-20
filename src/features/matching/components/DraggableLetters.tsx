@@ -112,8 +112,8 @@ export default DraggableLetterMatched;
 
 const styles = StyleSheet.create({
   itemSection: {
-    width: rf(isTablet()? 80: 70),
-    height: rf(isTablet()? 80: 70),
+    width: rf(70),
+    height: rf(70),
     borderWidth: 3,
     borderRadius: rf(18),
     justifyContent: 'center',
@@ -124,6 +124,6 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontFamily: 'Fredoka-Bold',
-    fontSize: rf(isTablet()? 40 : 34),
+    fontSize: rf(34),
   },
 });

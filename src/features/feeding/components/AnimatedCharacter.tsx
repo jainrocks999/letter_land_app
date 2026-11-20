@@ -6,7 +6,7 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import { rf } from '../../../utils/responsive';
+import { isTablet, rf } from '../../../utils/responsive';
 
 interface Props {
   state: 'standing' | 'feed' | 'enjoy' | 'oops' | 'speaking';
@@ -42,13 +42,20 @@ const AnimatedCharacter = ({ state }: Props) => {
       withTiming(0, { duration: 180 }),
     );
   };
+  const tablet = isTablet();
 
   return (
     <Pressable onPress={jump}>
       <Animated.Image
         key={state}
         source={image}
-        style={[{ width: rf(200), height: rf(200) }, animatedStyle]}
+        style={[
+          {
+            width: rf(tablet ? 150 : 180),
+            height: rf(tablet ? 150 : 180),
+          },
+          animatedStyle,
+        ]}
       />
     </Pressable>
   );

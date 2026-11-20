@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { isTablet, rf } from '../../utils/responsive';
+import { hp, isTablet, rf, wp } from '../../utils/responsive';
 
 const tablet = isTablet();
 
@@ -37,25 +37,25 @@ export const styles = StyleSheet.create({
   playArea: {
     ...contentWidth,
     backgroundColor: '#fff',
-    paddingVertical: rf(12),
+    paddingVertical: rf(tablet ? 18:12),
     alignItems: 'center',
     borderWidth: 1,
     borderBottomWidth: rf(7),
     borderRadius: rf(10),
-    height: '62%',
   },
   playBtn: {
     borderWidth: 3,
-    paddingVertical: rf(tablet ? 15 : 10),
-    paddingHorizontal: rf(tablet ? 18 : 13),
+    paddingVertical: rf(10),
+    paddingHorizontal: rf(13),
     borderRadius: rf(50),
     elevation: 5,
     backgroundColor: '#fff',
     top: -rf(20),
   },
   questionText: {
+    marginBottom:tablet ?20:0,
     fontFamily: 'Fredoka-Bold',
-    fontSize: rf(tablet ? 28 : 25),
+    fontSize: rf(25),
     marginHorizontal: rf(35),
     textAlign: 'center',
     letterSpacing: 0.8,
@@ -65,20 +65,20 @@ export const styles = StyleSheet.create({
     flexWrap: 'wrap',
     width: '100%',
     justifyContent: 'center',
-    gap: rf(25),
-    marginVertical: 'auto',
+    gap: rf( tablet? 20: 25),
   },
   optionBtn: {
     borderWidth: 3,
-    // height: rf(70),
-    width: '35%',
+    // height:tablet ? "30%":'auto',
+    width: tablet ? '45%':'35%',
     borderRadius: rf(10),
     alignItems: 'center',
     justifyContent: 'center',
   },
   optionTxt: {
     fontFamily: 'Fredoka-Medium',
-    fontSize: rf(tablet ? 50 : 30),
+    fontSize: rf(30),
     paddingVertical: rf(10),
   },
+  charImg:tablet ? {marginTop:0}:{}
 });

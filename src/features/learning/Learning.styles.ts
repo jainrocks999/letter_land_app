@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
   },
   letterText: {
     fontFamily: 'Fredoka-Bold',
-    fontSize: rf(140),
+    fontSize: rf(tablet? 110: 140),
     color: '#e85216',
   },
   lettersCard: {
@@ -48,8 +48,8 @@ export const styles = StyleSheet.create({
     fontFamily: 'Fredoka-Bold',
   },
   emojiContainer: {
-    fontSize: rf(120),
-    lineHeight: rf(170),
+    fontSize: rf(tablet ? 90: 120),
+    lineHeight: rf(tablet ? 120 :170),
   },
   wordText: {
     fontFamily: 'Fredoka-Bold',
@@ -106,15 +106,15 @@ export const styles = StyleSheet.create({
     backgroundColor: '#ffffffb9',
   },
   wordContainer: {
-    flex: 4,
+    flex: tablet ? 2 :4,
     borderRadius: rf(10),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#ffffffcb',
   },
   imgContainer: {
-    height: rf(150),
-    width: rf(150),
+    height: rf(tablet ? 120: 150),
+    width: rf(tablet ? 120:150),
     justifyContent: 'space-between',
     marginBottom: rf(22),
   },
@@ -125,7 +125,7 @@ export const styles = StyleSheet.create({
   },
   imgTitle: {
     fontFamily: 'Fredoka-Bold',
-    marginHorizontal: rf(15),
+    marginHorizontal: rf(tablet ? 5 :15),
     backgroundColor: '#fff',
     padding: rf(5),
     textAlign: 'center',

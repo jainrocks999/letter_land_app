@@ -265,7 +265,7 @@ const MatchingScreen: React.FC = () => {
                     height,
                   });
                 }}
-                style={{ marginVertical: rf(tablet? 12: 8) }}
+                style={{ marginVertical: rf(8) }}
               >
                 <DraggableLetterMatched
                   item={item}

@@ -14,7 +14,7 @@ import SettingsModal from '../../components/settingsModal/SettingsModal';
 import ProfileSwitcherModal from '../../components/profileSwitcher/ProfileSwitcherModal';
 import useProfilesContext from '../../app/contexts/profiles/useProfiles';
 import useRewardsContext from '../../app/contexts/rewards/useRewards';
-import { isTablet, rf } from '../../utils/responsive';
+import {isTablet, rf } from '../../utils/responsive';
 
 const HomeScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);

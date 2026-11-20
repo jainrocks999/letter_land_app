@@ -501,7 +501,7 @@ const StoryTellingReadScreen = () => {
           <View
             style={[
               styles.exerciseFooter,
-              { paddingBottom: insets.bottom + rf(14) },
+              { paddingBottom: insets.bottom + rf(tablet? 0:14) },
             ]}
           >
             <StoryExercise
@@ -519,31 +519,28 @@ const StoryTellingReadScreen = () => {
           <View
             style={[
               styles.readFooter,
-              { paddingBottom: insets.bottom + rf(14) },
+              { paddingBottom: insets.bottom + rf( tablet? -20: 14) },
             ]}
           >
             <ActionButton
-              bottomBorderWidth={rf( tablet ? 12:8)}
+              bottomBorderWidth={rf(8)}
               radius={rf(50)}
               backgroundColor={data.darkColor}
               bottomBorderColor={'#a43726'}
               onPress={goToPreviousPage}
-              styles={[
-                isFirstPage ? styles.navButtonDisabled : undefined,
-                tablet && styles.tabletArrowBtn,
-              ]}
+              styles={isFirstPage ? styles.navButtonDisabled : undefined}
             >
               <FontAwesome6
                 name="chevron-left"
                 iconStyle="solid"
-                size={rf(tablet ? 40 : 20)}
+                size={rf(20)}
                 color={'#ffff'}
               />
             </ActionButton>
 
             <ActionButton
-              bottomBorderWidth={rf( tablet ? 12:8)}
-              radius={rf(tablet ? 90 : 50)}
+              bottomBorderWidth={rf(8)}
+              radius={rf(50)}
               backgroundColor={'#ff6a26'}
               bottomBorderColor={'#c9460d'}
               onPress={readPageAloud}
@@ -552,12 +549,12 @@ const StoryTellingReadScreen = () => {
               <FontAwesome6
                 name="play"
                 iconStyle="solid"
-                size={rf(tablet ? 40 : 20)}
+                size={rf(20)}
                 color={'#ffff'}
               />
             </ActionButton>
             <ActionButton
-              bottomBorderWidth={rf( tablet ? 12:8)}
+              bottomBorderWidth={rf(8)}
               radius={rf(50)}
               backgroundColor={data.darkColor}
               bottomBorderColor={'#a43726'}
@@ -567,7 +564,7 @@ const StoryTellingReadScreen = () => {
               <FontAwesome6
                 name="chevron-right"
                 iconStyle="solid"
-                size={rf(tablet ? 40 : 20)}
+                size={rf(20)}
                 color={'#ffff'}
               />
             </ActionButton>

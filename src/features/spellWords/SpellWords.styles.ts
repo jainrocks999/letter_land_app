@@ -26,11 +26,11 @@ export const styles = StyleSheet.create({
     padding: rf(20),
     borderRadius: rf(10),
   },
-  emoji: { fontSize: rf(tablet ? 150 : 70) },
+  emoji: { fontSize: rf(tablet ? 90 : 70) },
   cardInfo: { flex: 1 },
   letterText: {
     fontFamily: 'Fredoka-Bold',
-    fontSize: rf(tablet ? 65 : 35),
+    fontSize: rf(tablet ? 55 : 35),
     letterSpacing: 2,
   },
   speakBtn: { height: rf(tablet ? 55: 45), width: rf(tablet ? 55:45) },
@@ -45,7 +45,7 @@ export const styles = StyleSheet.create({
     borderRadius: rf(50),
     paddingVertical: rf(5),
     paddingHorizontal: rf(8),
-    bottom:tablet ? rf(-50):0
+    // bottom:tablet ? rf(-50):0
   },
   hintText: {
     flexShrink: 1,
@@ -53,7 +53,7 @@ export const styles = StyleSheet.create({
     fontSize: rf(tablet ? 16:12),
     color: '#e8541a',
   },
-  character: { height: rf(tablet ? 180:80), width: rf(tablet ? 180:80), resizeMode: 'contain' },
+  character: { height: rf(tablet ? 120:80), width: rf(tablet ? 120:80), resizeMode: 'contain' },
   playArea: {
     flex: 1,
     backgroundColor: '#fff',

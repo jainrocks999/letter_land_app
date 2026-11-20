@@ -142,7 +142,6 @@ const StoryTellingListScreen = () => {
             >
               {featuredTag}
             </Text>
-
             <Text numberOfLines={1} style={styles.bannerTitle}>
               {featuredStory.title}
             </Text>

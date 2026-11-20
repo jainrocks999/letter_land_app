@@ -56,8 +56,8 @@ export default EmojiTarget;
 
 const styles = StyleSheet.create({
   itemSection: {
-    width: rf(isTablet()? 80:70),
-    height: rf(isTablet()? 80:70),
+    width: rf(70),
+    height: rf(70),
     borderWidth: 2,
     borderRadius: rf(18),
     justifyContent: 'center',
@@ -66,5 +66,5 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
   },
-  itemEmoji: { fontSize: rf(isTablet()? 50:40) },
+  itemEmoji: { fontSize: rf(40) },
 });

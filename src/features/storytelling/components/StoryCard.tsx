@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   },
   cardImage: {
     width: '100%',
-    height: rf(tablet ? 220 : 120),
+    height: rf(tablet ? 180 : 120),
   },
   cardBody: {
     padding: rf(10),

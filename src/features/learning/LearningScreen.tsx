@@ -41,6 +41,8 @@ const LearningScreen: React.FC = () => {
 
   const current = alphabetData[currentIndex];
   const progress = Math.round(((currentIndex + 1) / alphabetData.length) * 100);
+  const tablet = isTablet();
+
   useEffect(() => {
     TTSEventService.addListeners({
       onStart: () => setSpeaking(true),
@@ -101,7 +103,6 @@ const LearningScreen: React.FC = () => {
       <CustomTopbar data={data} progress={progress} />
 
       <ScreenHeadingSection
-        style={styles.headingSection}
         heading={data.cardTitle}
         subText="Learn letters with Buddy! - tap, listen, and repeat!"
       />
@@ -125,7 +126,7 @@ const LearningScreen: React.FC = () => {
                 style={[
                   styles.letterText,
                   {
-                    fontSize: rf(110),
+                    fontSize: rf(tablet ? 90 : 110),
                     bottom: -rf(10),
                     left: -rf(10),
                   },
@@ -172,7 +173,7 @@ const LearningScreen: React.FC = () => {
           { borderColor: data.darkColor },
         ]}
       >
-        <View style={{ gap: rf(10), flex: 1 }}>
+        <View style={{ gap: rf(10), flex: 2 }}>
           <View style={[styles.rowCenter, styles.actionStatusSection]}>
             <FontAwesome6
               name="circle"

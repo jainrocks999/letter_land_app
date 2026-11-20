@@ -61,7 +61,9 @@ const styles = StyleSheet.create({
   },
   toast: {
     alignItems: 'center',
-    backgroundColor: '#ffd84d',
+    // backgroundColor: '#ffd84d',
+    // backgroundColor: '#fff5ae',
+    backgroundColor: '#fff7c4',
     borderColor: '#e09b00',
     borderWidth: 2,
     borderBottomWidth: 7,

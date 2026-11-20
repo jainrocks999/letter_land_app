@@ -60,8 +60,8 @@ export default CharacterFeedback;
 
 const styles = StyleSheet.create({
   imgContainer: {
-    height: rf(tablet? 220 : 180),
-    width: rf(tablet? 220 : 180),
+    height: rf(180),
+    width: rf(180),
     borderWidth: 3,
     borderRadius: rf(999),
     overflow: 'hidden',

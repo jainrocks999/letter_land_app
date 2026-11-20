@@ -42,7 +42,6 @@ const SearchingScreen = () => {
   const screenProgress = Math.round(
     ((currentIndex + 1) / questions.length) * 100,
   );
-  const tablet = isTablet();
   useEffect(() => {
     TTSEventService.addListeners({
       onStart: () => setIsSpeaking(true),
@@ -161,6 +160,7 @@ const SearchingScreen = () => {
           selectedOption={selectedOption}
           isCorrect={isCorrect}
           isSpeaking={isSpeaking}
+          styles={styles.charImg}
         />
         {isCorrect === false && <SadEmojiAnimation />}
         <Pressable
@@ -176,7 +176,7 @@ const SearchingScreen = () => {
           <FontAwesome6
             name={isSpeaking ? 'volume-high' : 'play'}
             iconStyle="solid"
-            size={rf(tablet? 22:18)}
+            size={rf(18)}
             color={data.darkColor}
           />
         </Pressable>

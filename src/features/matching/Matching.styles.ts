@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: tablet ? rf(24) : rf(15),
-    gap: rf(10),
+    gap: rf(tablet ? 5 : 10),
   },
   headingSection: contentWidth,
   rowSection: {
@@ -31,10 +31,10 @@ export const styles = StyleSheet.create({
     ...contentWidth,
     borderWidth: 1.5,
     borderRadius: rf(10),
-    marginVertical: rf(15),
+    marginVertical: rf(tablet ? 5: 15),
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: rf(20),
+    padding: rf(tablet ? 16:20),
     position: 'relative',
     overflow: 'visible',
   },
@@ -52,8 +52,8 @@ export const styles = StyleSheet.create({
     paddingBottom: rf(18),
   },
   questionTextContainer: {
-    width: rf(tablet ? 68 : 54),
-    height: rf(tablet ? 68 : 54),
+    width: rf(54),
+    height: rf(54),
     borderRadius: rf(10),
     backgroundColor: '#ffffffd9',
     justifyContent: 'center',
@@ -61,7 +61,7 @@ export const styles = StyleSheet.create({
   },
   questionText: {
     fontFamily: 'Fredoka-Bold',
-    fontSize: rf(tablet ? 46 : 32),
+    fontSize: rf(32),
   },
   instructionTextContainer: {
     flex: 1,
@@ -75,8 +75,8 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
   cocoImage: {
-    width: rf(130),
-    height: rf(130),
+    width: rf(tablet? 110: 130),
+    height: rf(tablet?110:130),
     resizeMode: 'contain',
   },
   rowWithSpace: {

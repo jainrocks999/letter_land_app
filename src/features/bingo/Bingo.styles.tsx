@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { isTablet, rf } from '../../utils/responsive';
+import { isTablet, rf, wp } from '../../utils/responsive';
 
 const tablet = isTablet();
 
@@ -50,14 +50,14 @@ export const styles = StyleSheet.create({
   },
   letterText: {
     fontFamily: 'Fredoka-Bold',
-    fontSize: rf(80),
+    fontSize: rf(tablet ? 70:80),
     color: '#e85216',
   },
   smallLetterCard: {
     backgroundColor: '#fff',
     borderWidth: 1,
     borderBottomWidth: rf(7),
-    paddingHorizontal: rf( tablet? 28: 18),
+    paddingHorizontal: rf( tablet? 25: 18),
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: rf(20),
@@ -130,7 +130,7 @@ export const styles = StyleSheet.create({
   },
   bingoListContent: {
     gap: rf(10),
-    width:tablet ? "75%":'100%',
+    width:tablet ? '50%':'100%',
     alignSelf:"center"
   },
   footerRow: {

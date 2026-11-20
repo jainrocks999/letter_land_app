@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: tablet ? rf(24) : rf(15),
-    gap: rf(18),
+    gap: rf( tablet ? 14:18),
   },
   headingSection: contentWidth,
   challengeInfoContainer: {

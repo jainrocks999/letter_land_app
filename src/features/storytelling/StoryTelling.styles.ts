@@ -39,7 +39,7 @@ export const styles = StyleSheet.create({
   },
   readCover: {
     width: '100%',
-    height: rf(tablet ? 330 : 215),
+    height: rf(tablet ? 280 : 215),
   },
   readContainer: {
     flex: 1,
@@ -61,15 +61,15 @@ export const styles = StyleSheet.create({
     paddingTop: rf(14),
   },
   playButton: {
-    height: rf(tablet ? 120 : 70),
-    width: rf(tablet ? 120 : 70),
+    height: rf(70),
+    width: rf(70),
   },
   navButtonDisabled: {
     opacity: 0.4,
   },
   tabletArrowBtn: {
-    height: rf(90),
-    width: rf(90),
+    height: rf(50),
+    width: rf(50),
   },
   buddyRow: {
     flexDirection: 'row',

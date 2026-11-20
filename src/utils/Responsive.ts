@@ -1,4 +1,4 @@
-import { Dimensions, PixelRatio } from 'react-native';
+import { Dimensions, PixelRatio, useWindowDimensions } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -20,12 +20,6 @@ export const hp = (percent: number) => (height * percent) / 100;
 
 export const isTablet = () => {
   return Math.min(width, height) >= 600;
-};
-export const isTabletPortrait = () => {
-  return isTablet() && height >= width;
-};
-export const isLandscape = () => {
-  return width > height;
 };
 
 const getScale = () => {

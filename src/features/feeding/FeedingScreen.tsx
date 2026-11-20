@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { StackRouteProps } from '../../types/navigation.types';
 import { ROUTES } from '../../app/navigation/routeNames';
@@ -194,7 +194,6 @@ const FeedingScreen = () => {
         heading={data.cardTitle}
         subText="Pick the correct letter and feed it to Buddy! Learn your letters while helping Buddy enjoy a tasty treat!"
       />
-
       <View
         style={[
           styles.challengeInfoContainer,
@@ -251,7 +250,11 @@ const FeedingScreen = () => {
             );
           }}
         >
-          <BackerySVG width={'100%'} height={'100%'} />
+          <Image 
+          source={require('../../assets/images/Backery.webp')}
+            style={styles.trayImg}
+          />
+          {/* <BackerySVG width={'100%'} height={'100%'}  /> */}
           {traySize.width > 0 &&
             currentQues.options.map((option, index) => (
               <DraggableLetter
