@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { isTablet, rf } from '../../utils/responsive';
 
 const tablet = isTablet();
@@ -49,7 +49,7 @@ export const styles = StyleSheet.create({
     borderBottomWidth: rf(7),
     borderRadius: rf(10),
     padding: rf(12),
-    paddingBottom: rf(18),
+    paddingBottom: Platform.OS==='ios'? 0 : rf(18),
   },
   questionTextContainer: {
     width: rf(54),
@@ -75,8 +75,8 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
   cocoImage: {
-    width: rf(tablet? 110: 130),
-    height: rf(tablet?110:130),
+    width: rf(tablet? 110: Platform.OS==='ios'? 110: 130),
+    height: rf(tablet?110:Platform.OS==='ios'? 110: 130),
     resizeMode: 'contain',
   },
   rowWithSpace: {

@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { isTablet, rf } from '../../utils/responsive';
 
 const tablet = isTablet();
@@ -36,7 +36,7 @@ export const styles = StyleSheet.create({
   },
   trayImg:{
     height:"100%",
-    width: tablet ? "60%":"100%",
+    width: tablet ? "60%": Platform.OS==="ios" ?'90%': "100%",
     alignSelf:"center",
   },
   playArea: {
@@ -47,7 +47,7 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderBottomWidth: rf(7),
     borderRadius: rf(10),
-    height: tablet ? '60%':"62%",
+    height: tablet ? '60%': Platform.OS==='ios'? "59%": "62%",
   },
   speakBtn: {
     height: '10%',

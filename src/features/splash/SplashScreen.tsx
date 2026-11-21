@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { styles } from './Splash.styles';
 import { useNavigation } from '@react-navigation/native';
 import { ROUTES } from '../../app/navigation/routeNames';

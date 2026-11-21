@@ -1,5 +1,6 @@
 import {
   Image,
+  Platform,
   ScrollView,
   StyleProp,
   Text,
@@ -519,7 +520,7 @@ const StoryTellingReadScreen = () => {
           <View
             style={[
               styles.readFooter,
-              { paddingBottom: insets.bottom + rf( tablet? -20: 14) },
+              { paddingBottom: insets.bottom + rf( tablet? -20: Platform.OS==='ios'?-20: 14) },
             ]}
           >
             <ActionButton

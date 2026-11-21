@@ -1,4 +1,4 @@
-import { Pressable } from 'react-native';
+import { Platform, Pressable } from 'react-native';
 import React from 'react';
 import Animated, {
   useAnimatedStyle,
@@ -51,8 +51,8 @@ const AnimatedCharacter = ({ state }: Props) => {
         source={image}
         style={[
           {
-            width: rf(tablet ? 150 : 180),
-            height: rf(tablet ? 150 : 180),
+            width: rf(tablet ? 150 : Platform.OS==='ios'? 130: 180),
+            height: rf(tablet ? 150 : Platform.OS==='ios'? 130: 180),
           },
           animatedStyle,
         ]}

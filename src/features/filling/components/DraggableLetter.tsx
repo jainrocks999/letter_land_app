@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import React, { useMemo, useRef } from 'react';
 import {
   colorData,
@@ -60,7 +60,7 @@ const DraggableLetter: React.FC<Props> = ({
   );
 
   const scale = useScaledLayout ? containerWidth / DESIGN_WIDTH : 1;
-  const letterSize = rf(tablet? 50 : 100) * scale;
+  const letterSize = rf(tablet? 50 : Platform.OS==='ios'? 90 : 100) * scale;
 
   const drag = useLetterDrag({
     data: scaledData,

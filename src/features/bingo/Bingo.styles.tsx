@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { isTablet, rf, wp } from '../../utils/responsive';
 
 const tablet = isTablet();
@@ -74,6 +74,7 @@ export const styles = StyleSheet.create({
     fontSize: rf(18),
   },
   buttonContent: {
+    paddingVertical:Platform.OS=='ios'? rf(10):0,
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
@@ -95,7 +96,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: rf(10),
     alignItems: 'center',
-    marginVertical: rf(10),
+    marginVertical: rf(Platform.OS==='ios'? 0: 10),
   },
   askingLetterLabel: {
     fontSize: rf(tablet ? 26 : 22),
@@ -130,7 +131,7 @@ export const styles = StyleSheet.create({
   },
   bingoListContent: {
     gap: rf(10),
-    width:tablet ? '50%':'100%',
+    width:tablet ? '50%': Platform.OS==='ios'? "90%": '100%',
     alignSelf:"center"
   },
   footerRow: {

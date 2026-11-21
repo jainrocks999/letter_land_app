@@ -1,8 +1,11 @@
 import {
   DimensionValue,
+  Platform,
+  StyleProp,
   StyleSheet,
   TouchableOpacity,
   TouchableOpacityProps,
+  ViewStyle,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import React from 'react';
@@ -48,7 +51,10 @@ const CustomButton: React.FC<CustomButtonProps> = ({
         end={{ x: 0.5, y: 1 }}
         style={[
           styles.gradientContainer,
-          { padding: padding || 20, borderRadius: btnRadius || 20 },
+          {
+            padding: Platform.OS == 'ios' ? 0 : padding || 20,
+            borderRadius: btnRadius || 20,
+          },
         ]}
       >
         {children}

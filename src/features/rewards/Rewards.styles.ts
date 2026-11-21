@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { isTablet, rf } from '../../utils/responsive';
 
 const tablet = isTablet();
@@ -131,6 +131,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 10,
+    paddingVertical:Platform.OS=='ios'? rf(10):0,
   },
   buttonText: {
     fontFamily: 'Fredoka-Bold',

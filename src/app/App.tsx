@@ -1,4 +1,4 @@
-import { AppState, StatusBar, useColorScheme, View } from 'react-native';
+import { AppState, StatusBar, useColorScheme } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import RootNavigator from './navigation/RootNavigator';
 import { useEffect } from 'react';

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, Platform } from 'react-native';
 import React, { useEffect } from 'react';
 import LottieAnimation from '../LottieAnimation/LottieAnimation';
 import CustomButton from '../customButton/CustomButton';
@@ -140,6 +140,7 @@ const styles = StyleSheet.create({
   },
 
   buttonText: {
+    paddingVertical:Platform.OS=='ios'? rf(12):0,
     color: '#fff',
     fontSize: rf(16),
     fontFamily: 'Fredoka-Bold',

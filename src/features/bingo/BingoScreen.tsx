@@ -1,4 +1,4 @@
-import { View, Text, FlatList, useWindowDimensions } from 'react-native';
+import { View, Text, FlatList, useWindowDimensions, Platform } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import Animated, {
   BounceIn,
@@ -347,7 +347,7 @@ const BingoScreen = () => {
         <Animated.View
           key={`board-${round}`}
           entering={FadeInDown.duration(320)}
-          style={{ padding: rf(10) }}
+          style={{ padding: Platform.OS==='ios'? "6%" : rf(10) }}
         >
           <FlatList
             data={board}

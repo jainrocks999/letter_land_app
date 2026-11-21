@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { isTablet, rf } from '../../utils/responsive';
 
 const tablet = isTablet();
@@ -96,6 +96,7 @@ export const styles = StyleSheet.create({
     width: '100%',
   },
   buttonContent: {
+    paddingVertical:Platform.OS=='ios'? rf(6):0,
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',

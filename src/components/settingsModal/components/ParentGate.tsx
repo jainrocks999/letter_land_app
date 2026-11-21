@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Animated, {
   FadeIn,
   useAnimatedStyle,
@@ -152,6 +152,7 @@ const styles = StyleSheet.create({
     color: '#7b61ff',
   },
   cancelText: {
+    paddingVertical:Platform.OS=='ios'? rf(13):0,
     flex: 1,
     textAlign: 'center',
     fontFamily: 'Fredoka-Bold',

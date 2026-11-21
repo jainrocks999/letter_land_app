@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-import { hp, wp } from '../../utils/responsive';
+import { Platform, StyleSheet } from 'react-native';
+import { hp, rf, wp } from '../../utils/responsive';
 
 export const styles = StyleSheet.create({
   skipBtn: {
@@ -27,10 +27,11 @@ export const styles = StyleSheet.create({
   singleSlide: {
     height: hp(95),
     width: wp(100),
-    paddingTop: 70,
+    paddingTop: Platform.OS=='ios' ? 0 : 70,
   },
   slideCard: {
-    height: '77%',
+    marginTop: Platform.OS=='ios'? rf(70): 0,
+    height: Platform.OS=='ios'? '70%':'77%',
     backgroundColor: '#fff',
     marginHorizontal: 20,
     paddingHorizontal: 25,
@@ -96,17 +97,19 @@ export const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'center',
-    bottom: 145,
+    bottom: Platform.OS=='ios'? rf(105):rf(145),
   },
   btnText: {
     fontSize: 22,
     fontFamily: 'Fredoka-Bold',
     color: '#fff',
+    padding:Platform.OS==='ios'? rf(20):0
   },
   btnIcon: {
     backgroundColor: '#ffffff66',
     paddingHorizontal: 13,
     paddingVertical: 8,
     borderRadius: 20,
+    marginRight:Platform.OS==='ios'? rf(20):0
   },
 });

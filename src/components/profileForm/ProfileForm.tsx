@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -183,5 +184,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Fredoka-Bold',
     fontSize: 18,
     color: '#fff',
+    padding: Platform.OS == 'ios' ? 10 : 0,
   },
 });

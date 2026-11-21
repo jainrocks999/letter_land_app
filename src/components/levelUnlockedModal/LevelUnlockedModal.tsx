@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, Platform, StyleSheet, Text, View } from 'react-native';
 import LottieAnimation from '../LottieAnimation/LottieAnimation';
 import CustomButton from '../customButton/CustomButton';
 import MusicService from '../../services/music.service';
 import TTSService from '../../services/tts.service';
 import { Castle } from '../../features/home/data/home.data';
+import { rf } from '../../utils/responsive';
 
 interface LevelUnlockedModalProps {
   visible: boolean;
@@ -129,6 +130,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   buttonText: {
+    paddingVertical:Platform.OS=='ios'? rf(12):0,
     color: '#fff',
     fontSize: 16,
     fontFamily: 'Fredoka-Bold',

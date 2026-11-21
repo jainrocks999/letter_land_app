@@ -2,7 +2,7 @@ import Animated, { useSharedValue } from 'react-native-reanimated';
 import { LetterCardType } from '../../learning/data/learning.data';
 import { GestureDetector, usePanGesture } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-worklets';
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { Point } from '../../../types/tracing.types';
 import { useEffect } from 'react';
 import { ActivityCard } from '../../home/data/home.data';
@@ -30,7 +30,6 @@ const DraggableLetterMatched = ({
   onDragMove,
   onDragEnd,
 }: Props) => {
-
   const startX = useSharedValue(0);
   const startY = useSharedValue(0);
 
@@ -112,8 +111,8 @@ export default DraggableLetterMatched;
 
 const styles = StyleSheet.create({
   itemSection: {
-    width: rf(70),
-    height: rf(70),
+    width: rf(Platform.OS === 'ios' ? 60 : 70),
+    height: rf(Platform.OS === 'ios' ? 60 : 70),
     borderWidth: 3,
     borderRadius: rf(18),
     justifyContent: 'center',

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { LetterCardType } from '../../learning/data/learning.data';
 import { isTablet, rf } from '../../../utils/responsive';
 
@@ -56,8 +56,8 @@ export default EmojiTarget;
 
 const styles = StyleSheet.create({
   itemSection: {
-    width: rf(70),
-    height: rf(70),
+    width: rf( Platform.OS==='ios'? 60 :70),
+    height: rf(Platform.OS==='ios'? 60 :70),
     borderWidth: 2,
     borderRadius: rf(18),
     justifyContent: 'center',

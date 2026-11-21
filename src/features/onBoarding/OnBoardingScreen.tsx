@@ -82,7 +82,7 @@ const OnBoardingScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1}}>
       <Animated.FlatList
         ref={flatListRef}
         data={onBoardingSlidesData}

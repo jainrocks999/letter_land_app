@@ -1,4 +1,4 @@
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Platform, Text, TouchableOpacity, View } from 'react-native';
 import { hp, rf } from '../../utils/responsive';
 import {
   ActivityCard,
@@ -160,17 +160,17 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
           onPress={() => {
             const navigate = item.innerCard.navigate;
             if (!navigate) return;
-            if (isLocked) {
-              const remaining = getStickersToUnlock(
-                activityCardData,
-                collectedStickers,
-              );
-              const stickerWord = remaining === 1 ? 'sticker' : 'stickers';
-              const message = `Collect ${remaining} more ${stickerWord} to unlock ${activityCardData.cardTitle}`;
-              showToast(message, '🔒');
-              TTSService.speak(message);
-              return;
-            }
+            // if (isLocked) {
+            //   const remaining = getStickersToUnlock(
+            //     activityCardData,
+            //     collectedStickers,
+            //   );
+            //   const stickerWord = remaining === 1 ? 'sticker' : 'stickers';
+            //   const message = `Collect ${remaining} more ${stickerWord} to unlock ${activityCardData.cardTitle}`;
+            //   showToast(message, '🔒');
+            //   TTSService.speak(message);
+            //   return;
+            // }
             navigation.navigate(navigate, { data: activityCardData });
           }}
         >
@@ -188,13 +188,20 @@ const CarouselItem: React.FC<CarouselItemProps> = ({
           <View
             style={[
               styles.castleWrapper,
-              isLocked ? styles.lockedImage : undefined
+              isLocked ? styles.lockedImage : undefined,
             ]}
           >
             <View>
               <Animated.Image
                 source={item.image}
-                style={[styles.imgContainer, animatedStyle]}
+                style={[
+                  styles.imgContainer,
+                  animatedStyle,
+                  isLocked &&
+                    Platform.OS === 'ios' && {
+                      tintColor: '#777777d6',
+                    },
+                ]}
               />
             </View>
             {showCharacter && (

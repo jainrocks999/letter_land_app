@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { isTablet, rf } from '../../utils/responsive';
 
 export const styles = StyleSheet.create({
@@ -124,6 +124,7 @@ export const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   doneText: {
+    paddingVertical:Platform.OS=='ios'? rf(10):0,
     flex: 1,
     textAlign: 'center',
     fontFamily: 'Fredoka-Bold',

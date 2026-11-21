@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { isTablet, rf } from '../../utils/responsive';
 
 const tablet = isTablet();
@@ -44,6 +44,7 @@ export const styles = StyleSheet.create({
     borderRadius: rf(20),
   },
   btnText: {
+    paddingVertical:Platform.OS=='ios'? rf(15):0,
     fontSize: rf(22),
     fontFamily: 'Fredoka-Bold',
   },
@@ -113,7 +114,7 @@ export const styles = StyleSheet.create({
     backgroundColor: '#ffffffcb',
   },
   imgContainer: {
-    height: rf(tablet ? 120: 150),
+    height: rf(tablet ? 120: Platform.OS=='ios'? 100 : 150),
     width: rf(tablet ? 120:150),
     justifyContent: 'space-between',
     marginBottom: rf(22),

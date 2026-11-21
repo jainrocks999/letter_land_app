@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import { StackRouteProps } from '../../types/navigation.types';
 import { ROUTES } from '../../app/navigation/routeNames';
@@ -258,7 +258,7 @@ const FillingLetterScreen = () => {
                       textAnchor="middle"
                       alignmentBaseline="central"
                       fontFamily="Fredoka-Bold"
-                      fontSize={rf(105)}
+                      fontSize={rf(Platform.OS==='ios'? 90 : 105)}
                       fill={
                         isCorrect == null
                           ? '#e7e7e7'

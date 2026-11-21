@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { isTablet, rf } from '../../utils/responsive';
 
 const tablet = isTablet();
@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
     ...contentWidth,
     paddingVertical: rf(15),
     paddingHorizontal: rf(10),
-    marginBottom: rf(10),
+    marginBottom: rf(Platform.OS==='ios'? 0: 10),
     borderRadius: rf(20),
     borderWidth: 1,
     borderBottomWidth: rf(7),
@@ -89,9 +89,9 @@ export const styles = StyleSheet.create({
   },
   emoji: {
 
-    fontSize: rf( tablet ? 140: 100),
+    fontSize: rf( tablet ? 140:  Platform.OS==='ios'?80:100),
     lineHeight: rf(tablet ? 160 : 120),
-    right: rf(55),
+    right: rf( Platform.OS==='ios'?50:55),
   },
   optionsContainer: {
     width: '100%',

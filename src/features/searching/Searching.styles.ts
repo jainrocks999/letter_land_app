@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { hp, isTablet, rf, wp } from '../../utils/responsive';
 
 const tablet = isTablet();
@@ -37,7 +37,7 @@ export const styles = StyleSheet.create({
   playArea: {
     ...contentWidth,
     backgroundColor: '#fff',
-    paddingVertical: rf(tablet ? 18:12),
+    paddingVertical: rf(tablet ? 18: Platform.OS==='ios'? 25 : 12),
     alignItems: 'center',
     borderWidth: 1,
     borderBottomWidth: rf(7),
@@ -53,10 +53,10 @@ export const styles = StyleSheet.create({
     top: -rf(20),
   },
   questionText: {
-    marginBottom:tablet ?20:0,
+    marginBottom:tablet ?20: Platform.OS==='ios'?10: 0,
     fontFamily: 'Fredoka-Bold',
     fontSize: rf(25),
-    marginHorizontal: rf(35),
+    marginHorizontal: Platform.OS==='ios'? 2:  rf(35),
     textAlign: 'center',
     letterSpacing: 0.8,
   },
@@ -65,7 +65,7 @@ export const styles = StyleSheet.create({
     flexWrap: 'wrap',
     width: '100%',
     justifyContent: 'center',
-    gap: rf( tablet? 20: 25),
+    gap: rf( tablet? 20: Platform.OS==='ios'? 15: 25),
   },
   optionBtn: {
     borderWidth: 3,
@@ -80,5 +80,9 @@ export const styles = StyleSheet.create({
     fontSize: rf(30),
     paddingVertical: rf(10),
   },
-  charImg:tablet ? {marginTop:0}:{}
+  charImg:tablet ? {marginTop:0}:Platform.OS==='ios'?{
+      height :rf(160),
+      width :rf(160),
+      marginTop:0,
+  }:{}
 });
