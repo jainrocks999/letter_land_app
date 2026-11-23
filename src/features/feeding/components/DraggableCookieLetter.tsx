@@ -9,7 +9,7 @@ import Animated from 'react-native-reanimated';
 import { GestureDetector, usePanGesture } from 'react-native-gesture-handler';
 import { CookieSvg } from '../../../utils/searchingHelper';
 import useLetterDrag from '../../../hooks/useLetterDrag';
-import { isTablet, rf } from '../../../utils/responsive';
+import { isTablet, rf, useStageScale } from '../../../utils/responsive';
 
 const VIEW_BOX_WIDTH = 1024;
 const VIEW_BOX_HEIGHT = 765;
@@ -41,6 +41,7 @@ const DraggableCookie: React.FC<Props> = ({
   traySize,
 }) => {
   const tileRef = useRef<View>(null);
+  const stageScale = useStageScale();
 
   // The bakery is drawn with the SVG default "xMidYMid meet", so reproduce that
   // same fit transform here and place the cookie relative to the artwork. This
@@ -104,8 +105,8 @@ const DraggableCookie: React.FC<Props> = ({
   const panGesture = usePanGesture({
     onUpdate: e =>
       drag.handleUpdateNormal(
-        e.translationX,
-        e.translationY,
+        e.translationX / stageScale,
+        e.translationY / stageScale,
         e.absoluteX,
         e.absoluteY,
       ),

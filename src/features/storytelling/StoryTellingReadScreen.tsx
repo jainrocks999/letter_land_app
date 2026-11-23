@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { usePortraitInsets } from '../../utils/orientation';
 import Animated, {
   FadeIn,
   useAnimatedStyle,
@@ -125,7 +125,7 @@ const StoryTellingReadScreen = () => {
     completeActivityRun,
     updateStoryProgress,
   } = useRewardsContext();
-  const insets = useSafeAreaInsets();
+  const insets = usePortraitInsets();
   const { data, storyId } = route.params;
   const story = getStoryById(storyId);
 

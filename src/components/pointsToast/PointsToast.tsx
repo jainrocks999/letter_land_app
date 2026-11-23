@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeOutUp, ZoomIn } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { usePortraitInsets } from '../../utils/orientation';
 import useRewardsContext from '../../app/contexts/rewards/useRewards';
 import useSettingsContext from '../../app/contexts/settings/useSettings';
 import { PointsToastType } from '../../app/contexts/rewards/types';
@@ -11,7 +11,7 @@ const TOAST_DURATION = 1600;
 const PointsToast = () => {
   const { pointsToast } = useRewardsContext();
   const { settings } = useSettingsContext();
-  const insets = useSafeAreaInsets();
+  const insets = usePortraitInsets();
   // read through a ref so switching popups back on doesn't replay the last toast
   const starPopupsRef = useRef(settings.starPopups);
   starPopupsRef.current = settings.starPopups;

@@ -1,6 +1,13 @@
-import { Dimensions, PixelRatio, useWindowDimensions } from 'react-native';
+import { Dimensions, PixelRatio } from 'react-native';
 
-const { width, height } = Dimensions.get('window');
+const window = Dimensions.get('window');
+
+// Always use the device's portrait bounds. In landscape the whole UI is
+// letterboxed (see utils/orientation.ts), so every wp()/hp()/rf() value must
+// stay identical to what it would be in portrait — even if the app was
+// launched while the iPad was rotated.
+const width = Math.min(window.width, window.height);
+const height = Math.max(window.width, window.height);
 
 // Design reference: iPhone portrait (375 x 812)
 const guidelineBaseWidth = 375;
@@ -37,3 +44,9 @@ const scale = getScale();
 export const rf = (size: number) => {
   return Math.round(PixelRatio.roundToNearestPixel(size * scale));
 };
+
+export {
+  useAppDimensions,
+  usePortraitStage,
+  useStageScale,
+} from './orientation';

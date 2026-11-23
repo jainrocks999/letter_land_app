@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   KeyboardAvoidingView,
-  Modal,
   Platform,
   StyleSheet,
   Text,
@@ -11,6 +10,7 @@ import {
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import ProfileForm from '../../../components/profileForm/ProfileForm';
 import { NewProfileType, ProfileType } from '../../../services/profile.service';
+import StageModal from '../../../components/stageModal/StageModal';
 
 interface ProfileEditorModalProps {
   visible: boolean;
@@ -27,7 +27,7 @@ const ProfileEditorModal: React.FC<ProfileEditorModalProps> = ({
   onClose,
 }) => {
   return (
-    <Modal
+    <StageModal
       visible={visible}
       transparent
       animationType="fade"
@@ -63,7 +63,7 @@ const ProfileEditorModal: React.FC<ProfileEditorModalProps> = ({
           )}
         </View>
       </KeyboardAvoidingView>
-    </Modal>
+    </StageModal>
   );
 };
 

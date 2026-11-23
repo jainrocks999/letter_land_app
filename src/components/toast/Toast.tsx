@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Animated, { FadeOutUp, ZoomIn } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { usePortraitInsets } from '../../utils/orientation';
 import useToast from '../../app/contexts/toast/useToast';
 import { ToastType } from '../../app/contexts/toast/types';
 
@@ -9,7 +9,7 @@ const TOAST_DURATION = 2400;
 
 const Toast = () => {
   const { toast } = useToast();
-  const insets = useSafeAreaInsets();
+  const insets = usePortraitInsets();
   const [visibleToast, setVisibleToast] = useState<ToastType | null>(null);
 
   useEffect(() => {

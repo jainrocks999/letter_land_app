@@ -9,6 +9,7 @@ import {
 import { LetterOptionWithPosType, RectType } from '../types/search.types';
 import { runOnJS } from 'react-native-worklets';
 import { isInsideRect } from '../utils/searchingHelper';
+import { useStageScale } from '../utils/orientation';
 
 interface useLetterDragProps {
   data: LetterOptionWithPosType;
@@ -31,6 +32,7 @@ const useLetterDrag = ({
   const wasInside = useSharedValue(false);
   const scale = useSharedValue(1);
   const isLocked = useSharedValue(false);
+  const stageScale = useStageScale();
 
   const origin = useSharedValue({ x: 0, y: 0, width: 0, height: 0 }); // NEW: letter's own resting screen position
 
@@ -82,12 +84,14 @@ const useLetterDrag = ({
       runOnJS(onHoverChange)(false);
     }
     if (correct) {
-      translateX.value = withTiming(translateX.value + (rectShap.x - dropX), {
-        duration: 250,
-      });
-      translateY.value = withTiming(translateY.value + (rectShap.y - dropY), {
-        duration: 250,
-      });
+      translateX.value = withTiming(
+        translateX.value + (rectShap.x - dropX) / stageScale,
+        { duration: 250 },
+      );
+      translateY.value = withTiming(
+        translateY.value + (rectShap.y - dropY) / stageScale,
+        { duration: 250 },
+      );
 
       opacity.value = withTiming(0, { duration: 250 }, finished => {
         if (finished) runOnJS(onDrop)(data.data.letter, dropX, dropY);
@@ -143,8 +147,10 @@ const useLetterDrag = ({
       const targetCenterX = rectShap.x + rectShap.width / 2;
       const targetCenterY = rectShap.y + rectShap.height / 2;
 
-      const finalTranslateX = targetCenterX - tileCenterX;
-      const finalTranslateY = targetCenterY - tileCenterY;
+      // measure()/gesture coordinates are physical window points; the tile's
+      // transform lives in the scaled stage's logical coordinate space.
+      const finalTranslateX = (targetCenterX - tileCenterX) / stageScale;
+      const finalTranslateY = (targetCenterY - tileCenterY) / stageScale;
 
       translateX.value = withTiming(finalTranslateX, { duration: 280 });
       translateY.value = withTiming(

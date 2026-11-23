@@ -1,11 +1,51 @@
-import { AppState, StatusBar, useColorScheme } from 'react-native';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import {
+  AppState,
+  StatusBar,
+  StyleSheet,
+  useColorScheme,
+  View,
+} from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import RootNavigator from './navigation/RootNavigator';
 import { useEffect } from 'react';
 import TTSService from '../services/tts.service';
 import AppProviders from './providers/AppProviders';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import MusicService from '../services/music.service';
+import PortraitStage from '../components/portraitStage/PortraitStage';
+import { usePortraitInsets } from '../utils/orientation';
+
+const AppContent = () => {
+  const isDarkMode = useColorScheme() === 'dark';
+  const insets = usePortraitInsets();
+
+  return (
+    <GestureHandlerRootView style={styles.root}>
+      {/* Stage must wrap the providers so toasts/overlays stay inside the
+          letterboxed portrait screen in landscape. */}
+      <PortraitStage>
+        <AppProviders>
+          <View
+            style={[
+              styles.screen,
+              {
+                paddingTop: insets.top,
+                paddingBottom: insets.bottom,
+                paddingLeft: insets.left,
+                paddingRight: insets.right,
+              },
+            ]}
+          >
+            <StatusBar
+              barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+            />
+            <RootNavigator />
+          </View>
+        </AppProviders>
+      </PortraitStage>
+    </GestureHandlerRootView>
+  );
+};
 
 function App() {
   useEffect(() => {
@@ -26,22 +66,17 @@ function App() {
       MusicService.release();
     };
   }, []);
-  const isDarkMode = useColorScheme() === 'dark';
 
   return (
     <SafeAreaProvider>
-      <GestureHandlerRootView>
-        <AppProviders>
-          <SafeAreaView style={{ flex: 1 }}>
-            <StatusBar
-              barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-            />
-            <RootNavigator />
-          </SafeAreaView>
-        </AppProviders>
-      </GestureHandlerRootView>
+      <AppContent />
     </SafeAreaProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  root: { flex: 1, backgroundColor: '#000' },
+  screen: { flex: 1, backgroundColor: '#fff' },
+});
 
 export default App;

@@ -1,5 +1,7 @@
 import { Platform, StyleSheet } from 'react-native';
-import { hp, rf, wp } from '../../utils/responsive';
+import { hp, isTablet, rf, wp } from '../../utils/responsive';
+
+const tablet=isTablet();
 
 export const styles = StyleSheet.create({
   skipBtn: {
@@ -31,11 +33,11 @@ export const styles = StyleSheet.create({
   },
   slideCard: {
     marginTop: Platform.OS=='ios'? rf(70): 0,
-    height: Platform.OS=='ios'? '70%':'77%',
+    height: tablet? "77%": Platform.OS=='ios'? '70%':'77%',
     backgroundColor: '#fff',
     marginHorizontal: 20,
-    paddingHorizontal: 25,
-    paddingVertical: 20,
+    paddingHorizontal:tablet? rf(50) : rf(25),
+    paddingVertical: rf(tablet ? 30:20),
     borderWidth: 2,
     borderBottomWidth: 7,
     borderRadius: 20,
@@ -74,6 +76,7 @@ export const styles = StyleSheet.create({
   cardImg: {
     height: '100%',
     width: '100%',
+    // resizeMode:'contain'
   },
 
   cardTitleText: {

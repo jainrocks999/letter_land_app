@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import { useNavigation } from '@react-navigation/native';
 import Animated, { FadeIn, ZoomIn } from 'react-native-reanimated';
@@ -9,6 +9,7 @@ import ParentGate from '../settingsModal/components/ParentGate';
 import { StackNavigationProps } from '../../types/navigation.types';
 import { ROUTES } from '../../app/navigation/routeNames';
 import { isTablet, rf } from '../../utils/responsive';
+import StageModal from '../stageModal/StageModal';
 
 interface ProfileSwitcherModalProps {
   visible: boolean;
@@ -43,7 +44,7 @@ const ProfileSwitcherModal: React.FC<ProfileSwitcherModalProps> = ({
   };
 
   return (
-    <Modal
+    <StageModal
       visible={visible}
       transparent
       animationType="fade"
@@ -151,7 +152,7 @@ const ProfileSwitcherModal: React.FC<ProfileSwitcherModalProps> = ({
           )}
         </View>
       </View>
-    </Modal>
+    </StageModal>
   );
 };
 

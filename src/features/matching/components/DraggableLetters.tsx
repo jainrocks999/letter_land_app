@@ -6,7 +6,7 @@ import { Platform, StyleSheet, Text, View } from 'react-native';
 import { Point } from '../../../types/tracing.types';
 import { useEffect } from 'react';
 import { ActivityCard } from '../../home/data/home.data';
-import { isTablet, rf } from '../../../utils/responsive';
+import { isTablet, rf, useStageScale } from '../../../utils/responsive';
 
 interface Props {
   item: LetterCardType;
@@ -30,6 +30,7 @@ const DraggableLetterMatched = ({
   onDragMove,
   onDragEnd,
 }: Props) => {
+  const stageScale = useStageScale();
   const startX = useSharedValue(0);
   const startY = useSharedValue(0);
 
@@ -57,8 +58,8 @@ const DraggableLetterMatched = ({
       runOnJS(onDragStart)(item.letter, { x, y });
     },
     onUpdate: e => {
-      const x = startX.value + e.translationX;
-      const y = startY.value + e.translationY;
+      const x = startX.value + e.translationX / stageScale;
+      const y = startY.value + e.translationY / stageScale;
 
       currentX.value = x;
       currentY.value = y;

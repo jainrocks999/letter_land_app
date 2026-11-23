@@ -1,4 +1,4 @@
-import { View, Text, Image, useWindowDimensions } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSharedValue } from 'react-native-reanimated';
 import { styles } from './SpellWords.styles';
@@ -25,7 +25,7 @@ import {
 import LetterSlot from './components/LetterSlot';
 import DraggableTile, { SlotRectType } from './components/DraggableTile';
 import CustomButton from '../../components/customButton/CustomButton';
-import { isTablet, rf } from '../../utils/responsive';
+import { isTablet, rf, useAppDimensions } from '../../utils/responsive';
 
 type Feedback = 'none' | 'oops' | 'yay';
 
@@ -49,7 +49,7 @@ const SpellWordsScreen = () => {
   const route = useRoute<StackRouteProps<typeof ROUTES.SPELLING>>();
   const navigation = useNavigation();
   const { data } = route.params;
-  const { width } = useWindowDimensions();
+  const { width } = useAppDimensions();
   const { updateProgress } = useActivityProContext();
   const { rewardCorrect, rewardWrong, rewardComplete, startNewRound } =
     useActivityRewards(data);

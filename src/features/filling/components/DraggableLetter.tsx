@@ -8,7 +8,7 @@ import {
 import Animated from 'react-native-reanimated';
 import { GestureDetector, usePanGesture } from 'react-native-gesture-handler';
 import useLetterDrag from '../../../hooks/useLetterDrag';
-import { isTablet, rf } from '../../../utils/responsive';
+import { isTablet, rf, useStageScale } from '../../../utils/responsive';
 
 // Option positions are authored for a phone-sized options container.
 const DESIGN_WIDTH = 345;
@@ -38,6 +38,7 @@ const DraggableLetter: React.FC<Props> = ({
   containerSize,
 }) => {
   const { width: containerWidth, height: containerHeight } = containerSize;
+  const stageScale = useStageScale();
 
   // Phones keep the authored positions; on tablets, map them proportionally
   // into the measured options container so letters stay inside the box.
@@ -83,8 +84,8 @@ const DraggableLetter: React.FC<Props> = ({
         return;
       }
       drag.handleUpdateNormal(
-        e.translationX,
-        e.translationY,
+        e.translationX / stageScale,
+        e.translationY / stageScale,
         e.absoluteX,
         e.absoluteY,
       );

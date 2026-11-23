@@ -1,4 +1,4 @@
-import { View, Text, FlatList, useWindowDimensions, Platform } from 'react-native';
+import { View, Text, FlatList, Platform } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
 import Animated, {
   BounceIn,
@@ -25,7 +25,7 @@ import useActivityRewards from '../../hooks/useActivityRewards';
 import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
 import { ActivitiesKey } from '../../services/mmkv.service';
 import { praiseMessages, tryAgainMessages } from '../../utils/helperData';
-import { isTablet, rf } from '../../utils/responsive';
+import { isTablet, rf, useAppDimensions } from '../../utils/responsive';
 import BingoCell from './components/BingoCell';
 import {
   BINGO_ROUNDS,
@@ -40,7 +40,7 @@ const pickRandom = (messages: string[]) =>
 const BingoScreen = () => {
   const route = useRoute<StackRouteProps<typeof ROUTES.BINGO>>();
   const navigation = useNavigation();
-  const { width } = useWindowDimensions();
+  const { width } = useAppDimensions();
   const { data } = route.params;
   const { updateProgress } = useActivityProContext();
   const {

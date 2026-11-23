@@ -15,6 +15,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     guard let factory = appDelegate.reactNativeFactory else { return }
 
     let window = UIWindow(windowScene: windowScene)
+    // Black behind the RN root so rotation never flashes a white gap.
+    window.backgroundColor = .black
     factory.startReactNative(
       withModuleName: "eLetter",
       in: window,

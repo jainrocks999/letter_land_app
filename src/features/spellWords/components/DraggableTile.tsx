@@ -12,7 +12,7 @@ import { GestureDetector, usePanGesture } from 'react-native-gesture-handler';
 import { runOnJS } from 'react-native-worklets';
 import { colorData } from '../../../types/search.types';
 import { SpellTileType } from '../data/spellWords.data';
-import { rf } from '../../../utils/responsive';
+import { rf, useStageScale } from '../../../utils/responsive';
 
 export interface SlotRectType {
   x: number;
@@ -49,6 +49,7 @@ const DraggableTile: React.FC<DraggableTileProps> = ({
   onMissed,
 }) => {
   const viewRef = useRef<View>(null);
+  const stageScale = useStageScale();
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
   const scale = useSharedValue(1);
@@ -98,8 +99,8 @@ const DraggableTile: React.FC<DraggableTileProps> = ({
     enabled: !disabled && !isPlaced,
     onUpdate: e => {
       if (isLocked.value) return;
-      translateX.value = e.translationX;
-      translateY.value = e.translationY;
+      translateX.value = e.translationX / stageScale;
+      translateY.value = e.translationY / stageScale;
       scale.value = withTiming(1.12, { duration: 100 });
     },
     onFinalize: e => {
@@ -116,11 +117,12 @@ const DraggableTile: React.FC<DraggableTileProps> = ({
         );
         const startX = origin.value.x + origin.value.width / 2;
         const startY = origin.value.y + origin.value.height / 2;
-        translateX.value = withTiming(slot.x + slot.width / 2 - startX, {
-          duration: 220,
-        });
+        translateX.value = withTiming(
+          (slot.x + slot.width / 2 - startX) / stageScale,
+          { duration: 220 },
+        );
         translateY.value = withTiming(
-          slot.y + slot.height / 2 - startY,
+          (slot.y + slot.height / 2 - startY) / stageScale,
           { duration: 220 },
           finished => {
             if (finished) {

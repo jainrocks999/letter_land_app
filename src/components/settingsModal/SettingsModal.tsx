@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome6 from '@react-native-vector-icons/fontawesome6';
 import Animated, { FadeIn, ZoomIn } from 'react-native-reanimated';
@@ -17,6 +17,7 @@ import ToggleSwitch from './components/ToggleSwitch';
 import ParentGate from './components/ParentGate';
 import { styles } from './SettingsModal.styles';
 import { rf } from '../../utils/responsive';
+import StageModal from '../stageModal/StageModal';
 
 interface SettingsModalProps {
   visible: boolean;
@@ -71,7 +72,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
   };
 
   return (
-    <Modal
+    <StageModal
       visible={visible}
       transparent
       animationType="fade"
@@ -347,7 +348,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }) => {
           )}
         </View>
       </View>
-    </Modal>
+    </StageModal>
   );
 };
 
