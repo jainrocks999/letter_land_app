@@ -23,7 +23,8 @@ import SuccessModal from '../../components/customModal/CustomModel';
 import useActivityRewards from '../../hooks/useActivityRewards';
 import { ActivitiesKey } from '../../services/mmkv.service';
 import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
-import { rf } from '../../utils/responsive';
+import { isTablet, rf } from '../../utils/responsive';
+import { useAppDimensions } from '../../utils/orientation';
 
 const FillingLetterScreen = () => {
   const route = useRoute<StackRouteProps<typeof ROUTES.FILLING>>();
@@ -50,9 +51,10 @@ const FillingLetterScreen = () => {
     width: 0,
     height: 0,
   });
+  const { width: appWidth, height: appHeight } = useAppDimensions();
   const [optionsContainerSize, setOptionsContainerSize] = useState({
-    width: 0,
-    height: 0,
+    width: Math.max(appWidth - rf(70), 260),
+    height: Math.max(appHeight * 0.28, 180),
   });
 
   const targetRef = useRef<View>(null);
@@ -258,7 +260,7 @@ const FillingLetterScreen = () => {
                       textAnchor="middle"
                       alignmentBaseline="central"
                       fontFamily="Fredoka-Bold"
-                      fontSize={rf(Platform.OS==='ios'? 90 : 105)}
+                      fontSize={rf(Platform.OS==='ios'? isTablet() ? 50 : 80 : 105)}
                       fill={
                         isCorrect == null
                           ? '#e7e7e7'
@@ -298,27 +300,26 @@ const FillingLetterScreen = () => {
                 );
               }}
             >
-              {optionsContainerSize.width > 0 &&
-                currentQues?.options.map((option, index) => {
-                  const isThisTheAnsweredOne =
-                    isPlaced &&
-                    option.data.letter === currentQues.target.letter;
+              {currentQues?.options.map((option, index) => {
+                const isThisTheAnsweredOne =
+                  isPlaced && option.data.letter === currentQues.target.letter;
 
-                  return (
-                    <DraggableLetter
-                      colors={data}
-                      index={index}
-                      key={`${currentIndex}-${option.data.letter}-${index}`}
-                      data={option}
-                      mouthRect={shapRect}
-                      targetLetter={currentQues.target.letter}
-                      onDrop={handleLetterDrop}
-                      onHoverChange={() => {}}
-                      disabled={isPlaced && !isThisTheAnsweredOne}
-                      containerSize={optionsContainerSize}
-                    />
-                  );
-                })}
+                return (
+                  <DraggableLetter
+                    colors={data}
+                    index={index}
+                    key={`${currentIndex}-${option.data.letter}-${index}`}
+                    data={option}
+                    totalOptions={currentQues.options.length}
+                    mouthRect={shapRect}
+                    targetLetter={currentQues.target.letter}
+                    onDrop={handleLetterDrop}
+                    onHoverChange={() => {}}
+                    disabled={isPlaced && !isThisTheAnsweredOne}
+                    containerSize={optionsContainerSize}
+                  />
+                );
+              })}
             </View>
           </>
         ) : (

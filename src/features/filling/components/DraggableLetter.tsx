@@ -10,14 +10,11 @@ import { GestureDetector, usePanGesture } from 'react-native-gesture-handler';
 import useLetterDrag from '../../../hooks/useLetterDrag';
 import { isTablet, rf, useStageScale } from '../../../utils/responsive';
 
-// Option positions are authored for a phone-sized options container.
-const DESIGN_WIDTH = 345;
-const DESIGN_HEIGHT = 227;
-
 interface Props {
   colors: colorData;
   data: LetterOptionWithPosType;
   index: number;
+  totalOptions: number;
   targetLetter: string;
   mouthRect: RectType;
   disabled?: boolean;
@@ -29,6 +26,8 @@ const tablet = isTablet();
 
 const DraggableLetter: React.FC<Props> = ({
   data,
+  index,
+  totalOptions,
   onDrop,
   mouthRect,
   targetLetter,
@@ -40,28 +39,39 @@ const DraggableLetter: React.FC<Props> = ({
   const { width: containerWidth, height: containerHeight } = containerSize;
   const stageScale = useStageScale();
 
-  // Phones keep the authored positions; on tablets, map them proportionally
-  // into the measured options container so letters stay inside the box.
-  const useScaledLayout =
-    tablet && containerWidth > 0 && containerHeight > 0;
+  // Options are laid out on a grid that always fits the measured container.
+  // The authored data.x/data.y values were tuned for one phone size and can
+  // push the last column/row outside the box. iOS clips children at the
+  // parent's bounds (Android doesn't), which made those letters disappear.
+  const columns = totalOptions > 4 ? 3 : totalOptions > 2 ? 2 : 1;
+  const rows = Math.max(1, Math.ceil(totalOptions / columns));
+  const column = index % columns;
+  const row = Math.floor(index / columns);
 
-  const position = useMemo(() => {
-    if (!useScaledLayout) {
-      return { x: data.x, y: data.y };
-    }
+  const cellWidth = containerWidth / columns;
+  const cellHeight = containerHeight / rows;
+
+  const { position, tileWidth, tileHeight, fontSize } = useMemo(() => {
+    const baseFontSize = rf(tablet ? 50 : Platform.OS === 'ios' ? 90 : 100);
+    const size = Math.max(
+      rf(26),
+      Math.min(baseFontSize, (cellWidth * 0.82) / 1.1, (cellHeight * 0.82) / 1.2),
+    );
+    const width = size * 1.1;
+    const height = size * 1.2;
+
     return {
-      x: (data.x / DESIGN_WIDTH) * containerWidth,
-      y: (data.y / DESIGN_HEIGHT) * containerHeight,
+      fontSize: size,
+      tileWidth: width,
+      tileHeight: height,
+      position: {
+        x: column * cellWidth + (cellWidth - width) / 2,
+        y: row * cellHeight + (cellHeight - height) / 2,
+      },
     };
-  }, [data.x, data.y, useScaledLayout, containerWidth, containerHeight]);
+  }, [cellWidth, cellHeight, column, row]);
 
-  const scaledData = useMemo(
-    () => ({ ...data, ...position }),
-    [data, position],
-  );
-
-  const scale = useScaledLayout ? containerWidth / DESIGN_WIDTH : 1;
-  const letterSize = rf(tablet? 50 : Platform.OS==='ios'? 90 : 100) * scale;
+  const scaledData = useMemo(() => ({ ...data, ...position }), [data, position]);
 
   const drag = useLetterDrag({
     data: scaledData,
@@ -101,16 +111,15 @@ const DraggableLetter: React.FC<Props> = ({
   return (
     <GestureDetector gesture={panGesture}>
       <Animated.View
-        style={[styles.dragableContainer, drag.animatedStyle]}
+        style={[
+          styles.dragableContainer,
+          { width: tileWidth, height: tileHeight },
+          drag.animatedStyle,
+        ]}
         ref={viewRef}
         onLayout={handleLayout}
       >
-        <Text
-          style={[
-            styles.LetterText,
-            { color: colors.darkColor, fontSize: letterSize },
-          ]}
-        >
+        <Text style={[styles.LetterText, { color: colors.darkColor, fontSize }]}>
           {data.data.letter}
         </Text>
       </Animated.View>
@@ -127,9 +136,8 @@ const styles = StyleSheet.create({
     zIndex: 100,
   },
   LetterText: {
-    fontSize: rf(100),
     fontFamily: 'Fredoka-Bold',
-    position: 'absolute',
+    textAlign: 'center',
     opacity: 0.8,
   },
 });

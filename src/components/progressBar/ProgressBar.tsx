@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { LayoutChangeEvent, StyleSheet, View } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import Animated, {
   Easing,
@@ -16,26 +17,44 @@ const ProgressBar = ({
   progress: number;
   bgColor?: string;
 }) => {
-  const width = useSharedValue(0);
+  const fill = useSharedValue(0);
+  const trackWidth = useSharedValue(0);
+  const isFocused = useIsFocused();
 
+  // Progress often changes while this screen is hidden under another one (Home
+  // updates as the kid leaves an activity), so the bar fills once its screen is
+  // back on top, where the kid can see it.
   useEffect(() => {
-    width.value = withTiming(Math.max(0, Math.min(progress / 100, 1)), {
+    if (!isFocused) return;
+    fill.value = withTiming(Math.max(0, Math.min(progress / 100, 1)), {
       duration: 800,
       easing: Easing.out(Easing.cubic),
     });
-  }, [progress, width]);
+  }, [progress, isFocused, fill]);
 
+  const handleLayout = (event: LayoutChangeEvent) => {
+    trackWidth.value = event.nativeEvent.layout.width;
+  };
+
+  // The fill is always full width and slides in from the left. Animating `width`
+  // instead got reset to 0 on iOS whenever the card re-rendered, so the bar only
+  // showed the saved progress after an app restart.
   const animatedStyle = useAnimatedStyle(() => ({
-    width: `${width.value * 100}%`,
+    opacity: trackWidth.value > 0 ? 1 : 0,
+    transform: [{ translateX: (fill.value - 1) * trackWidth.value }],
   }));
+
   return (
-    <View style={[styles.container, { backgroundColor: bgColor || '#e7e7e7' }]}>
-      <Animated.View style={[styles.progressContainer, animatedStyle]}>
+    <View
+      onLayout={handleLayout}
+      style={[styles.container, { backgroundColor: bgColor || '#e7e7e7' }]}
+    >
+      <Animated.View style={[styles.fill, animatedStyle]}>
         <LinearGradient
           colors={['#8BE15A', '#49C92C']}
           start={{ x: 0.5, y: 0 }}
           end={{ x: 0.5, y: 1 }}
-          style={styles.progress}
+          style={styles.gradient}
         />
       </Animated.View>
     </View>
@@ -50,6 +69,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     overflow: 'hidden',
   },
-  progressContainer: { height: '100%' },
-  progress: { flex: 1, borderRadius: 20 },
+  fill: { ...StyleSheet.absoluteFill },
+  gradient: { flex: 1, borderRadius: 20 },
 });
