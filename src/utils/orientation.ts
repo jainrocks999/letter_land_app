@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { useWindowDimensions } from 'react-native';
 import {
   EdgeInsets,
@@ -95,6 +96,36 @@ export const useAppDimensions = () => {
  * stage so draggable items keep following the finger.
  */
 export const useStageScale = () => usePortraitStage().scale;
+
+/**
+ * Re-runs a `measureInWindow` callback whenever the letterboxed stage changes.
+ *
+ * Rotation changes the stage's scale/offset but NOT its internal layout size,
+ * so `onLayout` does not fire and cached window rects (drop targets, drag tile
+ * origins) become stale. Everything that compares gesture `absoluteX/Y` with a
+ * measured rect must refresh on these changes.
+ */
+export const useRemeasureOnStageChange = (measure: () => void) => {
+  const { scale, offsetX, offsetY, isLandscape, windowWidth, windowHeight } =
+    usePortraitStage();
+  const measureRef = useRef(measure);
+  measureRef.current = measure;
+
+  useEffect(() => {
+    // Two frames: the first lets the new stage transform commit, the second
+    // makes sure measureInWindow sees the transformed on-screen position.
+    let secondFrame = 0;
+    const firstFrame = requestAnimationFrame(() => {
+      secondFrame = requestAnimationFrame(() => {
+        measureRef.current();
+      });
+    });
+    return () => {
+      cancelAnimationFrame(firstFrame);
+      cancelAnimationFrame(secondFrame);
+    };
+  }, [scale, offsetX, offsetY, isLandscape, windowWidth, windowHeight]);
+};
 
 /**
  * Converts the real (landscape) safe area insets into the insets the portrait

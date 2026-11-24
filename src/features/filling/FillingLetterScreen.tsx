@@ -24,7 +24,10 @@ import useActivityRewards from '../../hooks/useActivityRewards';
 import { ActivitiesKey } from '../../services/mmkv.service';
 import useActivityProContext from '../../app/contexts/activityProgress/useActivityProgress';
 import { isTablet, rf } from '../../utils/responsive';
-import { useAppDimensions } from '../../utils/orientation';
+import {
+  useAppDimensions,
+  useRemeasureOnStageChange,
+} from '../../utils/orientation';
 
 const FillingLetterScreen = () => {
   const route = useRoute<StackRouteProps<typeof ROUTES.FILLING>>();
@@ -109,6 +112,10 @@ const FillingLetterScreen = () => {
       });
     });
   };
+
+  // Rotation changes the stage transform, not the layout, so onLayout alone
+  // leaves the drop rect pointing at the old orientation.
+  useRemeasureOnStageChange(handleTargetLayout);
 
   const handleLetterDrop = (letter: string) => {
     if (isPlaced) return;

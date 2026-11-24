@@ -4,6 +4,7 @@ import Animated, { ZoomIn } from 'react-native-reanimated';
 import { colorData } from '../../../types/search.types';
 import { SlotRectType } from './DraggableTile';
 import { rf } from '../../../utils/responsive';
+import { useRemeasureOnStageChange } from '../../../utils/orientation';
 
 interface LetterSlotProps {
   index: number;
@@ -32,6 +33,7 @@ const LetterSlot: React.FC<LetterSlotProps> = ({
       });
     });
   };
+  useRemeasureOnStageChange(handleLayout);
 
   return (
     <View

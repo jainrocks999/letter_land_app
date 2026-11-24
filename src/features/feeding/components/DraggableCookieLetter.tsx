@@ -10,6 +10,7 @@ import { GestureDetector, usePanGesture } from 'react-native-gesture-handler';
 import { CookieSvg } from '../../../utils/searchingHelper';
 import useLetterDrag from '../../../hooks/useLetterDrag';
 import { isTablet, rf, useStageScale } from '../../../utils/responsive';
+import { useRemeasureOnStageChange } from '../../../utils/orientation';
 
 const VIEW_BOX_WIDTH = 1024;
 const VIEW_BOX_HEIGHT = 765;
@@ -101,6 +102,7 @@ const DraggableCookie: React.FC<Props> = ({
       }
     });
   };
+  useRemeasureOnStageChange(handleLayout);
 
   const panGesture = usePanGesture({
     onUpdate: e =>

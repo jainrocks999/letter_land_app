@@ -13,6 +13,7 @@ import { runOnJS } from 'react-native-worklets';
 import { colorData } from '../../../types/search.types';
 import { SpellTileType } from '../data/spellWords.data';
 import { rf, useStageScale } from '../../../utils/responsive';
+import { useRemeasureOnStageChange } from '../../../utils/orientation';
 
 export interface SlotRectType {
   x: number;
@@ -74,6 +75,7 @@ const DraggableTile: React.FC<DraggableTileProps> = ({
       });
     });
   };
+  useRemeasureOnStageChange(handleLayout);
 
   const findSlot = (x: number, y: number) => {
     'worklet';

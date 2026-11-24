@@ -27,6 +27,7 @@ import useActivityProContext from '../../app/contexts/activityProgress/useActivi
 import { ActivitiesKey } from '../../services/mmkv.service';
 import useActivityRewards from '../../hooks/useActivityRewards';
 import { rf } from '../../utils/responsive';
+import { useRemeasureOnStageChange } from '../../utils/orientation';
 
 const FeedingScreen = () => {
   const route = useRoute<StackRouteProps<typeof ROUTES.FEEDING>>();
@@ -70,6 +71,9 @@ const FeedingScreen = () => {
       setMouthRect(calculateMouthRect(x, y, width, height));
     });
   };
+
+  // Keep the drop zone in sync with the letterboxed stage after rotation.
+  useRemeasureOnStageChange(updateMouthRect);
 
   useEffect(() => {
     const removeListeners = TTSEventService.addListeners({

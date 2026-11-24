@@ -9,6 +9,7 @@ import Animated from 'react-native-reanimated';
 import { GestureDetector, usePanGesture } from 'react-native-gesture-handler';
 import useLetterDrag from '../../../hooks/useLetterDrag';
 import { isTablet, rf, useStageScale } from '../../../utils/responsive';
+import { useRemeasureOnStageChange } from '../../../utils/orientation';
 
 interface Props {
   colors: colorData;
@@ -88,6 +89,7 @@ const DraggableLetter: React.FC<Props> = ({
       });
     });
   };
+  useRemeasureOnStageChange(handleLayout);
   const panGesture = usePanGesture({
     onUpdate: e => {
       if (disabled) {

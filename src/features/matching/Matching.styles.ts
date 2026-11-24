@@ -49,7 +49,7 @@ export const styles = StyleSheet.create({
     borderBottomWidth: rf(7),
     borderRadius: rf(10),
     padding: rf(12),
-    paddingBottom: Platform.OS==='ios'? 0 : rf(18),
+    paddingBottom: Platform.OS==='ios'? tablet? 18: 0 : rf(18),
   },
   questionTextContainer: {
     width: rf(54),
