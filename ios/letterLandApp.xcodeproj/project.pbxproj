@@ -15,7 +15,6 @@
 		596D0B450987447FA1AB063A /* Fredoka-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F94599696DD54262900F213F /* Fredoka-Regular.ttf */; };
 		5E1DEA1C2F4B4F0E9A1B2C3E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E1DEA1C2F4B4F0E9A1B2C3D /* SceneDelegate.swift */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
-		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		B1E9D6E530074060A8636B7B /* Fredoka-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 77AAD3AFF802444CAF50B7E1 /* Fredoka-Bold.ttf */; };
 		E01A57EF497343169B4AAAD3 /* Fredoka-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 82D942319A4A430DA451455A /* Fredoka-Medium.ttf */; };
 /* End PBXBuildFile section */
@@ -32,7 +31,6 @@
 		6CA7227454B94BF7915658B9 /* Fredoka-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 511881251769; includeInIndex = 0; lastKnownFileType = unknown; name = "Fredoka-Light.ttf"; path = "../src/assets/fonts/Fredoka-Light.ttf"; sourceTree = "<group>"; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = letterLandApp/AppDelegate.swift; sourceTree = "<group>"; };
 		77AAD3AFF802444CAF50B7E1 /* Fredoka-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 511881251769; includeInIndex = 0; lastKnownFileType = unknown; name = "Fredoka-Bold.ttf"; path = "../src/assets/fonts/Fredoka-Bold.ttf"; sourceTree = "<group>"; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = letterLandApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		82D942319A4A430DA451455A /* Fredoka-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 511881251769; includeInIndex = 0; lastKnownFileType = unknown; name = "Fredoka-Medium.ttf"; path = "../src/assets/fonts/Fredoka-Medium.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F4C557A274AC41A48501F72D /* Fredoka-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 511881251769; includeInIndex = 0; lastKnownFileType = unknown; name = "Fredoka-SemiBold.ttf"; path = "../src/assets/fonts/Fredoka-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -58,7 +56,6 @@
 				761780EC2CA45674006654EE /* AppDelegate.swift */,
 				5E1DEA1C2F4B4F0E9A1B2C3D /* SceneDelegate.swift */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
 			);
 			name = letterLandApp;
@@ -184,7 +181,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				27639B20A40C0BD2721CB72A /* PrivacyInfo.xcprivacy in Resources */,
 				E01A57EF497343169B4AAAD3 /* Fredoka-Medium.ttf in Resources */,

@@ -95,10 +95,18 @@ const DraggableCookie: React.FC<Props> = ({
     onDrop,
   });
 
+   const {
+    handleUpdateNormal,
+    handleFinalizeNormal,
+    setOrigin,
+    animatedStyle,
+  } = drag;
+
   const handleLayout = () => {
     tileRef.current?.measureInWindow((x, y, width, height) => {
       if (width > 0 && height > 0) {
-        drag.setOrigin(x, y, width, height);
+        // drag.setOrigin(x, y, width, height);
+        setOrigin(x, y, width, height);
       }
     });
   };
@@ -106,14 +114,16 @@ const DraggableCookie: React.FC<Props> = ({
 
   const panGesture = usePanGesture({
     onUpdate: e =>
-      drag.handleUpdateNormal(
+      // drag.handleUpdateNormal(
+      handleUpdateNormal(
         e.translationX / stageScale,
         e.translationY / stageScale,
         e.absoluteX,
         e.absoluteY,
       ),
     onFinalize: e => {
-      drag.handleFinalizeNormal(e.absoluteX, e.absoluteY);
+      // drag.handleFinalizeNormal(e.absoluteX, e.absoluteY);
+      handleFinalizeNormal(e.absoluteX, e.absoluteY);
     },
   });
 
@@ -126,7 +136,8 @@ const DraggableCookie: React.FC<Props> = ({
         style={[
           styles.dragableContainer,
           { width: tileSize, height: tileSize },
-          drag.animatedStyle,
+          // drag.animatedStyle,
+          animatedStyle,
         ]}
       >
         <Cookie width={'100%'} height={'100%'} />

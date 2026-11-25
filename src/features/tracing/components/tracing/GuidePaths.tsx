@@ -64,4 +64,5 @@ const GuidePaths: React.FC<Props> = ({
   );
 };
 
-export default GuidePaths;
+// Guide paths never change while the finger moves; skip re-rendering them.
+export default React.memo(GuidePaths);

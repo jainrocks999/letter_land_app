@@ -81,11 +81,20 @@ const DraggableLetter: React.FC<Props> = ({
     onHoverChange,
     onDrop,
   });
+
+  const {
+    handleUpdateNormal,
+    handleFinalizeNormal,
+    setOrigin,
+    animatedStyle,
+  } = drag;
+
   const viewRef = useRef<View>(null);
   const handleLayout = () => {
     requestAnimationFrame(() => {
       viewRef.current?.measureInWindow((x, y, width, height) => {
-        drag.setOrigin(x, y, width, height);
+        // drag.setOrigin(x, y, width, height);
+        setOrigin(x, y, width, height);
       });
     });
   };
@@ -95,7 +104,8 @@ const DraggableLetter: React.FC<Props> = ({
       if (disabled) {
         return;
       }
-      drag.handleUpdateNormal(
+      // drag.handleUpdateNormal(
+      handleUpdateNormal(
         e.translationX / stageScale,
         e.translationY / stageScale,
         e.absoluteX,
@@ -106,7 +116,8 @@ const DraggableLetter: React.FC<Props> = ({
       if (disabled) {
         return;
       }
-      drag.handleFinalizeNormal(e.absoluteX, e.absoluteY);
+      // drag.handleFinalizeNormal(e.absoluteX, e.absoluteY);
+      handleFinalizeNormal(e.absoluteX, e.absoluteY);
     },
   });
 
@@ -116,7 +127,8 @@ const DraggableLetter: React.FC<Props> = ({
         style={[
           styles.dragableContainer,
           { width: tileWidth, height: tileHeight },
-          drag.animatedStyle,
+          // drag.animatedStyle,
+          animatedStyle,
         ]}
         ref={viewRef}
         onLayout={handleLayout}

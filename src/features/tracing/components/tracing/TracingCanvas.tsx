@@ -1,5 +1,9 @@
 import { LayoutChangeEvent, StyleSheet, View } from 'react-native';
 import React from 'react';
+import Animated, {
+  SharedValue,
+  useAnimatedProps,
+} from 'react-native-reanimated';
 import Svg, { Circle, G, Path, Rect } from 'react-native-svg';
 import GuidePaths from './GuidePaths';
 import {
@@ -8,6 +12,8 @@ import {
   TraceStroke,
 } from '../../../../types/tracing.types';
 import { rf } from '../../../../utils/responsive';
+
+const AnimatedPath = Animated.createAnimatedComponent(Path);
 
 interface Props {
   current: TraceLetter;
@@ -25,7 +31,8 @@ interface Props {
   currentStroke: TraceStroke;
 
   totalLength: number;
-  tracedLength: number;
+  tracedLengthSv: SharedValue<number>;
+  activeTrailSv: SharedValue<string>;
 
   strokeTrails: string[];
   guidePoints: Point[];
@@ -42,12 +49,22 @@ const TracingCanvas: React.FC<Props> = ({
   activeStrokeIndex,
   currentStroke,
   totalLength,
-  tracedLength,
+  tracedLengthSv,
+  activeTrailSv,
   strokeTrails,
   guidePoints,
   checkpointIndex,
   onLayout,
 }) => {
+  // These props are updated on the UI thread straight from the gesture
+  // handlers. No React render happens while the finger moves.
+  const activeStrokeProps = useAnimatedProps(() => ({
+    strokeDashoffset: Math.max(totalLength - tracedLengthSv.value, 0),
+  }));
+  const activeTrailProps = useAnimatedProps(() => ({
+    d: activeTrailSv.value,
+  }));
+
   return (
     <View
       style={[
@@ -108,7 +125,7 @@ const TracingCanvas: React.FC<Props> = ({
           );
         })}
         {!isComplete ? (
-          <Path
+          <AnimatedPath
             d={currentStroke.path}
             stroke="#ff8a2b"
             strokeWidth={30}
@@ -116,7 +133,19 @@ const TracingCanvas: React.FC<Props> = ({
             strokeLinejoin="round"
             fill="none"
             strokeDasharray={`${totalLength} ${totalLength}`}
-            strokeDashoffset={Math.max(totalLength - tracedLength, 0)}
+            animatedProps={activeStrokeProps}
+          />
+        ) : null}
+        {!isComplete ? (
+          <AnimatedPath
+            d="M-1000 -1000"
+            stroke="#ffe76a"
+            strokeWidth={10}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+            opacity={0.5}
+            animatedProps={activeTrailProps}
           />
         ) : null}
         {strokeTrails.map((trailPath, index) =>
@@ -166,7 +195,7 @@ const TracingCanvas: React.FC<Props> = ({
   );
 };
 
-export default TracingCanvas;
+export default React.memo(TracingCanvas);
 
 const styles = StyleSheet.create({
   traceCard: {

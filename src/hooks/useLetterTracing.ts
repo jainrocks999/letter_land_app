@@ -1,7 +1,22 @@
 import { LayoutChangeEvent } from 'react-native';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, {
+  ReactNode,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import {
+  SharedValue,
+  useDerivedValue,
+  useSharedValue,
+} from 'react-native-reanimated';
 import { svgPathProperties } from 'svg-path-properties';
-import { getNearestPathPoint, toViewBoxPoint } from '../utils/tracingHelper';
+import {
+  buildPathSamples,
+  getNearestPathPoint,
+  toViewBoxPoint,
+} from '../utils/tracingHelper';
 import { Bounds, Point, TraceLetter } from '../types/tracing.types';
 import { tracingConstants } from '../config/constants';
 import { praiseMessages } from '../utils/helperData';
@@ -30,7 +45,6 @@ const useLetterTracing = ({
     height: 1,
   });
   const [activeStrokeIndex, setActiveStrokeIndex] = useState<number>(0);
-  const [tracedLength, setTracedLength] = useState<number>(0);
   const [strokeTrails, setStrokeTrails] = useState<string[]>([]);
   const [checkpointIndex, setCheckpointIndex] = useState<number>(0);
   const [statusText, setStatusText] = useState<string>('Touch the first dot.');
@@ -44,8 +58,20 @@ const useLetterTracing = ({
   const strokeTrailsRef = useRef<string[]>([]);
   const isTracingRef = useRef<boolean>(false);
   const isCompleteRef = useRef<boolean>(false);
-  const lastStateUpdateLengthRef = useRef<number>(0);
   const lastTrailPointRef = useRef<Point | null>(null);
+  const checkpointIndexRef = useRef<number>(0);
+  const statusRef = useRef<string>('Touch the first dot.');
+
+  // All per-move visuals live on the UI thread shared values. None of these
+  // trigger a React render while the finger moves.
+  const tracedLengthSv = useSharedValue(0);
+  const activeTrailSv = useSharedValue('M-1000 -1000');
+  const letterProgressSv = useSharedValue(0);
+  // DerivedValue is a SharedValue at runtime; Animated.Text only types its
+  // children as SharedValue<ReactNode>, hence the explicit cast.
+  const progressTextSv = useDerivedValue(
+    () => `${Math.round(letterProgressSv.value * 100)}%`,
+  ) as unknown as SharedValue<ReactNode>;
 
   //   Derived data
   const currentStroke =
@@ -61,6 +87,13 @@ const useLetterTracing = ({
     [pathMeasure],
   );
 
+  // One-time sampling per stroke. All move events use this table instead of
+  // calling the expensive curve arc-length math on every pointer update.
+  const pathSamples = useMemo(
+    () => buildPathSamples(pathMeasure, totalLength),
+    [pathMeasure, totalLength],
+  );
+
   const strokeLengths = useMemo(
     () =>
       current.strokes.map(strokeItem =>
@@ -69,19 +102,16 @@ const useLetterTracing = ({
     [current.strokes],
   );
 
-  const totalLetterLength = strokeLengths.reduce(
-    (sum, length) => sum + length,
-    0,
-  );
+  // Prefix sums avoid allocating/filtering an array on every pointer move.
+  const completedStrokeLengths = useMemo(() => {
+    const sums = [0];
+    for (let i = 0; i < strokeLengths.length; i += 1) {
+      sums[i + 1] = sums[i] + strokeLengths[i];
+    }
+    return sums;
+  }, [strokeLengths]);
 
-  const completedStrokeLength = strokeLengths
-    .slice(0, activeStrokeIndex)
-    .reduce((sum, length) => sum + length, 0);
-
-  const letterProgress =
-    totalLetterLength > 0
-      ? (completedStrokeLength + tracedLength) / totalLetterLength
-      : 0;
+  const totalLetterLength = completedStrokeLengths[strokeLengths.length] ?? 0;
 
   const guidePoints = useMemo(
     () =>
@@ -98,6 +128,12 @@ const useLetterTracing = ({
 
   const updateStatus = useCallback(
     (text: string) => {
+      // Repeated "Stay on the letter path." messages on every move used to
+      // trigger a React render each time.
+      if (statusRef.current === text) {
+        return;
+      }
+      statusRef.current = text;
       setStatusText(text);
       onStatusChange?.(text);
     },
@@ -111,6 +147,8 @@ const useLetterTracing = ({
       }
 
       tracedLengthRef.current = nextLength;
+      // UI-thread updates: no React render per pointer event.
+      tracedLengthSv.value = nextLength;
 
       const lastPoint = lastTrailPointRef.current;
       const pointMovedFarEnough =
@@ -124,10 +162,7 @@ const useLetterTracing = ({
             ? `M ${nearestPoint.x.toFixed(1)} ${nearestPoint.y.toFixed(1)}`
             : ` L ${nearestPoint.x.toFixed(1)} ${nearestPoint.y.toFixed(1)}`;
         lastTrailPointRef.current = nearestPoint;
-
-        const updatedTrails = [...strokeTrailsRef.current];
-        updatedTrails[activeStrokeIndexRef.current] = trailPathRef.current;
-        strokeTrailsRef.current = updatedTrails;
+        activeTrailSv.value = trailPathRef.current;
       }
 
       const nextCheckpoint = currentStroke.checkpoints.findIndex(
@@ -138,20 +173,32 @@ const useLetterTracing = ({
           ? currentStroke.checkpoints.length
           : nextCheckpoint;
 
-      const strokeCompleting = nextLength >= totalLength * 0.96;
-      const lengthAdvancedEnough =
-        nextLength - lastStateUpdateLengthRef.current >= 1.5;
-
-      if (lengthAdvancedEnough || strokeCompleting || pointMovedFarEnough) {
-        lastStateUpdateLengthRef.current = nextLength;
-        setTracedLength(nextLength);
-        setStrokeTrails(strokeTrailsRef.current);
+      if (computedCheckpoint !== checkpointIndexRef.current) {
+        checkpointIndexRef.current = computedCheckpoint;
         setCheckpointIndex(computedCheckpoint);
       }
 
+      // Percentage text is a shared value too. Previously this called
+      // setTracedLength on almost every pointer event (40 renders for 43
+      // moves), which was the real source of the visible curve lag.
+      const completedBefore =
+        completedStrokeLengths[activeStrokeIndexRef.current] ?? 0;
+      letterProgressSv.value =
+        totalLetterLength > 0
+          ? (completedBefore + nextLength) / totalLetterLength
+          : 0;
+
+      const strokeCompleting = nextLength >= totalLength * 0.96;
       if (!strokeCompleting) {
         return;
       }
+
+      // Completed trails are static: publish them once per stroke.
+      const updatedTrails = [...strokeTrailsRef.current];
+      updatedTrails[activeStrokeIndexRef.current] = trailPathRef.current;
+      strokeTrailsRef.current = updatedTrails;
+      setStrokeTrails(updatedTrails);
+      activeTrailSv.value = 'M-1000 -1000';
 
       if (activeStrokeIndexRef.current < current.strokes.length - 1) {
         const nextStroke = activeStrokeIndexRef.current + 1;
@@ -160,9 +207,13 @@ const useLetterTracing = ({
         setActiveStrokeIndex(nextStroke);
 
         tracedLengthRef.current = 0;
-        lastStateUpdateLengthRef.current = 0;
+        tracedLengthSv.value = 0;
+        letterProgressSv.value =
+          totalLetterLength > 0
+            ? (completedStrokeLengths[nextStroke] ?? 0) / totalLetterLength
+            : 0;
         lastTrailPointRef.current = null;
-        setTracedLength(0);
+        checkpointIndexRef.current = 0;
         trailPathRef.current = '';
         setCheckpointIndex(0);
 
@@ -176,6 +227,7 @@ const useLetterTracing = ({
 
       isCompleteRef.current = true;
       setIsComplete(true);
+      letterProgressSv.value = 1;
 
       const completeMsg = `${
         praiseMessages[Math.floor(Math.random() * praiseMessages.length)]
@@ -188,11 +240,16 @@ const useLetterTracing = ({
     [
       current,
       currentStroke,
+      completedStrokeLengths,
+      totalLetterLength,
       totalLength,
       onLetterComplete,
       onStrokeComplete,
       onSpeak,
       updateStatus,
+      tracedLengthSv,
+      activeTrailSv,
+      letterProgressSv,
     ],
   );
 
@@ -206,8 +263,7 @@ const useLetterTracing = ({
       const nearest = getNearestPathPoint(
         point,
         tracedLengthRef.current,
-        pathMeasure,
-        totalLength,
+        pathSamples,
       );
 
       const currentLength = tracedLengthRef.current;
@@ -235,8 +291,9 @@ const useLetterTracing = ({
       setIsTracing(true);
       trailPathRef.current = nextTrailPath;
       lastTrailPointRef.current = nearest;
+      activeTrailSv.value = nextTrailPath;
     },
-    [canvasBounds, pathMeasure, totalLength, syncProgress, updateStatus],
+    [canvasBounds, pathSamples, updateStatus, activeTrailSv],
   );
 
   const handleTraceMove = useCallback(
@@ -248,8 +305,7 @@ const useLetterTracing = ({
       const nearest = getNearestPathPoint(
         point,
         tracedLengthRef.current,
-        pathMeasure,
-        totalLength,
+        pathSamples,
       );
       if (nearest.distance > HIT_RADIUS) {
         updateStatus('Stay on the letter path.');
@@ -264,7 +320,7 @@ const useLetterTracing = ({
       }
       syncProgress(nearest.length, nearest);
     },
-    [canvasBounds, pathMeasure, totalLength, syncProgress],
+    [canvasBounds, pathSamples, syncProgress, updateStatus],
   );
 
   const handleTraceEnd = useCallback(() => {
@@ -281,12 +337,18 @@ const useLetterTracing = ({
     );
     trailPathRef.current = '';
     lastTrailPointRef.current = null;
-  }, [updateStatus]);
+    activeTrailSv.value = 'M-1000 -1000';
+  }, [updateStatus, activeTrailSv]);
 
   const resetTrace = useCallback(() => {
+    statusRef.current = 'Touch the first dot.';
+    checkpointIndexRef.current = 0;
+    tracedLengthSv.value = 0;
+    letterProgressSv.value = 0;
+    activeTrailSv.value = 'M-1000 -1000';
+
     activeStrokeIndexRef.current = 0;
     tracedLengthRef.current = 0;
-    lastStateUpdateLengthRef.current = 0;
     lastTrailPointRef.current = null;
     trailPathRef.current = '';
     strokeTrailsRef.current = [];
@@ -294,14 +356,13 @@ const useLetterTracing = ({
     isCompleteRef.current = false;
 
     setActiveStrokeIndex(0);
-    setTracedLength(0);
     setStrokeTrails([]);
     setCheckpointIndex(0);
     setIsTracing(false);
     setIsComplete(false);
 
     updateStatus('Touch the first dot.');
-  }, [updateStatus]);
+  }, [updateStatus, tracedLengthSv, letterProgressSv, activeTrailSv]);
 
   React.useEffect(() => {
     resetTrace();
@@ -311,13 +372,11 @@ const useLetterTracing = ({
     currentStroke,
     guidePoints,
     totalLength,
-    letterProgress,
+    progressTextSv,
     canvasBounds,
     setCanvasBounds,
     activeStrokeIndex,
     setActiveStrokeIndex,
-    tracedLength,
-    setTracedLength,
     strokeTrails,
     setStrokeTrails,
     checkpointIndex,
@@ -335,6 +394,9 @@ const useLetterTracing = ({
     strokeTrailsRef,
     isTracingRef,
     isCompleteRef,
+    tracedLengthSv,
+    activeTrailSv,
+    letterProgressSv,
 
     syncProgress,
     handleTraceStart,

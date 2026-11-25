@@ -31,6 +31,10 @@ import useActivityRewards from '../../hooks/useActivityRewards';
 
 const { VIEW_BOX_WIDTH, VIEW_BOX_HEIGHT } = tracingConstants;
 
+// These sections don't depend on per-frame tracing state.
+const MemoTopbar = React.memo(CustomTopbar);
+const MemoHeading = React.memo(ScreenHeadingSection);
+
 const TracingScreen = () => {
   const route = useRoute<StackRouteProps<typeof ROUTES.TRACING>>();
   const navigation = useNavigation();
@@ -39,6 +43,7 @@ const TracingScreen = () => {
   const { rewardCorrect, rewardComplete, startNewRound } =
     useActivityRewards(data);
   const tracedRef = useRef<Set<string>>(new Set());
+  const bubbleTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isSpeaking, setSpeaking] = useState<boolean>(false);
@@ -52,15 +57,22 @@ const TracingScreen = () => {
   const current = traceLetters[currentIndex];
 
   const showHitBubble = useCallback(() => {
-    setTimeout(() => {
-      bubbleOpacity.value = withTiming(1, { duration: 300 });
-      bubbleTranslateY.value = withTiming(0, { duration: 300 });
+    bubbleTimersRef.current.forEach(clearTimeout);
+    bubbleTimersRef.current = [];
 
+    bubbleTimersRef.current.push(
       setTimeout(() => {
-        bubbleOpacity.value = withTiming(0, { duration: 300 });
-        bubbleTranslateY.value = withTiming(-10, { duration: 300 });
-      }, 3000);
-    }, 500);
+        bubbleOpacity.value = withTiming(1, { duration: 300 });
+        bubbleTranslateY.value = withTiming(0, { duration: 300 });
+
+        bubbleTimersRef.current.push(
+          setTimeout(() => {
+            bubbleOpacity.value = withTiming(0, { duration: 300 });
+            bubbleTranslateY.value = withTiming(-10, { duration: 300 });
+          }, 3000),
+        );
+      }, 500),
+    );
   }, [bubbleOpacity, bubbleTranslateY]);
 
   const handleStrokeComplete = useCallback(
@@ -108,12 +120,21 @@ const TracingScreen = () => {
   });
 
   useEffect(() => {
-    TTSEventService.addListeners({
+    const removeListeners = TTSEventService.addListeners({
       onStart: () => setSpeaking(true),
       onFinish: () => setSpeaking(false),
       onCancel: () => setSpeaking(false),
     });
+    return removeListeners;
   }, []);
+
+  useEffect(
+    () => () => {
+      bubbleTimersRef.current.forEach(clearTimeout);
+      bubbleTimersRef.current = [];
+    },
+    [],
+  );
 
   useEffect(() => {
     showHitBubble();
@@ -158,9 +179,9 @@ const TracingScreen = () => {
         },
       ]}
     >
-      <CustomTopbar data={data} progress={screenProgress} />
+      <MemoTopbar data={data} progress={screenProgress} />
 
-      <ScreenHeadingSection
+      <MemoHeading
         style={styles.headingSection}
         heading={data.cardTitle}
         subText="Trace each letter with Buddy! Tap, follow, and practice your writing!"
@@ -186,18 +207,16 @@ const TracingScreen = () => {
         </View>
 
         <View style={styles.tracingProgress}>
-          <Text
+          {/* Driven by a shared value: zero React renders while tracing. */}
+          <Animated.Text
             style={[
               styles.statusText,
               styles.traceProgessText,
               { color: data.darkColor },
             ]}
           >
-            {tracing.isComplete
-              ? '100'
-              : Math.round(tracing.letterProgress * 100)}
-            %
-          </Text>
+            {tracing.progressTextSv.value}
+          </Animated.Text>
         </View>
       </View>
 
@@ -222,7 +241,8 @@ const TracingScreen = () => {
             checkpointIndex={tracing.checkpointIndex}
             currentStroke={tracing.currentStroke}
             totalLength={tracing.totalLength}
-            tracedLength={tracing.tracedLength}
+            tracedLengthSv={tracing.tracedLengthSv}
+            activeTrailSv={tracing.activeTrailSv}
             strokeTrails={tracing.strokeTrails}
             guidePoints={tracing.guidePoints}
             onLayout={tracing.handleCanvasLayout}
