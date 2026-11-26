@@ -49,6 +49,18 @@ export const RewardsProvider = ({ children }: Props) => {
     setRewards(updated);
   };
 
+  // TEMP: testing ke liye 5000 stars
+  // useEffect(() => {
+  //   const current = rewardsRef.current;
+  //   if (current.stars < 5000) {
+  //     saveRewards({
+  //       ...current,
+  //       stars: 5000,
+  //       totalEarned: Math.max(current.totalEarned, 5000),
+  //     });
+  //   }
+  // }, []);
+
   // load the other kid's stars when the parent switches profiles
   useEffect(() => {
     if (rewardsKeyRef.current === rewardsKey) return;
