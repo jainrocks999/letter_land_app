@@ -32,6 +32,7 @@ let currentTrack:TrackName='home';
 let isInitialized = false;
 let isEnabled = true;
 let isEffectPlaying = false;
+let isSuppressed = false;
 let removeTTSListeners: (() => void) | null = null;
 
 const getCurrentTrack=()=> tracks[currentTrack];
@@ -93,11 +94,33 @@ const MusicService = {
   },
 
   play: () => {
-    const track= getCurrentTrack();
-    if (!track || !isEnabled || isEffectPlaying) return;
+    const track = getCurrentTrack();
+    if (!track || !isEnabled || isEffectPlaying || isSuppressed) return;
+    if (track.isPlaying()) return;
+
+    // Video or other audio can change the iOS audio session; restore it.
+    Sound.setCategory(Platform.OS === 'ios' ? 'Ambient' : 'Playback', true);
+
     track.play(success => {
       if (!success) console.log('Music playback failed');
     });
+  },
+
+  setSuppressed: (suppressed: boolean) => {
+    if (isSuppressed === suppressed) return;
+    isSuppressed = suppressed;
+    if (suppressed) {
+      (Object.keys(tracks) as TrackName[]).forEach(name => tracks[name]?.pause());
+    } else if (AppState.currentState === 'active') {
+      // Delay lets the splash video release its iOS audio session first.
+      const tryPlay = () => {
+        if (!isSuppressed && AppState.currentState === 'active') {
+          MusicService.play();
+        }
+      };
+      setTimeout(tryPlay, 400);
+      setTimeout(tryPlay, 1200);
+    }
   },
 
   pause: () => {

@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { styles } from './Splash.styles';
 import { useNavigation } from '@react-navigation/native';
 import { ROUTES } from '../../app/navigation/routeNames';
@@ -8,13 +8,23 @@ import StorageService from '../../services/mmkv.service';
 import { STORAGE_KEYS } from '../../config/constants';
 import Video from 'react-native-video';
 import useProfilesContext from '../../app/contexts/profiles/useProfiles';
+import MusicService from '../../services/music.service';
 
 const SplashScreen = () => {
   const navigation =
     useNavigation<StackNavigationProps<typeof ROUTES.SPLASH>>();
   const { needsSetup } = useProfilesContext();
 
+  useEffect(() => {
+    MusicService.setSuppressed(true);
+    return () => {
+      MusicService.setSuppressed(false);
+    };
+  }, []);
+
   const handleVideoEnd = () => {
+    MusicService.setSuppressed(false);
+
     if (StorageService.getIsOnBorading(STORAGE_KEYS.IS_ONBORDING)) {
       navigation.replace(needsSetup ? ROUTES.CREATE_PROFILE : ROUTES.HOME);
     } else {
