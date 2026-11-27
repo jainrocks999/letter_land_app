@@ -88,8 +88,7 @@ export const styles = StyleSheet.create({
     height: '70%',
   },
   emoji: {
-
-    fontSize: rf( tablet ? 140:  Platform.OS==='ios'?80:100),
+    fontSize: rf( tablet ? 140:  Platform.OS==='ios'?80:95),
     lineHeight: rf(tablet ? 160 : 120),
     right: rf( Platform.OS==='ios'?50:55),
   },

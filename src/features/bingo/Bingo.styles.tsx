@@ -7,6 +7,7 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: tablet ? rf(24) : rf(15),
+    justifyContent:'space-between',
     gap: rf(14),
   },
   askingCard: {
@@ -96,7 +97,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: rf(10),
     alignItems: 'center',
-    marginVertical: rf(Platform.OS==='ios'? 0: 10),
+    // marginVertical: rf(Platform.OS==='ios'? 0: 0),
   },
   askingLetterLabel: {
     fontSize: rf(tablet ? 26 : 22),
@@ -131,7 +132,7 @@ export const styles = StyleSheet.create({
   },
   bingoListContent: {
     gap: rf(10),
-    width:tablet ? '50%': Platform.OS==='ios'? "90%": '100%',
+    width:tablet ? '50%': Platform.OS==='ios'? "90%": '95%',
     alignSelf:"center"
   },
   footerRow: {

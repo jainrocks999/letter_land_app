@@ -112,8 +112,8 @@ export default DraggableLetterMatched;
 
 const styles = StyleSheet.create({
   itemSection: {
-    width: rf(Platform.OS === 'ios' ? 60 : 70),
-    height: rf(Platform.OS === 'ios' ? 60 : 70),
+    width: rf(Platform.OS === 'ios' ? 60 : 65),
+    height: rf(Platform.OS === 'ios' ? 60 : 65),
     borderWidth: 3,
     borderRadius: rf(18),
     justifyContent: 'center',

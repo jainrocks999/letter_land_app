@@ -16,7 +16,7 @@ export const styles = StyleSheet.create({
     ...contentWidth,
     paddingVertical: rf(15),
     paddingHorizontal: rf(10),
-    marginBottom: rf(10),
+    marginBottom: tablet ? rf(10) :rf(0),
     borderRadius: rf(20),
     borderWidth: 1,
     borderBottomWidth: rf(7),
@@ -37,7 +37,7 @@ export const styles = StyleSheet.create({
   playArea: {
     ...contentWidth,
     backgroundColor: '#fff',
-    paddingVertical: rf(tablet ? 18: Platform.OS==='ios'? 25 : 12),
+    paddingVertical: rf(tablet ? 18: Platform.OS==='ios'? 25 : 15),
     alignItems: 'center',
     borderWidth: 1,
     borderBottomWidth: rf(7),
@@ -53,7 +53,7 @@ export const styles = StyleSheet.create({
     top: -rf(20),
   },
   questionText: {
-    marginBottom:tablet ?20: Platform.OS==='ios'?10: 0,
+    marginBottom:tablet ?20: Platform.OS==='ios'?10: 15,
     fontFamily: 'Fredoka-Bold',
     fontSize: rf(25),
     marginHorizontal: Platform.OS==='ios'? 2:  rf(35),
@@ -84,5 +84,5 @@ export const styles = StyleSheet.create({
       height :rf(160),
       width :rf(160),
       marginTop:0,
-  }:{}
+  }:{marginTop:0,}
 });

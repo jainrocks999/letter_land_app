@@ -51,8 +51,8 @@ const AnimatedCharacter = ({ state }: Props) => {
         source={image}
         style={[
           {
-            width: rf(tablet ? 150 : Platform.OS==='ios'? 130: 180),
-            height: rf(tablet ? 150 : Platform.OS==='ios'? 130: 180),
+            width: rf(tablet ? 150 : Platform.OS==='ios'? 130: 160),
+            height: rf(tablet ? 150 : Platform.OS==='ios'? 130: 160),
           },
           animatedStyle,
         ]}

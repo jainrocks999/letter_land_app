@@ -16,6 +16,7 @@ import PortraitStage from '../components/portraitStage/PortraitStage';
 import { usePortraitInsets } from '../utils/orientation';
 import AppUpdateModal from '../components/appUpdateModal/AppUpdateModal';
 import { useIosAppUpdate } from '../hooks/useIosAppUpdate';
+import { initAds } from '../services/ads.service';
 
 const AppContent = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -60,6 +61,7 @@ function App() {
   useEffect(() => {
     TTSService.init();
     MusicService.init();
+    void initAds();
 
     const sub = AppState.addEventListener('change', state => {
       if (state === 'active') {

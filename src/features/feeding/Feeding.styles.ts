@@ -36,7 +36,7 @@ export const styles = StyleSheet.create({
   },
   trayImg:{
     height:"100%",
-    width: tablet ? "60%": Platform.OS==="ios" ?'90%': "100%",
+    width: tablet ? "60%": Platform.OS==="ios" ?'90%': "95%",
     alignSelf:"center",
   },
   playArea: {

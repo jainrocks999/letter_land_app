@@ -49,7 +49,7 @@ export const styles = StyleSheet.create({
     fontFamily: 'Fredoka-Bold',
   },
   emojiContainer: {
-    fontSize: rf(tablet ? 90: 120),
+    fontSize: rf(tablet ? 90: 100),
     lineHeight: rf(tablet ? 120 :170),
   },
   wordText: {
@@ -114,8 +114,8 @@ export const styles = StyleSheet.create({
     backgroundColor: '#ffffffcb',
   },
   imgContainer: {
-    height: rf(tablet ? 120: Platform.OS=='ios'? 100 : 150),
-    width: rf(tablet ? 120:150),
+    height: rf(tablet ? 120: Platform.OS=='ios'? 100 : 120),
+    width: rf(tablet ? 120:120),
     justifyContent: 'space-between',
     marginBottom: rf(22),
   },
@@ -126,7 +126,7 @@ export const styles = StyleSheet.create({
   },
   imgTitle: {
     fontFamily: 'Fredoka-Bold',
-    marginHorizontal: rf(tablet ? 5 :15),
+    marginHorizontal: rf(tablet ? 5 :10),
     backgroundColor: '#fff',
     padding: rf(5),
     textAlign: 'center',

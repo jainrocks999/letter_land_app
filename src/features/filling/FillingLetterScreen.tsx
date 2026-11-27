@@ -267,7 +267,7 @@ const FillingLetterScreen = () => {
                       textAnchor="middle"
                       alignmentBaseline="central"
                       fontFamily="Fredoka-Bold"
-                      fontSize={rf(Platform.OS==='ios'? isTablet() ? 50 : 80 : 105)}
+                      fontSize={rf(Platform.OS==='ios'? isTablet() ? 50 : 80 : 95)}
                       fill={
                         isCorrect == null
                           ? '#e7e7e7'

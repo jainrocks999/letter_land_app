@@ -126,7 +126,7 @@ const LearningScreen: React.FC = () => {
                 style={[
                   styles.letterText,
                   {
-                    fontSize: rf(tablet ? 90 : 110),
+                    fontSize: rf(tablet ? 90 : 100),
                     bottom: -rf(10),
                     left: -rf(10),
                   },

@@ -31,7 +31,7 @@ export const styles = StyleSheet.create({
     ...contentWidth,
     borderWidth: 1.5,
     borderRadius: rf(10),
-    marginVertical: rf(tablet ? 5: 15),
+    marginVertical: rf(tablet ? 5: 10),
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: rf(tablet ? 16:20),
@@ -49,7 +49,7 @@ export const styles = StyleSheet.create({
     borderBottomWidth: rf(7),
     borderRadius: rf(10),
     padding: rf(12),
-    paddingBottom: Platform.OS==='ios'? tablet? 18: 0 : rf(18),
+    paddingBottom: Platform.OS==='ios'? tablet? 18: 0 : rf(10),
   },
   questionTextContainer: {
     width: rf(54),
