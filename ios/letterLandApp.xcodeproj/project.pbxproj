@@ -299,12 +299,13 @@
 				DEVELOPMENT_TEAM = MM8CWENXY2;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = letterLandApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "eLetter: Kids Alphabet & Words";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -313,6 +314,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.eflashapps.eletter;
 				PRODUCT_NAME = letterLandApp;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -329,12 +333,13 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = MM8CWENXY2;
 				INFOPLIST_FILE = letterLandApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "eLetter: Kids Alphabet & Words";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -343,6 +348,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.eflashapps.eletter;
 				PRODUCT_NAME = letterLandApp;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";

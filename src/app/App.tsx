@@ -14,10 +14,13 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import MusicService from '../services/music.service';
 import PortraitStage from '../components/portraitStage/PortraitStage';
 import { usePortraitInsets } from '../utils/orientation';
+import AppUpdateModal from '../components/appUpdateModal/AppUpdateModal';
+import { useIosAppUpdate } from '../hooks/useIosAppUpdate';
 
 const AppContent = () => {
   const isDarkMode = useColorScheme() === 'dark';
   const insets = usePortraitInsets();
+  const iosUpdate = useIosAppUpdate();
 
   return (
     <GestureHandlerRootView style={styles.root}>
@@ -40,6 +43,12 @@ const AppContent = () => {
               barStyle={isDarkMode ? 'light-content' : 'dark-content'}
             />
             <RootNavigator />
+            <AppUpdateModal
+              visible={iosUpdate.visible}
+              type={iosUpdate.type}
+              onUpdate={iosUpdate.onUpdate}
+              onLater={iosUpdate.onLater}
+            />
           </View>
         </AppProviders>
       </PortraitStage>
