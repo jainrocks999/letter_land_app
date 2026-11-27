@@ -1,8 +1,0 @@
-{
-    "admob":{
-        "childDirectedOnly": true,
-        "android_app_id":"ca-app-pub-3339897183017333~8230875932",
-        "delay_app_measurement_init": true,
-        "androidBannerUnitId":"ca-app-pub-3339897183017333/3495882015"
-    }
-}

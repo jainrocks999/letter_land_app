@@ -33,7 +33,7 @@ export const styles = StyleSheet.create({
   },
   slideCard: {
     marginTop: Platform.OS=='ios'? rf(70): 0,
-    height: tablet? "77%": Platform.OS=='ios'? '70%':'77%',
+    height: Platform.OS=='ios'? tablet? "77%": '70%':tablet? "70%":'77%',
     backgroundColor: '#fff',
     marginHorizontal: 20,
     paddingHorizontal:tablet? rf(50) : rf(25),

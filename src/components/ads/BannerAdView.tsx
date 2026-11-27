@@ -6,8 +6,13 @@ import {
   TestIds,
 } from 'react-native-google-mobile-ads';
 import { rf } from '../../utils/responsive';
+import appConfig from '../../../app.json';
 
-const UNIT_ID = TestIds.BANNER;
+const adsConfig = appConfig['react-native-google-mobile-ads'];
+
+// Development me test ID, release me app.json wali real ID
+const UNIT_ID = __DEV__ ? TestIds.ADAPTIVE_BANNER : adsConfig.androidBannerUnitId;
+
 const STRIP_HEIGHT = 50;
 
 const BannerAdView = () => {
@@ -30,12 +35,11 @@ const BannerAdView = () => {
         <BannerAd
           unitId={UNIT_ID}
           size={BannerAdSize.INLINE_ADAPTIVE_BANNER}
-        //   size={BannerAdSize.BANNER}
-            width={adWidth}
+          width={adWidth}
           maxHeight={rf(STRIP_HEIGHT)}
           requestOptions={{ requestNonPersonalizedAdsOnly: true }}
           onAdFailedToLoad={error =>
-            console.warn('[[ads] banner failed:', error)
+            console.warn('[ads] banner failed:', error)
           }
         />
       )}
